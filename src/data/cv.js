@@ -2,34 +2,40 @@
  * Single source of truth for every piece of content on the site.
  * Edit this file to update the site — no component changes needed.
  *
- * NOTE ON PDF LINKS: the `href` values below currently point at files hosted on
- * the old Wix site. They will break if that site is taken down. To self-host,
- * drop the PDFs into `public/files/` and change the href to
- * `${import.meta.env.BASE_URL}files/your-file.pdf`.
+ * Content is drawn from the 2026 CV and from the five project documents in
+ * `public/files/`. Where a fact was not stated in either, the field is left
+ * empty and the UI omits it, rather than being filled with a guess.
  */
 
-const WIX_FILES = 'https://f77742c6-6778-46e9-907e-2c7bd4e39077.filesusr.com/ugd/'
+/** PDFs are served from the repo, so nothing depends on the old Wix site. */
+const FILES = `${import.meta.env.BASE_URL}files/`
 
 export const profile = {
   name: 'Brina DeWeese',
   credential: 'MSc',
-  role: 'Lecturer & Data Scientist',
+  role: 'Lecturer & Module Lead',
   location: 'London, England',
   email: 'Brina.DeWeese@gmail.com',
-  cvUrl: `${WIX_FILES}aceff2_c61ffe87a9c3469aa3b4ed4a04e068c5.pdf`,
-  // Add these when you have them; the UI hides any link left as an empty string.
-  linkedin: '',
+  linkedin: 'https://linkedin.com/in/brina-deweese',
   github: '',
-  scholar: '',
+
+  /**
+   * TODO (Brina): your CV PDF is not linked yet, deliberately.
+   * The version on the old Wix site is out of date, and the current
+   * Brina_DeWeese_CV_LSE_2026.docx has your mobile number in the header, which
+   * you probably do not want on a public page. Export a phone-free version to
+   * `public/files/brina-deweese-cv.pdf` and set this to `${FILES}brina-deweese-cv.pdf`.
+   * While this is empty the download buttons are simply not rendered.
+   */
+  cvUrl: '',
 
   // NOTE: the big hero sentence is NOT here. It lives in src/pages/Home.jsx
   // because individual words inside it are highlighted, which needs markup.
-  // Edit it there.
 
   intro: [
-    'I am a Lecturer and Data Scientist with Master’s degrees in Data Science and Econometrics and in Tourism Management. I use Python, SQL, and econometric modelling to answer commercial and policy questions with evidence, and my work is finished only when the result is something someone can act on.',
-    'The analysis I am most confident in is the kind that survives being questioned. That usually means segmenting a dataset until a blended average stops hiding the real story, or checking whether a convincing correlation still holds once seasonality and confounders are accounted for.',
-    'Alongside that analytical work I lecture in business and tourism, building data tools and current industry practice into the curriculum. The two sides reinforce each other. Research keeps my teaching grounded in real method, and teaching forces the kind of clarity about a model that only comes from explaining it to people seeing it for the first time.',
+    'I am a Lecturer and Module Lead with Master’s degrees in Data Science and Econometrics and in Tourism Management. I lead the delivery of a foundation year capstone module across five campuses, coordinating a teaching team of 12 to 15 lecturers for more than 800 students each cycle.',
+    'My background is econometrics and applied data science, and it shapes how I run a programme. I build the reporting and quality assurance tools that keep delivery consistent at scale, most recently a Power BI dashboard and an automated reporting template now used by module leads on every campus.',
+    'The analysis I am most confident in is the kind that survives being questioned. That usually means segmenting a dataset until a blended average stops hiding the real story, checking whether a convincing correlation still holds once seasonality and confounders are accounted for, or reporting honestly that a model fits the history well and still cannot forecast.',
   ],
 }
 
@@ -37,7 +43,8 @@ export const profile = {
  * The three disciplines double as the site's categorical colour system.
  * Colours come from a CVD-validated three-slot palette (validated all-pairs in
  * both light and dark mode). They are ALWAYS paired with a visible text label —
- * aqua sits below 3:1 on the light surface, so colour never carries meaning alone.
+ * tourism sits below 3:1 on the light surface, so colour never carries meaning
+ * alone.
  */
 export const disciplines = {
   economics: {
@@ -45,59 +52,53 @@ export const disciplines = {
     label: 'Economics',
     short: 'ECON',
     blurb:
-      'A BSc in Economics and an MSc in Econometrics underpin how I frame a question: what is actually being measured, what would count as evidence, and what the model can and cannot claim.',
+      'A BSc in Economics and an MSc in Econometrics shape how I frame a question: what is actually being measured, what would count as evidence, and what a model can and cannot claim.',
   },
   data: {
     id: 'data',
     label: 'Data Science',
     short: 'DATA',
     blurb:
-      'Python, SQL, and the analytics stack are where the questions get answered. The output that matters is not the model, it is the decision someone can make because of it.',
+      'Python, SQL, and the modelling stack are where the questions get answered. The output that matters is not the model, it is the decision someone can make because of it.',
   },
   tourism: {
     id: 'tourism',
-    label: 'Tourism',
+    label: 'Tourism & Teaching',
     short: 'TOUR',
     blurb:
-      'An MSc in Tourism Management and doctoral research on industry resilience give me the sector knowledge to know which patterns in the data are meaningful and which are noise.',
+      'An MSc in Tourism Management and IRC-funded research on industry resilience give me the sector knowledge behind what I now teach, and the programme leadership to deliver it at scale.',
   },
 }
 
-/**
- * Headline figures. Every number here is drawn from a real, stated outcome.
- *
- * TODO (Brina): if you have quantified teaching results (pass rate, student
- * satisfaction score, cohort size) they would be stronger than the activity
- * count below. Same for the dissertation, if it produced a headline result.
- */
+/** Headline figures. Every number here is drawn from a real, stated outcome. */
 export const metrics = [
+  {
+    value: 800,
+    suffix: '+',
+    label: 'Students per delivery cycle',
+    detail:
+      'The foundation year capstone module I lead, delivered to a consistent standard across every cycle.',
+    discipline: 'tourism',
+  },
+  {
+    value: 5,
+    label: 'Campuses coordinated',
+    detail:
+      'Delivery readiness, assessment design, reporting cycles, and cross-campus logistics, kept aligned to agreed timelines.',
+    discipline: 'tourism',
+  },
+  {
+    value: 15,
+    label: 'Lecturers led',
+    detail:
+      'A teaching team of 12 to 15, supported with standardisation meetings, marking guidance, and grading comparison materials.',
+    discipline: 'economics',
+  },
   {
     value: 3,
     label: 'Degrees across three fields',
     detail:
-      'BSc Economics, MSc Data Science & Econometrics, and MSc Tourism Management. The combination the rest of this site is built on.',
-    discipline: 'economics',
-  },
-  {
-    value: 6,
-    label: 'Lecture activities designed',
-    detail:
-      'Gamified and data-led activities built for tourism and business modules, consistently exceeding KPIs for attendance, satisfaction, and pass rates.',
-    discipline: 'tourism',
-  },
-  {
-    value: 2,
-    label: 'National awards',
-    detail:
-      'The Irish Research Council Scholarship from the Government of Ireland, and the IvenTUre prize for an AR tourism business plan.',
-    discipline: 'tourism',
-  },
-  {
-    value: 54,
-    suffix: '%',
-    label: 'Increase in memberships',
-    detail:
-      'Ran a full visitor survey at The Lodge Space, analysed the results, and implemented the targeted growth strategy that followed.',
+      'MSc Data Science and Econometrics, MSc Tourism Management, and BSc Economics and Business.',
     discipline: 'data',
   },
 ]
@@ -107,37 +108,36 @@ export const experience = [
     id: 'gbs',
     start: 2025,
     end: null, // null = present
-    role: 'Lecturer',
+    startLabel: 'February 2025',
+    role: 'Lecturer & Module Lead',
     org: 'Global Banking School',
     location: 'London, England',
     discipline: 'tourism',
     summary:
-      'Designing and delivering tourism and business modules that pair theory with applied, data-literate practice.',
+      'Leading end-to-end delivery of a foundation year capstone module across five campuses, for a teaching team of 12 to 15 and more than 800 students each cycle.',
     points: [
-      'Design and deliver lectures on tourism and business, covering both theoretical knowledge and applied practice.',
-      'Use interactive methods and gamification to drive engagement and learning.',
-      'Integrate data tools (Python, Excel, Power BI) and industry insights into teaching.',
-      'Consistently exceed KPIs for attendance, satisfaction, and pass rates.',
-      'Mentor students with feedback, career guidance, and skills development.',
+      'Lead and coordinate a team of 12 to 15 lecturers across five campuses in the end-to-end delivery of a foundation year capstone module to 800+ students, ensuring consistent quality, standards, and delivery timelines throughout each cycle.',
+      'Run standardisation meetings and produce marking guidance, grading comparison materials, and assessment checklists to maintain consistent delivery standards across teaching teams and campuses.',
+      'Coordinate delivery readiness and manage multiple concurrent priorities, including assessment design, reporting cycles, and cross-campus logistics, working closely with academic and operational stakeholders.',
+      'Support delivery across in-person teaching and online, Moodle-based components, tracking completion and engagement data to maintain quality across formats.',
+      'Built a Power BI dashboard and an automated Excel reporting template adopted by all module lead staff across five campuses, giving leadership back approximately two hours per week previously spent on manual reporting.',
+      'Designed and delivered training for fellow lecturers on using gamification and AI tools appropriately in the classroom, raising staff confidence with new technology across teaching teams.',
     ],
   },
   {
-    id: 'lodge',
+    id: 'stenn',
     start: 2024,
-    end: 2024,
-    role: 'Marketing Strategist',
-    org: 'The Lodge Space',
+    end: 2025,
+    role: 'Marketing Data Analyst',
+    org: 'Stenn',
+    orgNote: 'Fintech',
     location: 'London, England',
     discipline: 'data',
     summary:
-      'Owned the analytics behind acquisition and retention, from survey design through to the dashboard leadership used to steer strategy.',
+      'Turned marketing and customer data into decisions senior stakeholders could act on, and automated the reporting behind it.',
     points: [
-      'Formulated and executed marketing strategies focused on customer retention and acquisition, substantially improving engagement metrics across all platforms.',
-      'Conducted a comprehensive visitor survey, analysed the results, and implemented targeted growth strategies that led to a 54% increase in memberships.',
-      'Grew social media following by 300 in the first month through strategic content and engagement tactics.',
-      'Developed a social media tracker to analyse post performance and turn those insights into a growth strategy.',
-      'Created and maintained a marketing analytics dashboard to monitor strategy impact, supporting dynamic adjustments.',
-      'Optimised social channels and websites for SEO, increasing visibility and traffic.',
+      'Coordinated with senior stakeholders across the business to translate marketing and customer data into strategic decision making, working to agreed reporting timelines.',
+      'Built data pipelines and automated reporting processes, including a flagging system to identify report-ready periods, reducing manual overhead and improving delivery consistency.',
     ],
   },
   {
@@ -149,12 +149,11 @@ export const experience = [
     location: 'Dublin, Ireland',
     discipline: 'economics',
     summary:
-      'Doctoral research into the economic resilience of the Irish tourism industry through periods of adversity.',
+      'IRC-funded research into the resilience of the Irish tourism sector, producing a literature review and an original conceptual framework applicable to policy and industry.',
     points: [
-      'Led research on business resilience in the Irish tourism industry, focusing on economic resilience and sustainability.',
-      'Conducted a detailed literature review on business and economic resilience relevant to public policy and economic consulting.',
-      'Created a conceptual framework analysing how business resilience evolves before, during, and after economic disruptions.',
-      'Communicated complex resilience theory through clear, visually engaging reports and presentations.',
+      'Awarded IRC funding to research business resilience in the Irish tourism sector, producing a comprehensive literature review and a proposed conceptual framework applicable to policy and industry.',
+      'Developed a theory of resilience categorisation distinguishing backwards-thinking resilience, which aims to return to a prior state, from forwards-thinking resilience, which treats disruption as a route to adaptation and growth.',
+      'Produced written research outputs and presentations communicating findings to academic and industry audiences.',
     ],
   },
   {
@@ -163,68 +162,63 @@ export const experience = [
     end: 2023,
     role: 'Growth & Development Executive',
     org: 'Imvizar',
+    orgNote: 'AR start-up',
     location: 'Dublin, Ireland',
     discipline: 'tourism',
     summary:
-      'Business development for an augmented reality tourism start-up, across trade shows, market analysis, and executive reporting.',
+      'Business development for an augmented reality tourism start-up, combining market analysis with client-facing communication.',
     points: [
-      'Coordinated and managed company exhibits at ExCeL London, AVEA Ireland, and Museums Connection Paris.',
-      'Represented the company at industry events, ensuring a professional and engaging presence.',
-      'Planned marketing initiatives and leveraged referral networks to drive business development.',
-      'Evaluated market trends and recommended marketing budget allocations to top management.',
-      'Completed monthly reports supporting executive decision making.',
-      'Developed short and long-term sales objectives and strategic plans to meet market needs.',
+      'Delivered consultative, client-facing pitches to prospective clients, combining data-driven market analysis with clear stakeholder communication.',
+      'Analysed market trends and customer data to guide budget allocation and strategic planning for an early-stage technology company.',
     ],
   },
 ]
 
 /**
- * TODO (Brina): your old site listed the three degrees but never named the
- * awarding institutions or the years. Rather than guess, `org`, `start`, and
- * `end` are left blank — the UI simply omits whatever is empty. Fill these in
- * and they appear automatically.
+ * TODO (Brina): your CV gives the institutions and grades but not the years.
+ * The MSc Data Science and Econometrics dates are taken from your dissertation
+ * title page (2023–2024). The other two are blank rather than guessed, and the
+ * UI omits whatever is empty.
  */
 export const education = [
+  {
+    id: 'msc-data',
+    start: 2023,
+    end: 2024,
+    degree: 'MSc Data Science and Econometrics',
+    org: 'Goldsmiths, University of London',
+    discipline: 'data',
+    note: 'First Class, Distinction',
+  },
   {
     id: 'msc-tourism',
     start: null,
     end: null,
     degree: 'MSc Tourism Management',
-    org: '',
+    org: 'Technological University Dublin, Ireland',
     discipline: 'tourism',
-    note: 'Master’s Class Representative, Technological University Dublin',
-  },
-  {
-    id: 'msc-data',
-    start: null,
-    end: null,
-    degree: 'MSc Data Science & Econometrics',
-    org: '',
-    discipline: 'data',
-    note: '',
+    note: 'Irish Research Council Scholar · Master’s Class Representative',
   },
   {
     id: 'bsc-econ',
     start: null,
     end: null,
-    degree: 'BSc Economics',
-    org: '',
+    degree: 'BSc Economics and Business',
+    org: 'University of Kansas, USA',
     discipline: 'economics',
-    note: 'Vice President, Economics Club, University of Kansas · Dean’s List Honor Roll',
+    note: 'First Class, Distinction · Vice President, Economics Club · Dean’s List Honor Roll',
   },
 ]
 
 /**
- * TODO (Brina): your old site showed five achievements beside only four year
- * ranges (2021 · 2019–2020 · 2016–2018 · 2015–2018) in a layout that made the
- * pairing ambiguous, so `year` is left blank rather than guessed. The UI omits
- * an empty year. Fill in the correct ones and they appear.
+ * TODO (Brina): the year ranges shown on your old site could not be matched to
+ * these reliably, so `year` is blank. The UI omits an empty year.
  */
 export const awards = [
   {
     year: '',
     title: 'Irish Research Council Scholarship',
-    detail: 'Awarded by the Government of Ireland.',
+    detail: 'Awarded by the Government of Ireland to fund tourism resilience research.',
     discipline: 'economics',
   },
   {
@@ -256,114 +250,241 @@ export const awards = [
 
 export const skills = [
   {
-    group: 'Programming',
-    discipline: 'data',
-    items: ['Python', 'R', 'SQL'],
-  },
-  {
-    group: 'Analysis & Visualisation',
+    group: 'Programming & Data',
     discipline: 'data',
     items: [
-      'NumPy',
+      'Python',
+      'R',
+      'SQL',
       'Pandas',
+      'NumPy',
       'Statsmodels',
-      'Seaborn',
-      'Matplotlib',
       'Beautiful Soup',
-      'Excel',
-      'Power BI',
       'Jupyter',
-      'Spyder',
+      'Google Colab',
     ],
   },
   {
-    group: 'Machine Learning',
-    discipline: 'data',
-    items: ['scikit-learn', 'XGBoost'],
-  },
-  {
-    group: 'Econometrics',
+    group: 'Modelling & Machine Learning',
     discipline: 'economics',
     items: [
-      'Econometric modelling',
-      'Regression analysis',
-      'Resilience frameworks',
-      'Survey design',
+      'ARIMA',
+      'ARDL',
+      'Random forests',
+      'Gradient boosting',
+      'KNN',
+      'scikit-learn',
+      'XGBoost',
+      'OLS regression',
+      'Forward selection',
+      'Sentiment analysis',
     ],
   },
   {
-    group: 'Marketing & Growth',
-    discipline: 'tourism',
-    items: ['SEO', 'Google Ads', 'Campaign analytics', 'Canva', 'Flodesk'],
+    group: 'Reporting & BI',
+    discipline: 'data',
+    items: [
+      'Power BI',
+      'Excel',
+      'Dashboard design',
+      'Process automation',
+      'KPI tracking & reporting',
+    ],
   },
   {
-    group: 'Platforms & Tools',
+    group: 'Programme & Delivery',
     discipline: 'tourism',
-    items: ['Jira', 'Moodle', 'Skedda', 'Momence', 'Microsoft Suite'],
+    items: [
+      'Multi-site coordination',
+      'Team leadership',
+      'Quality standardisation',
+      'Assessment design',
+      'Delivery readiness',
+      'Blended delivery',
+      'Moodle',
+    ],
+  },
+  {
+    group: 'Stakeholder & Communication',
+    discipline: 'tourism',
+    items: [
+      'Academic & operational liaison',
+      'Client-facing communication',
+      'Staff training & upskilling',
+      'Public presentation',
+    ],
+  },
+  {
+    group: 'Research',
+    discipline: 'economics',
+    items: [
+      'Literature review',
+      'Conceptual framework development',
+      'Policy & report writing',
+      'Survey design',
+      'Web scraping',
+    ],
   },
 ]
 
+/**
+ * TODO (Brina): your 2026 CV lists only these two. The old Wix site also had
+ * Google Ads Display and Google Ads Search certifications. Add them back if you
+ * still want them shown.
+ */
 export const certifications = [
-  'Python 3 Course Certification',
-  'Google Ads Display Certification',
-  'Google Ads Search Certification',
+  'Python for Data Science (Codecademy)',
+  'Teacher Training (Udemy)',
 ]
 
 /**
  * Projects. `slug` drives the detail page URL (/projects/:slug).
+ * Set `draft: true` on an entry to keep it in this file but off the site.
  *
- * !! REVIEW BEFORE PUBLISHING !!
- * Not every entry below is equally well sourced:
+ * Everything below is written from the actual source documents in
+ * `public/files/` or, for the enquiry analysis, from its source code. Check the
+ * emphasis is what you want, but the facts and findings are drawn from the work
+ * itself rather than inferred from a title.
  *
- *   - enquiry-performance-analysis and teach-with-technology are written from
- *     real sources (the marketing-task code and your teaching activities page),
- *     so they should be broadly accurate. Check the emphasis is what you want.
- *   - msc-dissertation is an empty shell. It is `draft: true` so it does not
- *     appear on the site until you write it.
- *   - cost-of-living-crime-chicago, the-eras-analysis, and
- *     women-of-wolverhampton are drafted from their TITLES ALONE, because the
- *     old site showed them only as an image plus a PDF link. Treat the summary,
- *     body, and especially `methods` as guesses to correct. `methods` may name
- *     tools you never used on that project.
- *
- * Four further PDFs were linked on the old projects page that could not be
- * identified from the images. Add them as new entries here:
- *   aceff2_d81f650cf045487db8fed9b8297ed65b.pdf
- *   aceff2_34b11610d09545ad90b2fd6eb2e2354a.pdf
- *   aceff2_2ac1339f29ba432cb914c045d9111765.pdf
- *   aceff2_03ef9a5bd36f4e76bc825aa7989fe92b.pdf
- *
- * ADDING A CHART: give a project a `chart` object and the detail page renders it.
- * Leave `chart` undefined and no chart appears — nothing is ever invented for you.
+ * ADDING A CHART: give a project a `chart` object and the detail page renders
+ * it. Leave it off and no chart appears.
  *   chart: {
  *     kind: 'bar' | 'line',
  *     title: 'What the chart shows',
  *     source: 'Where the numbers came from',
- *     xKey: 'year',
- *     series: [{ key: 'rate', label: 'Crime rate' }],
- *     data: [{ year: 2015, rate: 12 }, ...],
+ *     xKey: 'model',
+ *     series: [{ key: 'r2', label: 'R²' }],
+ *     data: [{ model: 'ARIMA', r2: 0.8 }, ...],
  *   }
  */
 export const projects = [
   {
-    slug: 'msc-dissertation',
-    // Hidden from the site until the content below is filled in. Delete this
-    // line (or set it to false) to publish it.
-    draft: true,
-    title: 'TODO: dissertation title',
-    subtitle: 'TODO: one line on what it asked',
+    slug: 'new-gold-rush-bitcoin',
+    title: 'The New Gold Rush',
+    subtitle:
+      'Modelling Bitcoin volatility with economic indicators and free sentiment analysis',
     discipline: 'economics',
-    year: '',
+    year: '2024',
     kind: 'MSc dissertation',
     summary:
-      'TODO (Brina): this is your MSc Data Science and Econometrics dissertation. Nothing about it appeared on the old Wix site, so there was nothing to draft from. Fill in the question it asked, the data it used, the method, and what you found.',
+      'My MSc dissertation, asking whether Bitcoin can be forecast using only freely available data. It compares ARIMA, ARDL, random forests, and linear regression, and finds that the models which fit history best are the ones that fail hardest at forecasting.',
     body: [
-      'TODO: what question did it ask, and why does that question matter?',
-      'TODO: what data did you use, and what did you have to do to make it usable?',
-      'TODO: what method did you apply, and what did you find? Findings that pushed back on your expectations are the most interesting thing you can put here.',
+      'Supervised by Dr V L Raju Chinthalapati in the Computing Department at Goldsmiths, University of London, this dissertation set out to build and compare predictive models for Bitcoin prices using data anyone can access for free, combining economic indicators with sentiment analysis.',
+      'The comparison covers ARIMA, ARDL, random forests, and linear regression, and evaluates each one twice: in-sample against the history it was trained on, and out-of-sample against data it had never seen. That second evaluation is the whole point. Random forests and linear regression perform well within the historical data and then overfit badly, struggling to predict forward. ARIMA and a scaled ARDL model are less impressive in-sample and considerably more reliable out-of-sample.',
+      'The conclusion is a methodological one rather than a trading one. In a market as volatile as Bitcoin, a model reported only on in-sample fit will look far better than it is, and hybrid approaches are the more promising direction. It is a result that argues against its own most flattering numbers, which is the part I would defend.',
     ],
-    methods: [],
-    links: [],
+    methods: [
+      'Python',
+      'ARIMA',
+      'ARDL',
+      'Random forests',
+      'Linear regression',
+      'Sentiment analysis',
+      'Time series',
+      'In-sample vs out-of-sample evaluation',
+    ],
+    links: [
+      {
+        label: 'Read the dissertation',
+        href: `${FILES}new-gold-rush-bitcoin-dissertation.pdf`,
+      },
+    ],
+  },
+  {
+    slug: 'cost-of-living-crime-chicago',
+    title: 'Will We Eat the Rich If We Run Out of Cake?',
+    subtitle: 'Analysing the cost of living’s impact on crime rates in the City of Chicago',
+    discipline: 'economics',
+    year: '',
+    kind: 'Econometric study',
+    summary:
+      'An end-to-end study of whether cost-of-living pressure moves crime rates in Chicago between 2010 and 2022, built from a scraped cost-of-living series and a 1.8 million row crime dataset.',
+    body: [
+      'The question is old enough that Confucius has a line about it, and the study opens there deliberately: do economic conditions drive criminal behaviour, and if so, which conditions and which crimes? National-level research had found that consumer price movements predict financially motivated crime, but costs and crime both vary enormously between American cities, so a national finding does not automatically hold for any particular one.',
+      'The pipeline was built in Python: cost-of-living indicators web-scraped from Numbeo, combined with a 1.8 million row Chicago crimes dataset, with feature engineering and imputation benchmarked against US inflation data to fill gaps defensibly. Crimes were grouped into drug-related, economically motivated, violent, and vulnerable populations categories so the analysis could ask which kinds of crime respond, rather than treating crime as one undifferentiated total.',
+      'Analysis ran from correlation through OLS regression to random forests, gradient boosting, and KNN, with forward selection used to identify which cost-of-living factors actually carry each crime category. Some categories model very well, with adjusted R² up to 0.96, and predictors as concrete as restaurant meal price, home purchase price, and monthly net salary. Others, notably one category at 0.41, do not.',
+      'Gradient boosting produced the lowest error across most crime categories, but the honest conclusion is that the mean squared errors remain far too large for the predictive model to be trusted. There simply is not enough training data at this granularity. Reporting that plainly, rather than presenting the best-looking model as a success, is the finding I stand behind.',
+    ],
+    methods: [
+      'Python',
+      'Web scraping',
+      'Feature engineering',
+      'Data imputation',
+      'Correlation analysis',
+      'OLS regression',
+      'Forward selection',
+      'Random forests',
+      'Gradient boosting',
+      'KNN',
+    ],
+    links: [
+      {
+        label: 'Read the full study',
+        href: `${FILES}cost-of-living-crime-chicago.pdf`,
+      },
+      {
+        label: 'Read the short version',
+        href: `${FILES}cost-of-living-crime-chicago-summary.pdf`,
+      },
+    ],
+  },
+  {
+    slug: 'tourism-resilience',
+    title: 'Forwards and Backwards Thinking',
+    subtitle: 'Resilience in the post-pandemic tourism industry',
+    discipline: 'tourism',
+    year: '',
+    kind: 'Funded research',
+    summary:
+      'Irish Research Council funded research building a theory of resilience categorisation, separating resilience that aims to restore the old state from resilience that treats disruption as a route to growth.',
+    body: [
+      '“Resilience” is used across engineering, ecology, psychology, and business to mean noticeably different things, and that ambiguity matters when the word is doing policy work. This research dissects the term across those disciplines and reframes it for tourism organisations, where the post-pandemic recovery made the distinction urgent.',
+      'The central contribution is a categorisation. Backwards-thinking resilience emphasises bouncing back, returning to a pre-existing state. The Latin root, resilio, literally means to jump back, and engineering definitions carry that sense directly. Forwards-thinking resilience holds that adapting to and exploiting change matters more than recovering, treating disruption as an opportunity to reach a better position than the one held before.',
+      'The categorisation was introduced in the literature in 2021 but had barely been researched, with little written on what motivates an organisation toward one or the other. That gap is what the work addresses, examining business resilience frameworks and resilience measurement to build a lens through which tourism business resilience can actually be assessed rather than merely asserted.',
+    ],
+    methods: [
+      'Literature review',
+      'Conceptual framework development',
+      'Theory building',
+      'Policy writing',
+      'Qualitative synthesis',
+    ],
+    links: [
+      {
+        label: 'Read the research',
+        href: `${FILES}forwards-and-backwards-thinking-resilience.pdf`,
+      },
+    ],
+  },
+  {
+    slug: 'the-eras-analysis',
+    title: 'The Eras Analysis',
+    subtitle: 'Analysing Taylor Swift’s discography and tour revenues',
+    discipline: 'data',
+    year: '',
+    kind: 'Data analysis',
+    summary:
+      'Three linked questions about what makes a song popular, whether re-recordings outperform the originals, and whether album popularity actually translates into tour revenue. The last answer is the interesting one.',
+    body: [
+      'The study asks how song features affect popularity, how the re-recorded “Taylor’s Version” albums compare with their originals, and how album popularity relates to tour earnings. Swift is an unusually good case study for this because the re-recordings create something rare in cultural data: a near-controlled comparison of the same songs released twice under different circumstances.',
+      'Song attributes including danceability, energy, and valence came from a Spotify API dataset, and tour figures for the Eras, Reputation, 1989, and Fearless tours were web-scraped from CNN and Statista to cover revenue, ticket sales, and show counts.',
+      'No single song characteristic dominantly drives popularity, which is itself worth stating given how often one is claimed to. The re-recordings score higher in popularity than their originals, pointing at nostalgia and artist branding rather than the music having changed. The third question is where the neat story breaks down: tour revenue has risen noticeably over the years, but that rise does not track the popularity of the albums the tours feature, so the relationship between recorded popularity and live earnings is more complicated than it first appears.',
+      'The write-up is candid about its own limits. Spotify popularity scores are algorithmic and updated continuously, so they capture recent trends better than historical reception, and the tour data skews toward North American figures.',
+    ],
+    methods: [
+      'Python',
+      'Web scraping',
+      'Spotify API data',
+      'Correlation analysis',
+      'Data visualisation',
+      'Exploratory analysis',
+    ],
+    links: [
+      {
+        label: 'Read the full analysis',
+        href: `${FILES}the-eras-analysis.pdf`,
+      },
+    ],
   },
   /**
    * !! CONFIDENTIALITY CHECK BEFORE PUBLISHING !!
@@ -371,8 +492,6 @@ export const projects = [
    * here and NO figures are quoted, deliberately: that dataset contains gross
    * booking value, media spend, AOV, and CAC broken down by market. Publishing
    * any of it on a public site is your call to make, not mine to assume.
-   * If you are cleared to name the client and quote results, say so and both
-   * can be added, including a chart. Until then this describes method only.
    */
   {
     slug: 'enquiry-performance-analysis',
@@ -383,13 +502,13 @@ export const projects = [
     year: '2025',
     kind: 'Commercial analytics',
     summary:
-      'A full-year analysis of a tour operator’s enquiry funnel, from first enquiry through quote to booking, built to answer where marketing budget earns its return. Delivered as a self-contained interactive dashboard.',
+      'A full-year analysis of a tour operator’s enquiry funnel, from first enquiry through quote to booking, delivered as a self-contained interactive dashboard.',
     body: [
       'The commercial question was simple to state and easy to get wrong: which markets and channels deserve more budget? A surface reading of acquisition cost points one way. Segmenting the funnel properly points another.',
       'The analysis follows every enquiry through to booking, split by market, by new versus repeat client, by device, and by channel. Separating new from repeat clients matters more than any other cut here, because blending them hides both the true cost of winning a client and the true value of keeping one. A market that looks expensive on blended numbers can be a young, high-value market worth investing in rather than cutting.',
-      'The paid media finding is the one I would defend hardest. A straight correlation between paid enquiries and total bookings looks convincing, but once seasonality is accounted for, the relationship largely disappears: both series simply rise and fall together across the year. Treating that correlation as a delayed lift from paid activity would have justified spend the data does not actually support.',
-      'A logistic regression fitted on a training split and scored on held-out data ranks what genuinely predicts a booking. Coefficients are reported as odds ratios against a baseline, so the output reads as "how much does this change the odds" rather than as an opaque score. The model deliberately uses broad categorical factors only.',
-      'The output is a dashboard with seven views, written as plain HTML, CSS, and JavaScript with a small custom SVG chart library and no external dependencies, so it opens from a file with no install and no server.',
+      'The paid media finding is the one I would defend hardest. A straight correlation between paid enquiries and total bookings looks convincing, but once seasonality is accounted for the relationship largely disappears: both series simply rise and fall together across the year. Treating that correlation as a delayed lift from paid activity would have justified spend the data does not support.',
+      'A logistic regression fitted on a training split and scored on held-out data ranks what genuinely predicts a booking, with coefficients reported as odds ratios against a baseline so the output reads as “how much does this change the odds” rather than as an opaque score.',
+      'The deliverable is a dashboard with seven views, written as plain HTML, CSS, and JavaScript with a small custom SVG chart library and no external dependencies, so it opens from a file with no install and no server.',
     ],
     methods: [
       'Python',
@@ -402,98 +521,50 @@ export const projects = [
       'Cohort segmentation',
       'JavaScript',
       'SVG',
-      'Dashboard design',
     ],
     links: [],
   },
   {
-    slug: 'cost-of-living-crime-chicago',
-    title: 'Will We Eat the Rich If We Run Out of Cake?',
+    slug: 'technology-in-the-classroom',
+    title: 'Technology in the Classroom',
     subtitle:
-      'Analysing the cost of living’s impact on crime rates in the City of Chicago',
-    discipline: 'economics',
-    year: '', // TODO (Brina): add the year — not stated on the old site.
-    kind: 'Econometric study',
-    summary:
-      'An econometric examination of whether cost-of-living pressure moves crime rates in Chicago, combining public crime records with economic indicators.',
-    body: [
-      'This study tests a question that sits squarely between economics and public policy: when the cost of living rises, does crime follow? Chicago offers an unusually rich public dataset, which makes it a strong candidate for testing the relationship empirically rather than anecdotally.',
-      'The work involved assembling crime records alongside cost-of-living and economic indicators, cleaning and aligning the series, and building regression models to isolate the relationship while controlling for confounding factors.',
-    ],
-    methods: ['Python', 'Pandas', 'Statsmodels', 'Regression analysis', 'Data cleaning'],
-    links: [
-      {
-        label: 'Read the full study',
-        href: `${WIX_FILES}aceff2_d31ac8e6aa18459db8809a078709e44a.pdf`,
-      },
-    ],
-  },
-  {
-    slug: 'teach-with-technology',
-    title: 'Teach with Technology',
-    subtitle:
-      'Building data literacy into tourism and business teaching, and making the case for it to faculty',
+      'Training lecturers to use gamification and AI well, and building data literacy into tourism teaching',
     discipline: 'tourism',
     year: '2025',
     kind: 'Curriculum design',
     summary:
-      'A suite of lecture activities that put data tools and gamified problem solving into tourism and business modules, plus the presentation that argued the approach to administration, lecturers, and deans.',
+      'A training initiative for fellow lecturers on using gamification and AI tools appropriately, alongside the activity suite that puts the approach into practice with students.',
     body: [
       'Tourism and business students do not arrive expecting to write code, and telling them they need to rarely works. The approach here is to lead with a question they already care about and let the tool be the thing that answers it. The Coding Practice with AI worksheet introduces Python through tourism data, so the point of the lesson is what you can find out once you know how to frame the question well.',
-      'Not every activity is technical. The escape room sequence turns the Tourism Area Life Cycle and stakeholder impact analysis into timed team puzzles students have to solve to earn their break. Gap in the Market pushes them to justify an idea with evidence rather than instinct. The crossword worksheets carry a full Harvard reference list, so students practise academic sourcing while they revise definitions.',
-      'The Teach with Tech presentation makes the case to faculty in concrete terms: which tool, for which learning outcome, and what students walk away able to do that they could not before. Across these modules I have consistently exceeded KPIs for attendance, satisfaction, and pass rates.',
+      'Not every activity is technical. The escape room sequence turns the Tourism Area Life Cycle and stakeholder impact analysis into timed team puzzles students solve to earn their break. Gap in the Market pushes them to justify an idea with evidence rather than instinct. The crossword worksheets carry a full Harvard reference list, so students practise academic sourcing while they revise definitions.',
+      'The other half is training the staff. I designed and delivered sessions for fellow lecturers on using gamification and AI tools appropriately in the classroom, which raised technology confidence across teaching teams as well as student engagement. Making the case to colleagues and to faculty leadership is a different skill from teaching students, and the argument has to be concrete: which tool, for which learning outcome, and what students walk away able to do.',
     ],
     methods: [
       'Curriculum design',
+      'Staff training',
       'Gamification',
       'Python',
       'Power BI',
-      'Excel',
       'Assessment design',
       'Academic referencing',
     ],
     links: [{ label: 'See all the activities', href: '#teaching', internal: true }],
   },
   {
-    slug: 'the-eras-analysis',
-    title: 'The Eras Analysis',
-    subtitle: 'An analytical examination of Taylor Swift’s discography',
+    slug: 'module-feedback-sentiment-classifier',
+    title: 'Module Feedback Sentiment Classifier',
+    subtitle: 'Turning open-text student feedback into something a teaching team can act on',
     discipline: 'data',
-    year: '', // TODO (Brina): add the year — not stated on the old site.
-    kind: 'Data analysis',
+    year: '2025',
+    kind: 'Applied NLP',
     summary:
-      'A structured analysis of a discography spanning nearly two decades, treating a cultural dataset with the same rigour as an economic one.',
+      'A Python natural language classifier that reads open-text student feedback for sentiment and recurring themes, used to brief lecturers on where to focus module improvements.',
     body: [
-      'Cultural datasets are an excellent teaching vehicle: the subject is familiar, so the analysis itself becomes the thing people focus on. This project examines how the character of a body of work shifts across eras, using audio and release metadata as the underlying signal.',
-      'The approach mirrors any other applied analysis: source the data, define what a meaningful comparison actually looks like, then let the results push back on the initial hypothesis.',
+      'Open-text student feedback is the most useful data a module collects and the least likely to be read properly, because it arrives in volume at exactly the point in the cycle when nobody has time. Star ratings get reported instead, which tell you that something is wrong without telling you what.',
+      'This classifier, built in Python in Google Colab, reads the free-text responses for sentiment and for recurring themes, so the output is not a score but a shortlist of what students actually raised and how strongly. That shortlist is what I brief lecturers on, which turns end-of-module feedback from a compliance exercise into a specific set of things to change.',
     ],
-    methods: ['Python', 'Pandas', 'Seaborn', 'Matplotlib', 'Exploratory analysis'],
-    links: [
-      {
-        label: 'Read the full analysis',
-        href: `${WIX_FILES}aceff2_cb830d95f0d046dfb8501b471195baff.pdf`,
-      },
-    ],
-  },
-  {
-    slug: 'women-of-wolverhampton',
-    title: 'Women of Wolverhampton',
-    subtitle: 'Volunteer data analysis and visualisation for a women’s group',
-    discipline: 'data',
-    year: '', // TODO (Brina): add the year — not stated on the old site.
-    kind: 'Volunteer analytics',
-    summary:
-      'Volunteered to help a community women’s group make sense of their own data, and to present it in a form they could act on and share.',
-    body: [
-      'Community organisations often collect a great deal of data and have no capacity to analyse it. This project involved taking that raw material, analysing it, and building visualisations the group could use in their own reporting and advocacy.',
-    ],
-    methods: ['Data analysis', 'Data visualisation', 'Reporting'],
-    links: [
-      {
-        label: 'View the work',
-        href: `${WIX_FILES}aceff2_e09ab3ef8b604deab630a4526045abab.pdf`,
-      },
-    ],
+    methods: ['Python', 'Google Colab', 'Natural language processing', 'Sentiment analysis', 'Thematic analysis'],
+    links: [],
   },
 ]
 
@@ -503,7 +574,7 @@ export const projects = [
  */
 export const visibleProjects = projects.filter((p) => !p.draft)
 
-/** Lecturing activities, taken from the teaching examples page. */
+/** Lecturing activities, from the teaching examples. */
 export const teaching = [
   {
     title: 'Gap in the Market',
@@ -536,10 +607,10 @@ export const teaching = [
       'Worksheets that make key definitions more engaging and memorable. Each puzzle draws on real academic sources with a full Harvard reference list, reinforcing subject knowledge and proper academic practice together.',
   },
   {
-    title: 'Teach With Tech Presentation',
+    title: 'Teach With Tech Training',
     discipline: 'data',
     description:
-      'A presentation for administration, lecturers, and deans on integrating a variety of technologies into the classroom to enhance learning, improve engagement, and build digital skills students carry into their careers.',
+      'Training for administration, lecturers, and deans on integrating technology into the classroom to enhance learning, improve engagement, and build digital skills students carry into their careers.',
   },
 ]
 

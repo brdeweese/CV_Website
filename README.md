@@ -45,26 +45,27 @@ a fact and it would have been wrong to guess:
 - **Awards**: the old site showed five achievements against four year ranges in
   an ambiguous layout, so years are blank.
 - **Project years**: blank for the projects that never listed one.
-- **Four unidentified PDFs** from the old projects page are listed in the
-  comment above the `projects` array, ready to be added as entries.
+- **CV download**: `profile.cvUrl` is empty, so no download button renders. The
+  Wix-hosted CV is out of date, and the 2026 .docx carries your mobile number in
+  the header, which is worth removing before putting it on a public page. Export
+  a phone-free PDF to `public/files/brina-deweese-cv.pdf` and point `cvUrl` at it.
 
-### Projects: two that need you specifically
+### The enquiry performance analysis
 
-**The MSc dissertation is an empty shell.** Nothing about it appeared on the old
-site, so there was nothing to draft from. It is marked `draft: true`, which
-keeps it off the site entirely until you write it. Fill in the question, the
-data, the method, and the finding, then remove the flag.
+It names no client and quotes no figures, deliberately. That dataset contains
+gross booking value, media spend, AOV, and CAC broken down by market. Whether
+any of it can appear on a public site is your call, so the entry describes
+method only. If you are cleared to name the client and show results, both can be
+added, including a chart.
 
-**The enquiry performance analysis names no client and quotes no figures.** That
-dataset contains gross booking value, media spend, AOV, and CAC broken down by
-market. Whether any of that can appear on a public site is your call, so the
-entry describes method only. If you are cleared to name the client and show
-results, both can be added, including a chart.
+### Project source documents
 
-The other three projects (Chicago, Eras, Wolverhampton) are drafted **from their
-titles alone**, because the old site showed them only as an image plus a PDF
-link. Their summaries and especially their `methods` lists are guesses and may
-name tools you never used on that project.
+Project write-ups are drawn from the PDFs in `public/files/`, which are served
+from this repo so nothing depends on the old Wix site staying up.
+
+One caveat: `the-eras-analysis.pdf` is **22.5 MB**, because it is a scanned
+image-based PDF rather than text. It works, but it is a slow download on mobile.
+Re-exporting it as a text PDF would cut it dramatically.
 
 Any field left blank is simply omitted by the UI rather than rendering an empty
 label.

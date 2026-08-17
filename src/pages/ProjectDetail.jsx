@@ -16,7 +16,7 @@ export default function ProjectDetail() {
   useEffect(() => {
     if (project) document.title = `${project.title} — Brina DeWeese`
     return () => {
-      document.title = 'Brina DeWeese — Lecturer & Data Scientist'
+      document.title = 'Brina DeWeese — Lecturer & Module Lead'
     }
   }, [project])
 

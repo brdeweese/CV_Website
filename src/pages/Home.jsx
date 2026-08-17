@@ -66,22 +66,24 @@ export default function Home() {
           </h1>
 
           <p className="hero-tagline">
-            I work where <b>economics</b>, <b>data science</b>, and <b>tourism</b> meet,
-            turning complex datasets into decisions and research into teaching that lands.
+            I lead a teaching programme across five campuses and build the data behind
+            it, working where <b>economics</b>, <b>data science</b>, and <b>tourism</b>{' '}
+            meet.
           </p>
 
           <div className="hero-actions">
             <a className="btn btn-primary" href="#projects">
               View projects <Arrow />
             </a>
-            <a
-              className="btn btn-ghost"
-              href={profile.cvUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Download CV
-            </a>
+            {profile.cvUrl ? (
+              <a className="btn btn-ghost" href={profile.cvUrl} target="_blank" rel="noreferrer">
+                Download CV
+              </a>
+            ) : (
+              <a className="btn btn-ghost" href="#contact">
+                Get in touch
+              </a>
+            )}
           </div>
         </div>
       </section>
@@ -134,13 +136,14 @@ export default function Home() {
               {experience.map((e) => (
                 <article className="exp reveal" key={e.id} data-discipline={e.discipline}>
                   <div className="exp-when">
-                    {e.start}
+                    {e.startLabel ?? e.start}
                     {e.end === null ? ' — Present' : e.end === e.start ? '' : ` — ${e.end}`}
                   </div>
                   <div>
                     <h3 className="exp-role">{e.role}</h3>
                     <div className="exp-org">
                       <span className="exp-org-name">{e.org}</span>
+                      {e.orgNote && <span className="exp-loc">{e.orgNote}</span>}
                       <span className="exp-loc">{e.location}</span>
                       <DisciplineTag id={e.discipline} />
                     </div>
@@ -284,9 +287,11 @@ export default function Home() {
               {profile.email}
             </a>
             <div className="hero-actions">
-              <a className="btn btn-ghost" href={profile.cvUrl} target="_blank" rel="noreferrer">
-                Download CV
-              </a>
+              {profile.cvUrl && (
+                <a className="btn btn-ghost" href={profile.cvUrl} target="_blank" rel="noreferrer">
+                  Download CV
+                </a>
+              )}
               {profile.linkedin && (
                 <a className="btn btn-ghost" href={profile.linkedin} target="_blank" rel="noreferrer">
                   LinkedIn

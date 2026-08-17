@@ -415,20 +415,61 @@ button { font: inherit; color: inherit; }
 
 /* --- Metrics band --------------------------------------------------------- */
 
+/* Flex rather than grid on purpose. With `grid-template-columns: repeat(
+   auto-fit, …)` a final row holding fewer tiles than there are columns leaves
+   empty tracks, and since the container's own background is the rule colour,
+   those tracks render as a solid grey block beside the last tile. Flex items
+   with flex-grow stretch to fill whatever row they land on, so the band is
+   always flush at every width. */
 .metrics {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1px;
   background: var(--rule);
   border-block: 1px solid var(--rule);
 }
 
 .metric {
+  flex: 1 1 200px;
+  min-width: 0;
   background: var(--page);
   padding: clamp(1.5rem, 3.5vw, 2.25rem) clamp(1.25rem, 2.5vw, 1.75rem);
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+}
+
+/* --- Discipline Venn tile ------------------------------------------------- */
+
+.metric-visual {
+  flex: 1 1 240px;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.venn {
+  width: 100%;
+  max-width: 270px;
+  height: auto;
+  margin-inline: auto;
+}
+
+.venn-circle {
+  fill: var(--accent);
+  fill-opacity: 0.16;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+
+.venn-core {
+  fill: var(--ink);
+}
+
+.venn-label {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  fill: var(--ink-2);
 }
 
 .metric-value {

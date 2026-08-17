@@ -17,6 +17,7 @@ import { useReveal } from '../hooks/useReveal.js'
 import { formatPeriod } from '../utils/period.js'
 import CareerTimeline from '../components/CareerTimeline.jsx'
 import DisciplineTag from '../components/DisciplineTag.jsx'
+import DisciplineVenn from '../components/DisciplineVenn.jsx'
 
 function SectionHead({ id }) {
   const s = sections.find((x) => x.id === id)
@@ -102,6 +103,16 @@ export default function Home() {
             <p className="metric-detail">{m.detail}</p>
           </div>
         ))}
+
+        {/* Sits last so it lands beside the degrees figure, and doubles as the
+            key to the discipline colours used across the rest of the page. */}
+        <div className="metric metric-visual reveal">
+          <DisciplineVenn />
+          <p className="metric-detail" style={{ textAlign: 'center' }}>
+            Economics frames the question, data science answers it, and the sector
+            knowledge decides which answers matter.
+          </p>
+        </div>
       </div>
 
       <main id="main">

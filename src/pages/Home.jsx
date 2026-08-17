@@ -108,10 +108,6 @@ export default function Home() {
             key to the discipline colours used across the rest of the page. */}
         <div className="metric metric-visual reveal">
           <DisciplineVenn />
-          <p className="metric-detail" style={{ textAlign: 'center' }}>
-            Economics frames the question, data science answers it, and the sector
-            knowledge decides which answers matter.
-          </p>
         </div>
       </div>
 

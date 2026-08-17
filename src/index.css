@@ -461,6 +461,13 @@ button { font: inherit; color: inherit; }
   stroke-width: 1.5;
 }
 
+/* The fourth set. Ink rather than a fourth hue — see DisciplineVenn.jsx. */
+.venn-circle--ink {
+  fill: var(--ink);
+  fill-opacity: 0.09;
+  stroke: var(--ink);
+}
+
 .venn-core {
   fill: var(--ink);
 }

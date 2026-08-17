@@ -44,12 +44,27 @@ a fact and it would have been wrong to guess:
   blank.
 - **Awards**: the old site showed five achievements against four year ranges in
   an ambiguous layout, so years are blank.
-- **Project years**: blank for the three projects that never listed one.
-- **Project descriptions**: the old site showed projects as images plus a PDF
-  link, with no written descriptions. The summaries and the `methods` tool lists
-  are drafted from the titles and need your review before they are accurate.
+- **Project years**: blank for the projects that never listed one.
 - **Four unidentified PDFs** from the old projects page are listed in the
   comment above the `projects` array, ready to be added as entries.
+
+### Projects: two that need you specifically
+
+**The MSc dissertation is an empty shell.** Nothing about it appeared on the old
+site, so there was nothing to draft from. It is marked `draft: true`, which
+keeps it off the site entirely until you write it. Fill in the question, the
+data, the method, and the finding, then remove the flag.
+
+**The enquiry performance analysis names no client and quotes no figures.** That
+dataset contains gross booking value, media spend, AOV, and CAC broken down by
+market. Whether any of that can appear on a public site is your call, so the
+entry describes method only. If you are cleared to name the client and show
+results, both can be added, including a chart.
+
+The other three projects (Chicago, Eras, Wolverhampton) are drafted **from their
+titles alone**, because the old site showed them only as an image plus a PDF
+link. Their summaries and especially their `methods` lists are guesses and may
+name tools you never used on that project.
 
 Any field left blank is simply omitted by the UI rather than rendering an empty
 label.

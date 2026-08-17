@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { disciplines, experience } from '../data/cv.js'
+import { formatPeriod, periodPoints } from '../utils/period.js'
 
 /**
  * Career timeline — a span chart of roles over real calendar years.
@@ -28,8 +29,9 @@ export default function CareerTimeline() {
     const now = new Date()
     const nowYear = now.getFullYear() + now.getMonth() / 12
 
-    const starts = experience.map((e) => e.start)
-    const ends = experience.map((e) => (e.end === null ? nowYear : e.end + 1))
+    const points = experience.map((e) => periodPoints(e, nowYear))
+    const starts = points.map((p) => p.start)
+    const ends = points.map((p) => p.end)
 
     const min = Math.floor(Math.min(...starts))
     // Headroom past the newest bar, but not so much that an extra, empty
@@ -39,20 +41,15 @@ export default function CareerTimeline() {
     const scale = (year) => PLOT_X + ((year - min) / (max - min)) * PLOT_W
 
     const built = experience.map((e, i) => {
-      const endValue = e.end === null ? nowYear : e.end + 1
-      const x1 = scale(e.start)
-      const x2 = scale(endValue)
+      const x1 = scale(points[i].start)
+      const x2 = scale(points[i].end)
       return {
         ...e,
         rowTop: HEADER_H + i * ROW_H,
         x: x1,
+        // Floor the width so a role lasting a single month stays visible.
         width: Math.max(x2 - x1, 6),
-        rangeLabel:
-          e.end === null
-            ? `${e.start} — Present`
-            : e.end === e.start
-              ? `${e.start}`
-              : `${e.start} — ${e.end}`,
+        rangeLabel: formatPeriod(e),
       }
     })
 

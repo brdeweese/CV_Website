@@ -14,6 +14,7 @@ import {
   visibleProjects,
 } from '../data/cv.js'
 import { useReveal } from '../hooks/useReveal.js'
+import { formatPeriod } from '../utils/period.js'
 import CareerTimeline from '../components/CareerTimeline.jsx'
 import DisciplineTag from '../components/DisciplineTag.jsx'
 
@@ -135,10 +136,7 @@ export default function Home() {
             <div className="exp-list">
               {experience.map((e) => (
                 <article className="exp reveal" key={e.id} data-discipline={e.discipline}>
-                  <div className="exp-when">
-                    {e.startLabel ?? e.start}
-                    {e.end === null ? ' — Present' : e.end === e.start ? '' : ` — ${e.end}`}
-                  </div>
+                  <div className="exp-when">{formatPeriod(e, true)}</div>
                   <div>
                     <h3 className="exp-role">{e.role}</h3>
                     <div className="exp-org">

@@ -107,8 +107,8 @@ export const experience = [
   {
     id: 'gbs',
     start: 2025,
+    startMonth: 2, // February 2025
     end: null, // null = present
-    startLabel: 'February 2025',
     role: 'Lecturer & Module Lead',
     org: 'Global Banking School',
     location: 'London, England',
@@ -128,6 +128,7 @@ export const experience = [
     id: 'stenn',
     start: 2024,
     end: 2025,
+    endMonth: 1, // Ended January 2025, immediately before the lecturing role began
     role: 'Marketing Data Analyst',
     org: 'Stenn',
     orgNote: 'Fintech',

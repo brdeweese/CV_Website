@@ -8,10 +8,10 @@ import {
   experience,
   metrics,
   profile,
-  projects,
   sections,
   skills,
   teaching,
+  visibleProjects,
 } from '../data/cv.js'
 import { useReveal } from '../hooks/useReveal.js'
 import CareerTimeline from '../components/CareerTimeline.jsx'
@@ -193,7 +193,7 @@ export default function Home() {
               into a fuller write-up.
             </p>
             <div className="proj-grid">
-              {projects.map((p) => (
+              {visibleProjects.map((p) => (
                 <Link
                   className="proj-card reveal"
                   to={`/projects/${p.slug}`}

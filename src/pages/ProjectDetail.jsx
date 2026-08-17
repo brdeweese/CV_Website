@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { projects } from '../data/cv.js'
+import { visibleProjects } from '../data/cv.js'
 import DisciplineTag from '../components/DisciplineTag.jsx'
 import NotFound from './NotFound.jsx'
 
@@ -10,8 +10,8 @@ const ProjectChart = lazy(() => import('../components/ProjectChart.jsx'))
 
 export default function ProjectDetail() {
   const { slug } = useParams()
-  const index = projects.findIndex((p) => p.slug === slug)
-  const project = projects[index]
+  const index = visibleProjects.findIndex((p) => p.slug === slug)
+  const project = visibleProjects[index]
 
   useEffect(() => {
     if (project) document.title = `${project.title} — Brina DeWeese`
@@ -22,8 +22,8 @@ export default function ProjectDetail() {
 
   if (!project) return <NotFound />
 
-  const prev = projects[index - 1]
-  const next = projects[index + 1]
+  const prev = visibleProjects[index - 1]
+  const next = visibleProjects[index + 1]
 
   return (
     <main className="detail" id="main">

@@ -27,8 +27,9 @@ export const profile = {
   // Edit it there.
 
   intro: [
-    'I am a Lecturer and Data Scientist with Master’s degrees in Data Science and Econometrics and in Tourism Management. My expertise lies in harnessing Python, Excel, and advanced analytics to extract meaningful insights from complex datasets and transform them into actionable strategies that drive marketing success and optimise business outcomes.',
-    'Alongside my technical and analytical work, I design and deliver lectures in business and tourism, integrating data-driven tools and industry insights into curriculum design. My analytical strengths extend to econometric modelling and enhancing operational efficiencies through data-driven decision making, while my lecturing experience reflects my ability to engage, educate, and inspire students.',
+    'I am a Lecturer and Data Scientist with Master’s degrees in Data Science and Econometrics and in Tourism Management. I use Python, SQL, and econometric modelling to answer commercial and policy questions with evidence, and my work is finished only when the result is something someone can act on.',
+    'The analysis I am most confident in is the kind that survives being questioned. That usually means segmenting a dataset until a blended average stops hiding the real story, or checking whether a convincing correlation still holds once seasonality and confounders are accounted for.',
+    'Alongside that analytical work I lecture in business and tourism, building data tools and current industry practice into the curriculum. The two sides reinforce each other. Research keeps my teaching grounded in real method, and teaching forces the kind of clarity about a model that only comes from explaining it to people seeing it for the first time.',
   ],
 }
 
@@ -62,30 +63,27 @@ export const disciplines = {
   },
 }
 
-/** Headline figures. Every number here is drawn from real, stated outcomes. */
+/**
+ * Headline figures. Every number here is drawn from a real, stated outcome.
+ *
+ * TODO (Brina): if you have quantified teaching results (pass rate, student
+ * satisfaction score, cohort size) they would be stronger than the activity
+ * count below. Same for the dissertation, if it produced a headline result.
+ */
 export const metrics = [
-  {
-    value: 54,
-    suffix: '%',
-    label: 'Increase in memberships',
-    detail:
-      'Ran a full visitor survey at The Lodge Space, analysed the results, and implemented the targeted growth strategy that followed.',
-    discipline: 'data',
-  },
-  {
-    value: 300,
-    prefix: '+',
-    label: 'Social followers in month one',
-    detail:
-      'Achieved through a content and engagement strategy built on a custom post-performance tracker.',
-    discipline: 'data',
-  },
   {
     value: 3,
     label: 'Degrees across three fields',
     detail:
-      'BSc Economics, MSc Data Science & Econometrics, and MSc Tourism Management — the combination the rest of this site is built on.',
+      'BSc Economics, MSc Data Science & Econometrics, and MSc Tourism Management. The combination the rest of this site is built on.',
     discipline: 'economics',
+  },
+  {
+    value: 6,
+    label: 'Lecture activities designed',
+    detail:
+      'Gamified and data-led activities built for tourism and business modules, consistently exceeding KPIs for attendance, satisfaction, and pass rates.',
+    discipline: 'tourism',
   },
   {
     value: 2,
@@ -93,6 +91,14 @@ export const metrics = [
     detail:
       'The Irish Research Council Scholarship from the Government of Ireland, and the IvenTUre prize for an AR tourism business plan.',
     discipline: 'tourism',
+  },
+  {
+    value: 54,
+    suffix: '%',
+    label: 'Increase in memberships',
+    detail:
+      'Ran a full visitor survey at The Lodge Space, analysed the results, and implemented the targeted growth strategy that followed.',
+    discipline: 'data',
   },
 ]
 
@@ -307,11 +313,18 @@ export const certifications = [
  * Projects. `slug` drives the detail page URL (/projects/:slug).
  *
  * !! REVIEW BEFORE PUBLISHING !!
- * Your old site showed these projects as images plus a PDF link, with no
- * written descriptions. The `summary`, `body`, and `methods` fields below are
- * therefore drafted from the titles alone and are placeholders describing what
- * the work probably involved. Read each one and correct it — especially
- * `methods`, which lists tools you may not have used on that specific project.
+ * Not every entry below is equally well sourced:
+ *
+ *   - enquiry-performance-analysis and teach-with-technology are written from
+ *     real sources (the marketing-task code and your teaching activities page),
+ *     so they should be broadly accurate. Check the emphasis is what you want.
+ *   - msc-dissertation is an empty shell. It is `draft: true` so it does not
+ *     appear on the site until you write it.
+ *   - cost-of-living-crime-chicago, the-eras-analysis, and
+ *     women-of-wolverhampton are drafted from their TITLES ALONE, because the
+ *     old site showed them only as an image plus a PDF link. Treat the summary,
+ *     body, and especially `methods` as guesses to correct. `methods` may name
+ *     tools you never used on that project.
  *
  * Four further PDFs were linked on the old projects page that could not be
  * identified from the images. Add them as new entries here:
@@ -332,6 +345,67 @@ export const certifications = [
  *   }
  */
 export const projects = [
+  {
+    slug: 'msc-dissertation',
+    // Hidden from the site until the content below is filled in. Delete this
+    // line (or set it to false) to publish it.
+    draft: true,
+    title: 'TODO: dissertation title',
+    subtitle: 'TODO: one line on what it asked',
+    discipline: 'economics',
+    year: '',
+    kind: 'MSc dissertation',
+    summary:
+      'TODO (Brina): this is your MSc Data Science and Econometrics dissertation. Nothing about it appeared on the old Wix site, so there was nothing to draft from. Fill in the question it asked, the data it used, the method, and what you found.',
+    body: [
+      'TODO: what question did it ask, and why does that question matter?',
+      'TODO: what data did you use, and what did you have to do to make it usable?',
+      'TODO: what method did you apply, and what did you find? Findings that pushed back on your expectations are the most interesting thing you can put here.',
+    ],
+    methods: [],
+    links: [],
+  },
+  /**
+   * !! CONFIDENTIALITY CHECK BEFORE PUBLISHING !!
+   * This is the Audley work in ~/GitHub/marketing-task. The client is NOT named
+   * here and NO figures are quoted, deliberately: that dataset contains gross
+   * booking value, media spend, AOV, and CAC broken down by market. Publishing
+   * any of it on a public site is your call to make, not mine to assume.
+   * If you are cleared to name the client and quote results, say so and both
+   * can be added, including a chart. Until then this describes method only.
+   */
+  {
+    slug: 'enquiry-performance-analysis',
+    title: 'Enquiry Performance Analysis',
+    subtitle:
+      'Where a luxury travel operator should invest its marketing budget, and where the obvious answer is wrong',
+    discipline: 'data',
+    year: '2025',
+    kind: 'Commercial analytics',
+    summary:
+      'A full-year analysis of a tour operator’s enquiry funnel, from first enquiry through quote to booking, built to answer where marketing budget earns its return. Delivered as a self-contained interactive dashboard.',
+    body: [
+      'The commercial question was simple to state and easy to get wrong: which markets and channels deserve more budget? A surface reading of acquisition cost points one way. Segmenting the funnel properly points another.',
+      'The analysis follows every enquiry through to booking, split by market, by new versus repeat client, by device, and by channel. Separating new from repeat clients matters more than any other cut here, because blending them hides both the true cost of winning a client and the true value of keeping one. A market that looks expensive on blended numbers can be a young, high-value market worth investing in rather than cutting.',
+      'The paid media finding is the one I would defend hardest. A straight correlation between paid enquiries and total bookings looks convincing, but once seasonality is accounted for, the relationship largely disappears: both series simply rise and fall together across the year. Treating that correlation as a delayed lift from paid activity would have justified spend the data does not actually support.',
+      'A logistic regression fitted on a training split and scored on held-out data ranks what genuinely predicts a booking. Coefficients are reported as odds ratios against a baseline, so the output reads as "how much does this change the odds" rather than as an opaque score. The model deliberately uses broad categorical factors only.',
+      'The output is a dashboard with seven views, written as plain HTML, CSS, and JavaScript with a small custom SVG chart library and no external dependencies, so it opens from a file with no install and no server.',
+    ],
+    methods: [
+      'Python',
+      'Logistic regression',
+      'Odds ratios',
+      'Train/test validation',
+      'Attribution modelling',
+      'Seasonality control',
+      'Funnel analysis',
+      'Cohort segmentation',
+      'JavaScript',
+      'SVG',
+      'Dashboard design',
+    ],
+    links: [],
+  },
   {
     slug: 'cost-of-living-crime-chicago',
     title: 'Will We Eat the Rich If We Run Out of Cake?',
@@ -355,6 +429,32 @@ export const projects = [
     ],
   },
   {
+    slug: 'teach-with-technology',
+    title: 'Teach with Technology',
+    subtitle:
+      'Building data literacy into tourism and business teaching, and making the case for it to faculty',
+    discipline: 'tourism',
+    year: '2025',
+    kind: 'Curriculum design',
+    summary:
+      'A suite of lecture activities that put data tools and gamified problem solving into tourism and business modules, plus the presentation that argued the approach to administration, lecturers, and deans.',
+    body: [
+      'Tourism and business students do not arrive expecting to write code, and telling them they need to rarely works. The approach here is to lead with a question they already care about and let the tool be the thing that answers it. The Coding Practice with AI worksheet introduces Python through tourism data, so the point of the lesson is what you can find out once you know how to frame the question well.',
+      'Not every activity is technical. The escape room sequence turns the Tourism Area Life Cycle and stakeholder impact analysis into timed team puzzles students have to solve to earn their break. Gap in the Market pushes them to justify an idea with evidence rather than instinct. The crossword worksheets carry a full Harvard reference list, so students practise academic sourcing while they revise definitions.',
+      'The Teach with Tech presentation makes the case to faculty in concrete terms: which tool, for which learning outcome, and what students walk away able to do that they could not before. Across these modules I have consistently exceeded KPIs for attendance, satisfaction, and pass rates.',
+    ],
+    methods: [
+      'Curriculum design',
+      'Gamification',
+      'Python',
+      'Power BI',
+      'Excel',
+      'Assessment design',
+      'Academic referencing',
+    ],
+    links: [{ label: 'See all the activities', href: '#teaching', internal: true }],
+  },
+  {
     slug: 'the-eras-analysis',
     title: 'The Eras Analysis',
     subtitle: 'An analytical examination of Taylor Swift’s discography',
@@ -372,27 +472,6 @@ export const projects = [
       {
         label: 'Read the full analysis',
         href: `${WIX_FILES}aceff2_cb830d95f0d046dfb8501b471195baff.pdf`,
-      },
-    ],
-  },
-  {
-    slug: 'marketing-analytics-tracker',
-    title: 'Marketing Campaign Tracker & Analytics',
-    subtitle: 'A live dashboard for measuring campaign performance',
-    discipline: 'data',
-    year: '2024',
-    kind: 'Applied analytics',
-    summary:
-      'The tracker and dashboard built at The Lodge Space to measure what marketing activity actually moved, and to adjust strategy while campaigns were still running.',
-    body: [
-      'Most marketing reporting arrives too late to change anything. This tracker was built to close that gap: post-level performance data feeding a dashboard that leadership could read at a glance, so strategy could be adjusted mid-campaign rather than post-mortem.',
-      'The same instrumentation underpinned the visitor survey analysis that led to a 54% increase in memberships, and the content strategy that added 300 social followers in the first month.',
-    ],
-    methods: ['Excel', 'Dashboard design', 'Campaign analytics', 'Survey analysis', 'SEO'],
-    links: [
-      {
-        label: 'Open the interactive tracker',
-        href: 'https://docs.google.com/spreadsheets/d/1L_cPZcr1UvMmJM2pAncC_YcVvaBmTH0KJyM-DzWaSEg/edit?usp=sharing',
       },
     ],
   },
@@ -416,23 +495,13 @@ export const projects = [
       },
     ],
   },
-  {
-    slug: 'teach-with-technology',
-    title: 'Teach with Technology',
-    subtitle: 'Integrating technology into higher education teaching',
-    discipline: 'tourism',
-    year: '2025',
-    kind: 'Pedagogy',
-    summary:
-      'A presentation and set of worked examples showing administration, lecturers, and deans how classroom technology can lift engagement and build digital skills.',
-    body: [
-      'Built for an audience of administration, lecturers, and deans, this presentation makes the case for classroom technology in concrete terms: which tools, for which learning outcome, and what students gain that they would not otherwise.',
-      'The accompanying activities put the argument into practice — see the teaching section for the full set.',
-    ],
-    methods: ['Curriculum design', 'Educational technology', 'Presentation'],
-    links: [{ label: 'See the activities', href: '#teaching', internal: true }],
-  },
 ]
+
+/**
+ * What the site actually renders. Anything flagged `draft: true` is withheld,
+ * so a half-written entry can sit in the file without appearing publicly.
+ */
+export const visibleProjects = projects.filter((p) => !p.draft)
 
 /** Lecturing activities, taken from the teaching examples page. */
 export const teaching = [

@@ -96,58 +96,96 @@ export function useMscFlight() {
       const b = d(p1x, p1y)
       const c = d(p2x, p2y)
 
-      badge.classList.add('is-ready')
-
       const rest = `translate(${c.x}px, ${c.y}px)`
 
       if (!animate || reduced || typeof badge.animate !== 'function') {
         badge.style.transform = rest
-        hasFlown.current = true
+        // Only reveal here if the flight has already happened (or was never
+        // going to). Revealing during the pre-flight measuring pass is what
+        // made the badge appear at its destination and never bounce, because
+        // it also marked the flight as done.
+        if (hasFlown.current || reduced || typeof badge.animate !== 'function') {
+          badge.classList.add('is-ready')
+          hasFlown.current = true
+        }
         return
       }
 
-      // Arc height scales with how far each hop travels.
-      const hop1 = Math.max(46, Math.abs(b.x - a.x) * 0.22)
-      const hop2 = Math.max(38, Math.abs(c.x - b.x) * 0.26)
+      // Park it ON THE FIRST LETTER and reveal it there. Setting the resting
+      // transform first made the badge appear already arrived, then snap back
+      // to the start when the animation began, which read as a glitch rather
+      // than a bounce.
+      const entryY = a.y - 120
+      badge.style.transform = `translate(${a.x}px, ${entryY}px)`
+      badge.classList.add('is-ready')
 
-      badge.style.transform = rest
+      // Arcs are generous on purpose. Against type this large, a shallow arc
+      // reads as a slide rather than a bounce.
+      const hop1 = Math.max(96, Math.abs(b.x - a.x) * 0.34)
+      const hop2 = Math.max(84, Math.abs(c.x - b.x) * 0.3)
+      const apex1 = Math.min(a.y, b.y) - hop1
+      const apex2 = Math.min(b.y, c.y) - hop2
+
+      const FALL = 'cubic-bezier(0.45, 0, 1, 1)' // accelerating into a letter
+      const RISE = 'cubic-bezier(0, 0, 0.32, 1)' // decelerating off it
+
       flight = badge.animate(
         [
-          { transform: `translate(${a.x}px, ${a.y}px) scale(1) rotate(0deg)`, offset: 0 },
-          // squash against the a
+          // dropping in
           {
-            transform: `translate(${a.x}px, ${a.y + 4}px) scale(1.22, 0.8) rotate(-6deg)`,
-            offset: 0.08,
+            transform: `translate(${a.x}px, ${entryY}px) scale(0.88, 1.18) rotate(-10deg)`,
+            offset: 0,
+            easing: FALL,
           },
-          // up and over
+          // first strike, on the a
           {
-            transform: `translate(${(a.x + b.x) / 2}px, ${Math.min(a.y, b.y) - hop1}px) scale(0.94, 1.1) rotate(12deg)`,
+            transform: `translate(${a.x}px, ${a.y}px) scale(1.34, 0.68) rotate(0deg)`,
+            offset: 0.14,
+            easing: RISE,
+          },
+          {
+            transform: `translate(${(a.x + b.x) / 2}px, ${apex1}px) scale(0.9, 1.16) rotate(14deg)`,
             offset: 0.3,
+            easing: FALL,
           },
-          // squash against the e
+          // second strike, on the e
           {
-            transform: `translate(${b.x}px, ${b.y + 4}px) scale(1.24, 0.78) rotate(6deg)`,
-            offset: 0.52,
+            transform: `translate(${b.x}px, ${b.y}px) scale(1.34, 0.68) rotate(0deg)`,
+            offset: 0.48,
+            easing: RISE,
           },
-          // second arc
           {
-            transform: `translate(${(b.x + c.x) / 2}px, ${Math.min(b.y, c.y) - hop2}px) scale(0.96, 1.08) rotate(-8deg)`,
-            offset: 0.72,
+            transform: `translate(${(b.x + c.x) / 2}px, ${apex2}px) scale(0.92, 1.14) rotate(-12deg)`,
+            offset: 0.66,
+            easing: FALL,
           },
-          // dip just past the resting place
+          // touchdown at the resting place
           {
-            transform: `translate(${c.x}px, ${c.y + 10}px) scale(1.08, 0.92) rotate(3deg)`,
-            offset: 0.88,
+            transform: `translate(${c.x}px, ${c.y}px) scale(1.26, 0.76) rotate(0deg)`,
+            offset: 0.82,
+            easing: RISE,
           },
-          { transform: rest, offset: 1 },
+          // one small hop to settle
+          {
+            transform: `translate(${c.x}px, ${c.y - 16}px) scale(0.96, 1.07) rotate(3deg)`,
+            offset: 0.91,
+            easing: FALL,
+          },
+          { transform: rest + ' scale(1, 1) rotate(0deg)', offset: 1 },
         ],
         {
-          duration: 1850,
-          delay: 620,
-          easing: 'cubic-bezier(0.4, 0.1, 0.35, 1)',
-          fill: 'backwards',
+          duration: 2200,
+          delay: 700,
+          fill: 'both',
         },
       )
+
+      // Commit the final position so nothing depends on the animation being
+      // retained afterwards.
+      flight.onfinish = () => {
+        badge.style.transform = rest
+      }
+
       hasFlown.current = true
     }
 

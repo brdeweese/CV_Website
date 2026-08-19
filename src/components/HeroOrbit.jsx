@@ -14,7 +14,19 @@
  * reverse, which keeps it upright without dragging it back over the overlap.
  * The highlight is offset the same way, so the label stays in the lit part too.
  *
- * The text is a sibling of the blended sphere rather than a child, so it is
+ * WHY THE LABELS ARE A SEPARATE LAYER. The four slots are coplanar, so the
+ * browser paints them in document order: measured front to back it is always
+ * br, bl, tr, tl. A label therefore sat under every sphere declared after it,
+ * and Economics, declared first, sat under three.
+ *
+ * That looked intermittent rather than constant because the projection is not
+ * rigid. The plane is tilted and lit by a perspective, which magnifies whichever
+ * slot is nearest the viewer, so the overlaps between spheres and labels shift
+ * as the group turns and the text sank under the glass and surfaced again.
+ *
+ * Labels therefore ride a second, flat layer that runs the same rotation. It is
+ * a sibling of the orbit under the same perspective, so the two stay registered,
+ * and being flat it is painted as one unit after every sphere. The text is also
  * never multiplied against whatever passes beneath it.
  */
 
@@ -42,6 +54,13 @@ export default function HeroOrbit() {
           >
             <div className={`orb${o.tone === 'ink' ? ' orb--ink' : ''}`} />
             <div className="orb-gloss" />
+          </div>
+        ))}
+      </div>
+
+      <div className="orbit orbit--labels">
+        {ORBS.map((o) => (
+          <div key={o.key} className={`orb-slot orb-slot--${o.pos}`}>
             <div className="orb-label-pos">
               <span className="orb-label">
                 {o.lines.map((line) => (

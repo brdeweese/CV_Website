@@ -39,6 +39,11 @@
   --div-pos: #2a78d6;
   --div-neg: #e34948;
   --div-mid: #e1e0d9;
+  /* Specular highlight stops, so dark mode can soften the gloss without
+     redefining where on each sphere it sits. */
+  --gloss-1: rgba(255, 255, 255, 0.8);
+  --gloss-2: rgba(255, 255, 255, 0.34);
+  --gloss-3: rgba(255, 255, 255, 0.05);
 
   --font-display: "Iowan Old Style", "Palatino Linotype", Palatino,
     "Book Antiqua", Georgia, serif;
@@ -72,6 +77,9 @@
     --div-pos: #3987e5;
     --div-neg: #e66767;
     --div-mid: #383835;
+    --gloss-1: rgba(255, 255, 255, 0.5);
+    --gloss-2: rgba(255, 255, 255, 0.2);
+    --gloss-3: rgba(255, 255, 255, 0.04);
   }
 }
 
@@ -95,6 +103,9 @@
     --div-pos: #3987e5;
     --div-neg: #e66767;
     --div-mid: #383835;
+    --gloss-1: rgba(255, 255, 255, 0.5);
+    --gloss-2: rgba(255, 255, 255, 0.2);
+    --gloss-3: rgba(255, 255, 255, 0.04);
 }
 
 /* Discipline helper: set --accent once, use it everywhere below. */
@@ -1391,74 +1402,96 @@ button { font: inherit; color: inherit; }
     circle at 50% 50%,
     color-mix(in srgb, var(--accent) 40%, transparent) 0%,
     color-mix(in srgb, var(--accent) 58%, transparent) 72%,
-    color-mix(in srgb, var(--accent) 72%, transparent) 100%
+    color-mix(in srgb, var(--accent) 74%, transparent) 100%
   );
   mix-blend-mode: multiply;
 }
 .orb--ink {
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(11, 11, 11, 0.16) 0%,
-    rgba(11, 11, 11, 0.26) 72%,
-    rgba(11, 11, 11, 0.34) 100%
+    rgba(11, 11, 11, 0.15) 0%,
+    rgba(11, 11, 11, 0.24) 72%,
+    rgba(11, 11, 11, 0.32) 100%
   );
 }
 
-/* The lit face and the label. Runs the orbit backwards at the same speed, so
-   the highlight stays put in the scene and the label rides round upright,
-   staying inside the bright part of its sphere. Not blended, so the text keeps
-   its contrast over whatever passes beneath. */
-.orb-face {
+/* Highlight and inner shading. Offset toward the outer side of each sphere so
+   it lights the same area the label occupies. Rides the orbit rather than
+   counter-rotating, so light and label never drift apart. */
+.orb-gloss {
   position: absolute;
   inset: 0;
   border-radius: 50%;
+  box-shadow:
+    inset -14px -18px 40px rgba(0, 0, 0, 0.16),
+    inset 10px 12px 22px rgba(255, 255, 255, 0.2),
+    0 24px 46px rgba(11, 11, 11, 0.15);
+}
+
+/* The label anchor. Offset outward from the sphere centre, on the layer that
+   rotates, so "outward" stays outward for the whole orbit and the text keeps
+   clear of the overlapping lens. */
+.orb-label-pos {
+  position: absolute;
+  /* Hug the text rather than reserving a fixed box, so the label occupies only
+     the area its glyphs actually cover and stays clear of the lens. */
+  width: max-content;
+  max-width: 74%;
+  transform: translate(-50%, -50%);
+}
+
+.orb-slot--tl .orb-gloss {
+  background: radial-gradient(circle at 33% 27%,
+    var(--gloss-1) 0%, var(--gloss-2) 22%,
+    var(--gloss-3) 42%, transparent 60%);
+}
+.orb-slot--tr .orb-gloss {
+  background: radial-gradient(circle at 67% 27%,
+    var(--gloss-1) 0%, var(--gloss-2) 22%,
+    var(--gloss-3) 42%, transparent 60%);
+}
+.orb-slot--bl .orb-gloss {
+  background: radial-gradient(circle at 33% 73%,
+    var(--gloss-1) 0%, var(--gloss-2) 22%,
+    var(--gloss-3) 42%, transparent 60%);
+}
+.orb-slot--br .orb-gloss {
+  background: radial-gradient(circle at 67% 73%,
+    var(--gloss-1) 0%, var(--gloss-2) 22%,
+    var(--gloss-3) 42%, transparent 60%);
+}
+
+/* Matching outward offsets for the text. */
+.orb-slot--tl .orb-label-pos { left: 35%; top: 31%; }
+.orb-slot--tr .orb-label-pos { left: 65%; top: 31%; }
+.orb-slot--bl .orb-label-pos { left: 35%; top: 69%; }
+.orb-slot--br .orb-label-pos { left: 65%; top: 69%; }
+
+/* Only the type counter-rotates, so it stays upright without being pulled back
+   across the overlap. */
+.orb-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.18em;
+  font-family: var(--font-mono);
+  font-size: clamp(0.5rem, 0.86vw, 0.66rem);
+  line-height: 1.25;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--ink);
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8),
+    0 0 6px rgba(255, 255, 255, 0.6);
   animation: orbit-spin-reverse 46s linear infinite;
 }
+.orb-line { display: block; white-space: nowrap; }
 
 @keyframes orbit-spin-reverse {
   from { transform: rotateZ(0deg); }
   to { transform: rotateZ(-360deg); }
 }
-
-.orb-gloss {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 36% 28%,
-    rgba(255, 255, 255, 0.78) 0%,
-    rgba(255, 255, 255, 0.34) 20%,
-    rgba(255, 255, 255, 0.06) 40%,
-    transparent 58%
-  );
-  box-shadow:
-    inset -16px -22px 42px rgba(0, 0, 0, 0.18),
-    inset 10px 12px 22px rgba(255, 255, 255, 0.22),
-    0 24px 46px rgba(11, 11, 11, 0.16);
-}
-
-/* Sits over the highlight, up and left of centre, where the sphere is
-   lightest. */
-.orb-label {
-  position: absolute;
-  left: 40%;
-  top: 34%;
-  transform: translate(-50%, -50%);
-  width: 82%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15em;
-  font-family: var(--font-mono);
-  font-size: clamp(0.54rem, 0.92vw, 0.7rem);
-  line-height: 1.25;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  text-align: center;
-  color: var(--ink);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
-}
-.orb-line { display: block; white-space: nowrap; }
 
 .hero-name,
 .hero-eyebrow,
@@ -1491,10 +1524,6 @@ button { font: inherit; color: inherit; }
     color: #ffffff;
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
   }
-  :root:where(:not([data-theme="light"])) .orb-gloss {
-    background: radial-gradient(circle at 36% 28%,
-      rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 22%, transparent 55%);
-  }
 }
 :root[data-theme="dark"] .orb { mix-blend-mode: screen; }
 :root[data-theme="dark"] .orb--ink {
@@ -1505,10 +1534,6 @@ button { font: inherit; color: inherit; }
   color: #ffffff;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
 }
-:root[data-theme="dark"] .orb-gloss {
-  background: radial-gradient(circle at 36% 28%,
-    rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 22%, transparent 55%);
-}
 
 /* The orbit needs room the small layout does not have. The badge still flies,
    because it lands on the name itself rather than on the diagram. */
@@ -1517,5 +1542,5 @@ button { font: inherit; color: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .orbit, .orb-face, .hero-figure { animation: none; }
+  .orbit, .orb-label, .hero-figure { animation: none; }
 }

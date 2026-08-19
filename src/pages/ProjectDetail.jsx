@@ -11,7 +11,9 @@ const ProjectVisuals = lazy(() => import('../components/ProjectVisuals.jsx'))
 // Pulls in a topojson world atlas, so it loads only on the page that uses it.
 const MigrationExplorer = lazy(() => import('../components/MigrationExplorer.jsx'))
 
-const HEROES = { migration: MigrationExplorer }
+const MarketingVisuals = lazy(() => import('../components/MarketingVisuals.jsx'))
+
+const HEROES = { migration: MigrationExplorer, marketing: MarketingVisuals }
 
 function Takeaways({ items }) {
   if (!items?.length) return null
@@ -139,7 +141,7 @@ export default function ProjectDetail() {
         {isVisual ? (
           <>
             {HeroVisual && (
-              <Suspense fallback={<div className="viz-loading">Loading the map…</div>}>
+              <Suspense fallback={<div className="viz-loading">Loading…</div>}>
                 <HeroVisual />
               </Suspense>
             )}

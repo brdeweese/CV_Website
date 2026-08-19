@@ -14,7 +14,7 @@ import {
   IMMIGRATION_RATIO,
 } from './projects/immigration.js'
 import { BTC_METRICS, BTC_MODELS } from './projects/bitcoin.js'
-import { CLIENT_MIX, CONVERSION, MARKET_VS_UK } from './projects/marketing.js'
+import { CLIENT_MIX, MARKET_VS_UK } from './projects/marketing.js'
 
 const FILES = `${import.meta.env.BASE_URL}files/`
 
@@ -519,6 +519,8 @@ export const projects = [
    */
   {
     slug: 'marketing-performance-dashboard',
+    // The funnel and the market comparison from the original dashboard lead.
+    hero: 'marketing',
     title: 'Marketing Performance Dashboard',
     subtitle: 'Where the money goes, and where it comes back from',
     discipline: 'data',
@@ -557,19 +559,6 @@ export const projects = [
         unit: '%',
         data: MARKET_VS_UK,
         note: 'More expensive to acquire and slower to convert, but worth more per booking.',
-      },
-      {
-        kind: 'groupedBar',
-        title: 'Conversion through the funnel',
-        source: 'Percentage converting at each stage',
-        xKey: 'stage',
-        unit: '%',
-        series: [
-          { key: 'new', label: 'New clients' },
-          { key: 'repeat', label: 'Repeat clients' },
-        ],
-        data: CONVERSION,
-        note: 'A returning client is nearly four times as likely to book.',
       },
     ],
     body: [

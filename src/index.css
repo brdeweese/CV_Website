@@ -2052,3 +2052,105 @@ button { font: inherit; color: inherit; }
   color: var(--ink-2);
 }
 .detail-intro p:last-child { color: var(--ink); }
+
+/* --- Marketing funnel and market comparison ------------------------------- */
+
+/* Ordinal ramp for the three funnel stages: one hue, light to dark, because
+   the stages are ordered rather than categorical. Stays above the contrast
+   floor at both ends in each theme. */
+:root {
+  --funnel-1: #86b6ef;
+  --funnel-2: #3987e5;
+  --funnel-3: #184f95;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    --funnel-1: #9ec5f4;
+    --funnel-2: #5598e7;
+    --funnel-3: #256abf;
+  }
+}
+:root[data-theme="dark"] {
+  --funnel-1: #9ec5f4;
+  --funnel-2: #5598e7;
+  --funnel-3: #256abf;
+}
+
+.mktviz { margin-bottom: clamp(2rem, 4vw, 3rem); }
+
+.mktviz-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: clamp(1rem, 3vw, 2rem);
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--rule);
+  border-bottom: 0;
+  background: var(--surface);
+}
+
+.mktviz-group { display: grid; gap: 0.5rem; }
+
+.mktviz-head {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.mktviz-row { display: flex; gap: 0.3rem; }
+
+.mktviz-btn {
+  padding: 0.45rem 0.9rem;
+  border-radius: 100px;
+  border: 1px solid var(--rule-strong);
+  background: var(--page);
+  color: var(--ink-2);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+}
+.mktviz-btn:hover { border-color: var(--ink); color: var(--ink); }
+.mktviz-btn.is-on { background: var(--ink); color: var(--page); border-color: var(--ink); }
+
+.mktviz-actions { margin-left: auto; display: flex; gap: 0.4rem; align-items: center; }
+
+.mktviz-reset,
+.mktviz-replay {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 100px;
+  border: 1px solid var(--rule-strong);
+  background: none;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.18s ease, color 0.18s ease;
+}
+.mktviz-reset:hover,
+.mktviz-replay:hover { border-color: var(--ink); color: var(--ink); }
+
+.mktviz-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+@media (max-width: 900px) {
+  .mktviz-pair { grid-template-columns: 1fr; }
+}
+
+.mktviz-card { border: 0; margin: 0; min-width: 0; }
+
+.mktviz-plot {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+.mktviz-plot svg { width: 100%; height: auto; display: block; }

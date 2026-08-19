@@ -55,8 +55,10 @@
   --gloss-2: rgba(255, 255, 255, 0.34);
   --gloss-3: rgba(255, 255, 255, 0.05);
   /* Halo behind the sphere labels. A token because the theme rules and the
-     mobile rules both want a say, and whichever came last was winning. */
-  --orb-label-shadow: 0 1px 0 rgba(255, 255, 255, 0.9), 0 0 3px rgba(255, 255, 255, 0.55);
+     mobile rules both want a say, and whichever came last was winning.
+     No vertical offset on purpose: an offset halo smears onto the line below
+     it, which is why the two wrapped labels read lighter than the rest. */
+  --orb-label-shadow: 0 0 2px rgba(255, 255, 255, 0.95), 0 0 5px rgba(255, 255, 255, 0.6);
 
   --font-display: "Iowan Old Style", "Palatino Linotype", Palatino,
     "Book Antiqua", Georgia, serif;
@@ -97,7 +99,7 @@
     --gloss-1: rgba(255, 255, 255, 0.5);
     --gloss-2: rgba(255, 255, 255, 0.2);
     --gloss-3: rgba(255, 255, 255, 0.04);
-    --orb-label-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+    --orb-label-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.6);
   }
 }
 
@@ -128,7 +130,7 @@
     --gloss-1: rgba(255, 255, 255, 0.5);
     --gloss-2: rgba(255, 255, 255, 0.2);
     --gloss-3: rgba(255, 255, 255, 0.04);
-    --orb-label-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+    --orb-label-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.6);
 }
 
 /* Discipline helper: set --accent once, use it everywhere below. */
@@ -1498,7 +1500,7 @@ button { font: inherit; color: inherit; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.18em;
+  gap: 0.38em;
   font-family: var(--font-mono);
   font-size: clamp(0.5rem, 0.86vw, 0.66rem);
   line-height: 1.25;
@@ -2185,3 +2187,64 @@ button { font: inherit; color: inherit; }
   margin-top: 0.5rem;
 }
 .mktviz-plot svg { width: 100%; height: auto; display: block; }
+
+/* --- Migration map on a phone --------------------------------------------- */
+
+/* The map reads left to right, but at phone width the canvas was taller than
+   it was wide. Worse, the USA outline is sized from the canvas HEIGHT, so a
+   tall canvas made the country wider: at 375px it filled over half the frame
+   and left barely 90px of gap for the arcs to cross. Shortening the canvas
+   shrinks the outline and hands that space back to the journey. */
+@media (max-width: 620px) {
+  .mmap-stage { min-height: 0; }
+  .mmap-canvas { height: 280px; }
+
+  /* Pinned to the canvas rather than the card, which now runs taller than the
+     canvas because the readouts sit beneath it. */
+  .mmap-country { bottom: auto; top: 250px; }
+
+  /* The counts and the legend overlapped each other over the map. Below phone
+     width they drop out of the overlay and sit under it, which also leaves the
+     animation itself unobstructed. */
+  .mmap-counts,
+  .mmap-legend {
+    position: static;
+    backdrop-filter: none;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .mmap-counts {
+    margin: 0.9rem 1rem 0;
+    gap: 0.75rem;
+  }
+  .mmap-count {
+    background: none;
+    border: 0;
+    border-left: 3px solid var(--fem);
+    border-radius: 0;
+    padding: 0 0 0 0.6rem;
+  }
+  .mmap-count--m { border-left-color: var(--male); }
+
+  .mmap-legend {
+    margin: 0.85rem 1rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.9rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 0.75rem;
+  }
+  .mmap-legend-title { margin: 0; }
+  .mmap-legend-row { margin: 0; }
+  .mmap-legend-note { margin: 0; padding: 0; border: 0; }
+
+  /* The year readout and controls share the top strip with less room. */
+  .mmap-year-num { font-size: 2.3rem; }
+  .mmap-year-q { font-size: 0.62rem; }
+  .mmap-era { font-size: 0.55rem; padding: 0.25rem 0.55rem; }
+  .mmap-btn { width: 30px; height: 30px; }
+}

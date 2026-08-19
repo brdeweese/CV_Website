@@ -8,6 +8,9 @@
  */
 
 /** PDFs are served from the repo, so nothing depends on the old Wix site. */
+import { IMMIGRATION_AGE_GAP, IMMIGRATION_QUARTERLY } from './projects/immigration.js'
+import { CLIENT_MIX, CONVERSION, MARKET_VS_UK } from './projects/marketing.js'
+
 const FILES = `${import.meta.env.BASE_URL}files/`
 
 export const profile = {
@@ -488,28 +491,67 @@ export const projects = [
     ],
   },
   /**
-   * !! CONFIDENTIALITY CHECK BEFORE PUBLISHING !!
-   * This is the Audley work in ~/GitHub/marketing-task. The client is NOT named
-   * here and NO figures are quoted, deliberately: that dataset contains gross
-   * booking value, media spend, AOV, and CAC broken down by market. Publishing
-   * any of it on a public site is your call to make, not mine to assume.
+   * The client is NOT named and no absolute figure appears: no revenue, no
+   * media spend, no order value, no acquisition cost. Every number shown is a
+   * share, a rate, or a percentage difference, so the analysis is visible
+   * without publishing anyone's commercial data. See data/projects/marketing.js.
    */
   {
-    slug: 'enquiry-performance-analysis',
-    title: 'Enquiry Performance Analysis',
+    slug: 'marketing-performance-dashboard',
+    title: 'Marketing Performance Dashboard',
     subtitle:
-      'Where a luxury travel operator should invest its marketing budget, and where the obvious answer is wrong',
+      'A year of enquiry data, and why the market that looks most expensive is the one worth investing in',
     discipline: 'data',
     year: '2025',
-    kind: 'Commercial analytics',
+    kind: 'Interactive dashboard',
     summary:
-      'A full-year analysis of a tour operator’s enquiry funnel, from first enquiry through quote to booking, delivered as a self-contained interactive dashboard.',
+      'A full year of enquiry data for a luxury travel operator, followed from first enquiry through quote to booking, built to answer where marketing budget actually earns its return. Delivered as a self-contained interactive dashboard.',
     body: [
-      'The commercial question was simple to state and easy to get wrong: which markets and channels deserve more budget? A surface reading of acquisition cost points one way. Segmenting the funnel properly points another.',
-      'The analysis follows every enquiry through to booking, split by market, by new versus repeat client, by device, and by channel. Separating new from repeat clients matters more than any other cut here, because blending them hides both the true cost of winning a client and the true value of keeping one. A market that looks expensive on blended numbers can be a young, high-value market worth investing in rather than cutting.',
-      'The paid media finding is the one I would defend hardest. A straight correlation between paid enquiries and total bookings looks convincing, but once seasonality is accounted for the relationship largely disappears: both series simply rise and fall together across the year. Treating that correlation as a delayed lift from paid activity would have justified spend the data does not support.',
-      'A logistic regression fitted on a training split and scored on held-out data ranks what genuinely predicts a booking, with coefficients reported as odds ratios against a baseline so the output reads as “how much does this change the odds” rather than as an opaque score.',
-      'The deliverable is a dashboard with seven views, written as plain HTML, CSS, and JavaScript with a small custom SVG chart library and no external dependencies, so it opens from a file with no install and no server.',
+      'The commercial question was easy to state and easy to get wrong: which markets and channels deserve more budget? Read acquisition cost on its own and the answer points one way. Segment the funnel properly and it points somewhere else entirely.',
+      'Separating new from repeat clients matters more than any other cut in this dataset, because blending them hides both the true cost of winning a client and the true value of keeping one. Repeat clients account for just over a third of enquiries but more than three quarters of revenue. They convert from enquiry to booking at 24.6 percent against 6.6 percent for new clients, and return roughly eighteen times as much per unit of media spend.',
+      'That gap is why the headline acquisition cost is misleading rather than informative. Winning a new client is supposed to look expensive next to retaining one, so a market full of new clients will always read badly on a blended number. The US market is exactly that case: acquisition cost runs 84 percent above the UK, but order value runs 31 percent higher and the customer base is younger and earlier in its lifecycle. Reading the cost alone would argue for cutting it. Reading it alongside value and stage argues for investing in it.',
+      'The paid media finding is the one I would defend hardest. A straight correlation between paid enquiries and total bookings looks convincing, and it does not survive contact with seasonality. Once the calendar cycle is accounted for the relationship largely disappears: both series simply rise and fall together across the year. Treating that correlation as a delayed lift from paid activity would have justified spend the data does not support.',
+      'A logistic regression fitted on a training split and scored on held-out data ranks what genuinely predicts a booking, with coefficients reported as odds ratios against a baseline so the output reads as how much something changes the odds rather than as an opaque score.',
+      'The dashboard itself has seven views and is written as plain HTML, CSS, and JavaScript with a small custom SVG chart library and no external dependencies, so it opens from a file with no install and no server.',
+    ],
+    visuals: [
+      {
+        kind: 'groupedBar',
+        title: 'Where the value actually sits',
+        source: 'Share of the year total held by each client type, in percent',
+        xKey: 'stage',
+        unit: '%',
+        series: [
+          { key: 'new', label: 'New clients' },
+          { key: 'repeat', label: 'Repeat clients' },
+        ],
+        data: CLIENT_MIX,
+        note: 'Repeat clients are a minority of enquiries and a large majority of revenue. Reading acquisition cost on a blended basis averages two very different groups into a number that describes neither.',
+      },
+      {
+        kind: 'groupedBar',
+        title: 'Conversion through the funnel',
+        source: 'Percentage converting at each stage',
+        xKey: 'stage',
+        unit: '%',
+        series: [
+          { key: 'new', label: 'New clients' },
+          { key: 'repeat', label: 'Repeat clients' },
+        ],
+        data: CONVERSION,
+        note: 'A repeat client is nearly four times as likely to convert an enquiry into a booking, and the gap widens at every stage rather than appearing only at the end.',
+      },
+      {
+        kind: 'diverging',
+        title: 'US market against the UK',
+        source: 'Percentage difference, UK as the baseline',
+        xKey: 'metric',
+        valueKey: 'pct',
+        valueLabel: 'Difference vs UK',
+        unit: '%',
+        data: MARKET_VS_UK,
+        note: 'The case for the US in one chart. Acquisition costs more and converts less, which is what a younger customer base looks like, but each booking is worth substantially more. Cutting on cost alone would trade away the higher value.',
+      },
     ],
     methods: [
       'Python',
@@ -522,6 +564,59 @@ export const projects = [
       'Cohort segmentation',
       'JavaScript',
       'SVG',
+    ],
+    links: [],
+  },
+  {
+    slug: 'usa-to-uk-migration',
+    title: 'US to UK Migration Dashboard',
+    subtitle: 'Thirteen years of American arrivals, and a gender gap that reverses with age',
+    discipline: 'economics',
+    year: '2026',
+    kind: 'Interactive dashboard',
+    summary:
+      'An interactive dashboard covering every US national who registered for a UK National Insurance number between 2013 and 2026. Women outnumber men in all 53 quarters without exception, and above 45 the gap inverts.',
+    body: [
+      'The dataset is unusually complete: 156,924 US nationals registering for a UK National Insurance number across 53 consecutive quarters, from Q1 2013 to Q1 2026, broken down by age band and sex. Because registration is a requirement for working, it is a better proxy for people actually moving to work than visa or survey figures.',
+      'The headline is a gender gap that does not waver. Across the whole period 61.5 percent of registrations were women, a ratio of 1.6 to 1. What makes that convincing rather than incidental is its consistency: women outnumber men in all 53 of 53 quarters. Not most quarters, not just the recent ones, every single one, through Brexit, a pandemic, and three changes of government. The gap peaked in Q2 2020 at 108 percent, when women registered at more than double the male rate.',
+      'The more interesting finding is that the gap is not a property of American migrants generally. It belongs almost entirely to the under-40s, and above 45 it reverses. Women aged 18 to 24 outnumber men by 163 percent and 25 to 29 year olds by 101 percent, but from 45 the sign flips and keeps going: 11 percent more men at 50 to 54, and 27 percent more at 60 and over.',
+      'That reversal is what a single blended figure would have destroyed. Reported as 61.5 percent of American migrants being women, the story sounds like one population with a consistent skew. Split by age it is clearly two different kinds of migration happening at once, one dominated by young women and another, much smaller, by older men, and they are unlikely to share an explanation.',
+      'The dashboard is built in React with filtering by age band, so the trend, the gap, and the age breakdown all recompute against whichever bands are selected. That matters here, because the gender gap you see depends entirely on which ages you include, which is the point the analysis is making.',
+    ],
+    visuals: [
+      {
+        kind: 'line',
+        title: 'Registrations by quarter',
+        source: 'US nationals registering for a UK National Insurance number. UK Home Office / DWP Stat-Xplore',
+        xKey: 'q',
+        xInterval: 3,
+        xFormat: 'year',
+        series: [
+          { key: 'female', label: 'Female' },
+          { key: 'male', label: 'Male' },
+        ],
+        data: IMMIGRATION_QUARTERLY,
+        note: 'The female line sits above the male line in every one of the 53 quarters. The sawtooth is the academic and hiring calendar, with Q3 and Q4 consistently strongest.',
+      },
+      {
+        kind: 'diverging',
+        title: 'The gap reverses with age',
+        source: 'How many percent more women than men registered, by age band, across the whole period',
+        xKey: 'band',
+        valueKey: 'pct',
+        valueLabel: 'More women than men',
+        unit: '%',
+        data: IMMIGRATION_AGE_GAP,
+        note: 'Blue is a female majority, red a male one. The overall 61.5 percent female figure is produced almost entirely by the under-35s. From 45 upward the pattern inverts, which a single headline number hides completely.',
+      },
+    ],
+    methods: [
+      'React',
+      'Data visualisation',
+      'Dashboard design',
+      'Cohort analysis',
+      'Time series',
+      'Public data',
     ],
     links: [],
   },

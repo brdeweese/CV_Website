@@ -7,6 +7,7 @@ import NotFound from './NotFound.jsx'
 // Recharts is ~400 kB. Loading it lazily keeps it out of the main bundle so it
 // is only fetched on a project page that actually has chart data.
 const ProjectChart = lazy(() => import('../components/ProjectChart.jsx'))
+const ProjectVisuals = lazy(() => import('../components/ProjectVisuals.jsx'))
 
 export default function ProjectDetail() {
   const { slug } = useParams()
@@ -48,6 +49,12 @@ export default function ProjectDetail() {
             {project.body.map((p, i) => (
               <p key={i}>{p}</p>
             ))}
+            {project.visuals?.length > 0 && (
+              <Suspense fallback={<div className="viz-loading">Loading charts…</div>}>
+                <ProjectVisuals visuals={project.visuals} />
+              </Suspense>
+            )}
+
             {project.chart?.data?.length > 0 && (
               <Suspense fallback={null}>
                 <ProjectChart chart={project.chart} />

@@ -1555,10 +1555,38 @@ button { font: inherit; color: inherit; }
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
 }
 
-/* The orbit needs room the small layout does not have. The badge still flies,
-   because it lands on the name itself rather than on the diagram. */
+/* On a small screen there is no room beside the name, so the orbit drops
+   into the flow underneath the buttons instead of being hidden.
+
+   It sits first in the markup because the desktop layout floats it to the
+   right, so the column is ordered rather than the DOM reshuffled: the figure
+   is pushed last and everything else keeps its natural sequence. */
 @media (max-width: 860px) {
-  .hero-figure { display: none; }
+  .hero-inner {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-figure {
+    order: 99;
+    position: static;
+    width: min(360px, 88vw);
+    margin: clamp(2.25rem, 9vw, 3.25rem) auto 0;
+    /* The desktop drift is built around translateY(-48%), which is how the
+       figure is centred when absolutely positioned. In normal flow that would
+       yank it upward, so the motion is rebuilt around zero. */
+    animation: orbit-drift-flow 12s ease-in-out infinite;
+    transform: none;
+  }
+
+  /* The label size is tied to viewport width for the desktop layout, which
+     leaves it too small once the figure is the full width of a phone. */
+  .orb-label { font-size: 0.58rem; }
+}
+
+@keyframes orbit-drift-flow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
 }
 
 @media (prefers-reduced-motion: reduce) {

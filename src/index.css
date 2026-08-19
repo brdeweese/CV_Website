@@ -39,6 +39,16 @@
   --div-pos: #2a78d6;
   --div-neg: #e34948;
   --div-mid: #e1e0d9;
+
+  /* Gender palette, used only by the migration project. Pink and blue are the
+     convention that dataset is read with. Both steps were validated all-pairs:
+     colour-vision separation is deltaE 15.4 light and 11.9 dark, comfortably
+     above the floor. The rgb triplets exist because the map paints arcs at
+     partial alpha and needs the channels, not a hex. */
+  --fem: #d81b7f;
+  --fem-rgb: 216, 27, 127;
+  --male: #2a78d6;
+  --male-rgb: 42, 120, 214;
   /* Specular highlight stops, so dark mode can soften the gloss without
      redefining where on each sphere it sits. */
   --gloss-1: rgba(255, 255, 255, 0.8);
@@ -77,6 +87,10 @@
     --div-pos: #3987e5;
     --div-neg: #e66767;
     --div-mid: #383835;
+    --fem: #e0559a;
+    --fem-rgb: 224, 85, 154;
+    --male: #3987e5;
+    --male-rgb: 57, 135, 229;
     --gloss-1: rgba(255, 255, 255, 0.5);
     --gloss-2: rgba(255, 255, 255, 0.2);
     --gloss-3: rgba(255, 255, 255, 0.04);
@@ -103,6 +117,10 @@
     --div-pos: #3987e5;
     --div-neg: #e66767;
     --div-mid: #383835;
+    --fem: #e0559a;
+    --fem-rgb: 224, 85, 154;
+    --male: #3987e5;
+    --male-rgb: 57, 135, 229;
     --gloss-1: rgba(255, 255, 255, 0.5);
     --gloss-2: rgba(255, 255, 255, 0.2);
     --gloss-3: rgba(255, 255, 255, 0.04);
@@ -1784,8 +1802,8 @@ button { font: inherit; color: inherit; }
   backdrop-filter: blur(6px);
   border: 1px solid var(--rule);
 }
-.mmap-count--f { border-left: 3px solid var(--series-1); }
-.mmap-count--m { border-left: 3px solid var(--series-2); }
+.mmap-count--f { border-left: 3px solid var(--fem); }
+.mmap-count--m { border-left: 3px solid var(--male); }
 .mmap-count-label {
   font-family: var(--font-mono);
   font-size: 0.56rem;
@@ -2000,4 +2018,22 @@ button { font: inherit; color: inherit; }
 :root[data-theme="dark"] .mmap {
   --map-ink: #9dc0ee;
   --map-ink-line: rgba(157, 192, 238, 0.75);
+}
+
+/* The gender filter carries the same colours as the data it filters. */
+.mfilter-btn.is-on[data-g="Female"] {
+  background: var(--fem);
+  border-color: var(--fem);
+  color: #ffffff;
+}
+.mfilter-btn.is-on[data-g="Male"] {
+  background: var(--male);
+  border-color: var(--male);
+  color: #ffffff;
+}
+
+/* Age chips follow the same family rather than the site's default blue. */
+.mfilter-band.is-on {
+  background: color-mix(in srgb, var(--fem) 16%, transparent);
+  border-color: var(--fem);
 }

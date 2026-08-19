@@ -17,6 +17,8 @@ const ARC_ALPHA           = 0.18;
 // dark surface, so it is read from CSS instead and refreshed on theme change.
 let INK_SOLID = '#1e3a8a';
 let INK_LINE  = 'rgba(30,58,138,0.80)';
+let FEM_RGB   = '216,27,127';
+let MALE_RGB  = '42,120,214';
 
 const START_YEAR   = 2013;
 const NUM_QUARTERS = RAW.length;
@@ -169,12 +171,12 @@ function drawScene(canvas, dims, lines) {
     if (i < fL.length) {
       const l = fL[i];
       const alpha = l.status === 'fading' ? (l.opacity * ARC_ALPHA).toFixed(2) : ARC_ALPHA.toFixed(2);
-      drawArc(ctx, arcGeom(l.seed, W, H), l.drawP, 0.95 * dpr, `rgba(42,120,214,${alpha})`);
+      drawArc(ctx, arcGeom(l.seed, W, H), l.drawP, 0.95 * dpr, `rgba(${FEM_RGB},${alpha})`);
     }
     if (i < mL.length) {
       const l = mL[i];
       const alpha = l.status === 'fading' ? (l.opacity * ARC_ALPHA).toFixed(2) : ARC_ALPHA.toFixed(2);
-      drawArc(ctx, arcGeom(l.seed, W, H), l.drawP, 0.95 * dpr, `rgba(235,104,52,${alpha})`);
+      drawArc(ctx, arcGeom(l.seed, W, H), l.drawP, 0.95 * dpr, `rgba(${MALE_RGB},${alpha})`);
     }
   }
 
@@ -207,8 +209,12 @@ export default function MigrationMap({ gender, activeBands, setCurrentQuarterIdx
       const cs = getComputedStyle(el);
       const solid = cs.getPropertyValue('--map-ink').trim();
       const line = cs.getPropertyValue('--map-ink-line').trim();
+      const fem = cs.getPropertyValue('--fem-rgb').trim();
+      const male = cs.getPropertyValue('--male-rgb').trim();
       if (solid) INK_SOLID = solid;
       if (line) INK_LINE = line;
+      if (fem) FEM_RGB = fem.replace(/\s+/g, '');
+      if (male) MALE_RGB = male.replace(/\s+/g, '');
     };
     read();
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -526,7 +532,7 @@ export default function MigrationMap({ gender, activeBands, setCurrentQuarterIdx
           <div className="mmap-tut"
             style={{ top:'48%', left:'30%', transform:'translate(-50%,-40px)', opacity:ui.tutMaleA, transition:'opacity 0.15s' }}>
             <div className="mmap-tut-inner">
-              <div className="mmap-swatch" style={{ height:2, background:'#eb6834' }}/>
+              <div className="mmap-swatch" style={{ height:2, background:'var(--male)' }}/>
               <span className="mmap-tut-text">= 10 male immigrants</span>
             </div>
           </div>
@@ -535,7 +541,7 @@ export default function MigrationMap({ gender, activeBands, setCurrentQuarterIdx
           <div className="mmap-tut"
             style={{ top:'52%', left:'38%', transform:'translate(-50%,-20px)', opacity:ui.tutFemA, transition:'opacity 0.15s' }}>
             <div className="mmap-tut-inner">
-              <div className="mmap-swatch" style={{ height:2, background:'#2a78d6' }}/>
+              <div className="mmap-swatch" style={{ height:2, background:'var(--fem)' }}/>
               <span className="mmap-tut-text">= 10 female immigrants</span>
             </div>
           </div>
@@ -566,8 +572,8 @@ export default function MigrationMap({ gender, activeBands, setCurrentQuarterIdx
         {/* Legend */}
         <div className="mmap-legend">
           <div className="mmap-legend-title">USA → UK</div>
-          {showF && <div className="mmap-legend-row"><div className="mmap-swatch" style={{ background:'rgba(42,120,214,0.85)', height:2 }}/><span className="mmap-legend-name">Female</span></div>}
-          {showM && <div className="mmap-legend-row"><div className="mmap-swatch" style={{ background:'rgba(235,104,52,0.85)', height:2 }}/><span className="mmap-legend-name">Male</span></div>}
+          {showF && <div className="mmap-legend-row"><div className="mmap-swatch" style={{ background:'var(--fem)', height:2 }}/><span className="mmap-legend-name">Female</span></div>}
+          {showM && <div className="mmap-legend-row"><div className="mmap-swatch" style={{ background:'var(--male)', height:2 }}/><span className="mmap-legend-name">Male</span></div>}
           <div className="mmap-legend-note">1 arc ≈ 10 people</div>
         </div>
       </div>

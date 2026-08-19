@@ -49,6 +49,7 @@ export default function MigrationExplorer() {
               <button
                 key={g}
                 className={`mfilter-btn${gender === g ? ' is-on' : ''}`}
+                data-g={g}
                 onClick={() => setGender(g)}
                 aria-pressed={gender === g}
               >

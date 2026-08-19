@@ -239,6 +239,8 @@ function Chart({ spec, width, height, t }) {
     zeroBased = true,
     refLine,
     yFormat,
+    posColor = 'var(--div-pos)',
+    negColor = 'var(--div-neg)',
   } = spec
 
   const keys = kind === 'diverging' ? [valueKey] : series.map((s) => s.key)
@@ -329,7 +331,7 @@ function Chart({ spec, width, height, t }) {
             type="monotone"
             dataKey={s.key}
             name={s.label}
-            stroke={SERIES[i % SERIES.length]}
+            stroke={s.color ?? SERIES[i % SERIES.length]}
             strokeWidth={2}
             dot={false}
             activeDot={{ r: 5, strokeWidth: 2, stroke: 'var(--surface)' }}
@@ -372,7 +374,7 @@ function Chart({ spec, width, height, t }) {
           isAnimationActive={false}
         >
           {data.map((d) => (
-            <Cell key={d[xKey]} fill={d[valueKey] >= 0 ? 'var(--div-pos)' : 'var(--div-neg)'} />
+            <Cell key={d[xKey]} fill={d[valueKey] >= 0 ? posColor : negColor} />
           ))}
         </Bar>
       </BarChart>
@@ -410,7 +412,7 @@ function Chart({ spec, width, height, t }) {
           key={s.key}
           dataKey={s.key}
           name={s.label}
-          fill={SERIES[i % SERIES.length]}
+          fill={s.color ?? SERIES[i % SERIES.length]}
           radius={[4, 4, 0, 0]}
           maxBarSize={54}
           isAnimationActive={false}

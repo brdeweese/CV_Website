@@ -512,10 +512,11 @@ export const projects = [
     ],
   },
   /**
-   * The client is NOT named and no absolute figure appears: no revenue, no
-   * media spend, no order value, no acquisition cost. Every number shown is a
-   * share, a rate, or a percentage difference, so the analysis is visible
-   * without publishing anyone's commercial data. See data/projects/marketing.js.
+   * The client is NOT named anywhere on this page. Order value and acquisition
+   * cost ARE shown in pounds on the market comparison, because an index with
+   * the UK pinned at 100 read as a price rather than a reference and made the
+   * chart meaningless. Revenue and media spend totals are still withheld;
+   * everything else on the page stays a share or a rate.
    */
   {
     slug: 'marketing-performance-dashboard',
@@ -563,7 +564,7 @@ export const projects = [
       },
     ],
     body: [
-      'A full year of enquiry data, followed from first enquiry through quote to booking, delivered as a self-contained dashboard of seven views. The client is not named here and no absolute figures are shown.',
+      'A full year of enquiry data, followed from first enquiry through quote to booking, delivered as a self-contained dashboard of seven views. The client is not named.',
     ],
     methods: [
       'Python',

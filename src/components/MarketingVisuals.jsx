@@ -10,10 +10,10 @@ import { FUNNEL_SEGMENTS, MARKET_SEGMENTS } from '../data/projects/marketingSegm
  * rewriting every <animate> by hand for no gain; the markup is generated here,
  * never from user input.
  *
- * Figures stay relative, as everywhere else on this project: the funnel reads
- * per 100 enquiries, and value and cost are indexed with the UK at 100. Both
- * visuals already scale against their own maximum, so the shapes are identical
- * either way and no commercial number is published.
+ * The funnel reads per 100 enquiries, which is its natural basis. The market
+ * comparison shows real order value and acquisition cost: indexing the UK to
+ * 100 made the baseline look like a price rather than a reference, so it was
+ * dropped.
  */
 
 const MARKETS = ['All', 'UK', 'US']
@@ -57,6 +57,10 @@ function useThemeInk(ref) {
 }
 
 const rnd = (a, b) => a + Math.random() * (b - a)
+
+/* Same shape as the original dashboard's formatter. */
+const money = (x) =>
+  Math.abs(x) >= 1000 ? '£' + Math.round(x).toLocaleString() : '£' + Math.round(x)
 
 /* ---------- funnel ---------- */
 
@@ -207,10 +211,10 @@ function marketSvg(seg, market, ink) {
     g += poundStream(cx, fb + 6, fb + 6 + drop, dn, ink.cost, 1.9)
     g += flag(cx - fw / 2, ft, fw, fh)
     g += `<text x="${cx}" y="26" text-anchor="middle" font-size="18" fill="${ink.text}" font-family="Georgia, serif">${label}</text>`
-    g += `<text x="${cx}" y="${ft - rise - 14}" text-anchor="middle" font-size="19" font-weight="700" fill="${ink.gain}" font-family="Georgia, serif">${aov}</text>`
-    g += `<text x="${cx}" y="52" text-anchor="middle" font-size="11" fill="${ink.muted}" font-family="ui-monospace, monospace">VALUE PER BOOKING &#8593;</text>`
-    g += `<text x="${cx}" y="${fb + drop + 24}" text-anchor="middle" font-size="19" font-weight="700" fill="${ink.cost}" font-family="Georgia, serif">${cac}</text>`
-    g += `<text x="${cx}" y="${H - 8}" text-anchor="middle" font-size="11" fill="${ink.muted}" font-family="ui-monospace, monospace">COST TO ACQUIRE &#8595;</text>`
+    g += `<text x="${cx}" y="${ft - rise - 14}" text-anchor="middle" font-size="19" font-weight="700" fill="${ink.gain}" font-family="Georgia, serif">${money(aov)}</text>`
+    g += `<text x="${cx}" y="52" text-anchor="middle" font-size="11" fill="${ink.muted}" font-family="ui-monospace, monospace">AOV &#8593;</text>`
+    g += `<text x="${cx}" y="${fb + drop + 24}" text-anchor="middle" font-size="19" font-weight="700" fill="${ink.cost}" font-family="Georgia, serif">${money(cac)}</text>`
+    g += `<text x="${cx}" y="${H - 8}" text-anchor="middle" font-size="11" fill="${ink.muted}" font-family="ui-monospace, monospace">CAC &#8595;</text>`
     return g + `</g>`
   }
 
@@ -324,7 +328,8 @@ export default function MarketingVisuals() {
           <figcaption className="viz-head">
             <span className="viz-title">Value against cost, UK and US</span>
             <span className="viz-source">
-              Indexed, UK = 100 · {client === 'All' ? 'all clients' : `${client.toLowerCase()} clients`}
+              Value per booking against cost to win one ·{' '}
+              {client === 'All' ? 'all clients' : `${client.toLowerCase()} clients`}
             </span>
           </figcaption>
           <div
@@ -333,8 +338,9 @@ export default function MarketingVisuals() {
             dangerouslySetInnerHTML={{ __html: ink ? marketSvg(marketSeg, market, ink) : '' }}
           />
           <p className="viz-note">
-            Pounds rise with what a booking is worth and fall with what it costs to win.
-            The US earns more per booking and costs more to acquire.
+            Pounds rise with AOV, the value of a booking, and fall with CAC, the cost of
+            winning one. The US earns more per booking and costs more to acquire, which is
+            the case for investing in it rather than cutting it.
           </p>
         </figure>
       </div>

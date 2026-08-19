@@ -1,10 +1,13 @@
 /**
  * Segment figures behind the funnel and the market comparison.
  *
- * DELIBERATELY RELATIVE, like the rest of this project. The funnel is stated
- * per 100 enquiries, and order value and acquisition cost are indexed with the
- * UK at 100. That is exactly what both visuals encode anyway, since each scales
- * against its own maximum, so nothing is lost by not printing the absolutes.
+ * The funnel is stated per 100 enquiries, which is the natural basis: of every
+ * 100 enquiries, this many reach a quote and this many become a booking.
+ *
+ * Order value and acquisition cost are the real figures in GBP. An index with
+ * the UK pinned at 100 was tried and abandoned: it reads as though the UK books
+ * are worth 100 pounds, which is worse than showing nothing. These are real
+ * commercial numbers for a real operator, shown unattributed.
  *
  * Keys are market|client: All, UK or US, then All, New or Repeat.
  */
@@ -60,32 +63,32 @@ export const FUNNEL_SEGMENTS = {
 export const MARKET_SEGMENTS = {
   "All": {
     "aov": {
-      "UK": 100,
-      "US": 131
+      "UK": 15997,
+      "US": 20939
     },
     "cac": {
-      "UK": 100,
-      "US": 184
+      "UK": 894,
+      "US": 1647
     }
   },
   "New": {
     "aov": {
-      "UK": 100,
-      "US": 125
+      "UK": 12266,
+      "US": 15330
     },
     "cac": {
-      "UK": 100,
-      "US": 178
+      "UK": 1057,
+      "US": 1881
     }
   },
   "Repeat": {
     "aov": {
-      "UK": 100,
-      "US": 126
+      "UK": 17961,
+      "US": 22703
     },
     "cac": {
-      "UK": 100,
-      "US": 208
+      "UK": 478,
+      "US": 993
     }
   }
 }

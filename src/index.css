@@ -414,7 +414,9 @@ button { font: inherit; color: inherit; }
 .hero-tagline b {
   font-weight: 400;
   color: var(--ink);
-  box-shadow: inset 0 -0.32em 0 color-mix(in srgb, var(--accent) 22%, transparent);
+  /* Pinned to the tourism green rather than inheriting the section accent,
+     which was the orange. Uses the token so it still restyles per theme. */
+  box-shadow: inset 0 -0.32em 0 color-mix(in srgb, var(--tourism) 26%, transparent);
 }
 
 .hero-actions {

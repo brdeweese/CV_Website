@@ -90,9 +90,9 @@ export default function Home() {
           </span>
 
           <p className="hero-tagline">
-            I lead a teaching programme across five campuses and build the data behind
-            it, working where <b>economics</b>, <b>data science</b>, and <b>tourism</b>{' '}
-            meet.
+            I am a lecturer and module leader, combining industry experience with
+            academic research in <b>economics</b>, <b>data science</b>, and{' '}
+            <b>tourism</b>.
           </p>
 
           <div className="hero-actions">

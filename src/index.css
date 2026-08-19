@@ -54,6 +54,9 @@
   --gloss-1: rgba(255, 255, 255, 0.8);
   --gloss-2: rgba(255, 255, 255, 0.34);
   --gloss-3: rgba(255, 255, 255, 0.05);
+  /* Halo behind the sphere labels. A token because the theme rules and the
+     mobile rules both want a say, and whichever came last was winning. */
+  --orb-label-shadow: 0 1px 0 rgba(255, 255, 255, 0.9), 0 0 3px rgba(255, 255, 255, 0.55);
 
   --font-display: "Iowan Old Style", "Palatino Linotype", Palatino,
     "Book Antiqua", Georgia, serif;
@@ -94,6 +97,7 @@
     --gloss-1: rgba(255, 255, 255, 0.5);
     --gloss-2: rgba(255, 255, 255, 0.2);
     --gloss-3: rgba(255, 255, 255, 0.04);
+    --orb-label-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
   }
 }
 
@@ -124,6 +128,7 @@
     --gloss-1: rgba(255, 255, 255, 0.5);
     --gloss-2: rgba(255, 255, 255, 0.2);
     --gloss-3: rgba(255, 255, 255, 0.04);
+    --orb-label-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
 }
 
 /* Discipline helper: set --accent once, use it everywhere below. */
@@ -1501,9 +1506,7 @@ button { font: inherit; color: inherit; }
   text-transform: uppercase;
   text-align: center;
   color: var(--ink);
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.8),
-    0 0 6px rgba(255, 255, 255, 0.6);
+  text-shadow: var(--orb-label-shadow);
   animation: orbit-spin-reverse 46s linear infinite;
 }
 .orb-line { display: block; white-space: nowrap; }
@@ -1540,20 +1543,14 @@ button { font: inherit; color: inherit; }
     background: radial-gradient(circle at 50% 50%,
       rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.24) 100%);
   }
-  :root:where(:not([data-theme="light"])) .orb-label {
-    color: #ffffff;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-  }
+  :root:where(:not([data-theme="light"])) .orb-label { color: #ffffff; }
 }
 :root[data-theme="dark"] .orb { mix-blend-mode: screen; }
 :root[data-theme="dark"] .orb--ink {
   background: radial-gradient(circle at 50% 50%,
     rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.24) 100%);
 }
-:root[data-theme="dark"] .orb-label {
-  color: #ffffff;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-}
+:root[data-theme="dark"] .orb-label { color: #ffffff; }
 
 /* On a small screen there is no room beside the name, so the orbit drops
    into the flow underneath the buttons instead of being hidden.
@@ -1580,8 +1577,14 @@ button { font: inherit; color: inherit; }
   }
 
   /* The label size is tied to viewport width for the desktop layout, which
-     leaves it too small once the figure is the full width of a phone. */
-  .orb-label { font-size: 0.58rem; }
+     leaves it too small once the figure is the full width of a phone. At that
+     size the regular weight reads as faded against the spheres, so it goes
+     bold with tighter tracking. */
+  .orb-label {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
 }
 
 @keyframes orbit-drift-flow {

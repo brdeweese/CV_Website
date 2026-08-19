@@ -69,16 +69,19 @@ export default function Home() {
           </div>
 
           <h1 className="hero-name">
-            {/* The badge bounces a -> e, then rests above "eese". Those three
-                letters are wrapped so their positions can be measured. */}
+            {/* Split so the badge can target individual letters: it strikes
+                the a, then the SECOND e of DeWeese, and comes to rest above
+                the third e and the s. */}
             Brin<span ref={fromRef}>a</span>
             <br />
-            D<span ref={viaRef}>e</span>W
+            DeW
+            <span ref={viaRef}>e</span>
             <span ref={toRef} className="msc-rest">
-              eese
+              es
               {/* Zero-height, baseline-aligned: its top IS the baseline. */}
               <span className="baseline-probe" ref={baselineRef} aria-hidden="true" />
             </span>
+            e
             <span className="sr-only">, MSc</span>
           </h1>
 

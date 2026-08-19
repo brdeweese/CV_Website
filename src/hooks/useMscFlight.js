@@ -115,7 +115,10 @@ export function useMscFlight() {
       // transform first made the badge appear already arrived, then snap back
       // to the start when the animation began, which read as a glitch rather
       // than a bounce.
-      const entryY = a.y - 120
+      // Enter from above the top of the window rather than just above the
+      // letter, so it genuinely falls into frame. originY is where the badge
+      // sits parked on the a, so this puts its centre past the top edge.
+      const entryY = -(originY + bh + 48)
       badge.style.transform = `translate(${a.x}px, ${entryY}px)`
       badge.classList.add('is-ready')
 
@@ -133,49 +136,49 @@ export function useMscFlight() {
         [
           // dropping in
           {
-            transform: `translate(${a.x}px, ${entryY}px) scale(0.88, 1.18) rotate(-10deg)`,
+            transform: `translate(${a.x}px, ${entryY}px) scale(0.82, 1.3) rotate(-6deg)`,
             offset: 0,
             easing: FALL,
           },
           // first strike, on the a
           {
             transform: `translate(${a.x}px, ${a.y}px) scale(1.34, 0.68) rotate(0deg)`,
-            offset: 0.14,
+            offset: 0.28,
             easing: RISE,
           },
           {
             transform: `translate(${(a.x + b.x) / 2}px, ${apex1}px) scale(0.9, 1.16) rotate(14deg)`,
-            offset: 0.3,
+            offset: 0.44,
             easing: FALL,
           },
           // second strike, on the e
           {
             transform: `translate(${b.x}px, ${b.y}px) scale(1.34, 0.68) rotate(0deg)`,
-            offset: 0.48,
+            offset: 0.61,
             easing: RISE,
           },
           {
             transform: `translate(${(b.x + c.x) / 2}px, ${apex2}px) scale(0.92, 1.14) rotate(-12deg)`,
-            offset: 0.66,
+            offset: 0.76,
             easing: FALL,
           },
           // touchdown at the resting place
           {
             transform: `translate(${c.x}px, ${c.y}px) scale(1.26, 0.76) rotate(0deg)`,
-            offset: 0.82,
+            offset: 0.89,
             easing: RISE,
           },
           // one small hop to settle
           {
             transform: `translate(${c.x}px, ${c.y - 16}px) scale(0.96, 1.07) rotate(3deg)`,
-            offset: 0.91,
+            offset: 0.95,
             easing: FALL,
           },
           { transform: rest + ' scale(1, 1) rotate(0deg)', offset: 1 },
         ],
         {
-          duration: 2200,
-          delay: 700,
+          duration: 2600,
+          delay: 500,
           fill: 'both',
         },
       )

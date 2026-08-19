@@ -13,6 +13,7 @@ import {
   IMMIGRATION_QUARTERLY,
   IMMIGRATION_RATIO,
 } from './projects/immigration.js'
+import { BTC_METRICS, BTC_MODELS } from './projects/bitcoin.js'
 import { CLIENT_MIX, CONVERSION, MARKET_VS_UK } from './projects/marketing.js'
 
 const FILES = `${import.meta.env.BASE_URL}files/`
@@ -369,17 +370,33 @@ export const projects = [
   {
     slug: 'new-gold-rush-bitcoin',
     title: 'The New Gold Rush',
-    subtitle:
-      'Modelling Bitcoin volatility with economic indicators and free sentiment analysis',
+    subtitle: 'The models that fit the past best were the worst at predicting it',
     discipline: 'economics',
     year: '2024',
     kind: 'MSc dissertation',
+    layout: 'visual',
     summary:
-      'My MSc dissertation, asking whether Bitcoin can be forecast using only freely available data. It compares ARIMA, ARDL, random forests, and linear regression, and finds that the models which fit history best are the ones that fail hardest at forecasting.',
+      'My MSc dissertation, comparing ARIMA, ARDL, random forests, and linear regression on Bitcoin using only freely available data. The best-fitting model turned out to be the worst forecaster.',
+    takeaways: [
+      'Random Forest fitted the history almost perfectly and then forecast worst of every model tested. That gap is what overfitting looks like when you actually measure it.',
+      'ARIMA and a scaled ARDL model were the only dependable forecasters, at roughly a quarter of Random Forest\u2019s error on unseen data.',
+      'Which of those two wins depends on the metric you pick. ARIMA leads on average error, scaled ARDL on squared error, and the difference between them is small.',
+      'Everything here runs on free data: public economic indicators and free sentiment scores, no paid feeds.',
+    ],
+    visuals: [
+      {
+        kind: 'race',
+        title: 'Forecast error on 30 days the models had never seen',
+        source: 'Lower is better. Switch metric to re-rank',
+        metrics: BTC_METRICS,
+        data: BTC_MODELS,
+        unitNote: 'MAE and RMSE in USD, MSE in USD squared',
+        note: 'Random Forest and ARDL are three to four times worse than the leaders. Watch the top two swap when you move between MAE and the squared-error metrics: the ranking is not as settled as a single table makes it look.',
+      },
+    ],
     body: [
-      'Supervised by Dr V L Raju Chinthalapati in the Computing Department at Goldsmiths, University of London, this dissertation set out to build and compare predictive models for Bitcoin prices using data anyone can access for free, combining economic indicators with sentiment analysis.',
-      'The comparison covers ARIMA, ARDL, random forests, and linear regression, and evaluates each one twice: in-sample against the history it was trained on, and out-of-sample against data it had never seen. That second evaluation is the whole point. Random forests and linear regression perform well within the historical data and then overfit badly, struggling to predict forward. ARIMA and a scaled ARDL model are less impressive in-sample and considerably more reliable out-of-sample.',
-      'The conclusion is a methodological one rather than a trading one. In a market as volatile as Bitcoin, a model reported only on in-sample fit will look far better than it is, and hybrid approaches are the more promising direction. It is a result that argues against its own most flattering numbers, which is the part I would defend.',
+      'Supervised by Dr V L Raju Chinthalapati at Goldsmiths, University of London. Each model was fitted on the historical series, then asked to predict 30 days beyond it, so in-sample fit and out-of-sample accuracy could be judged separately.',
+      'The conclusion is methodological rather than financial. In a market this volatile, a model reported on in-sample fit alone will look far better than it is, and hybrid approaches are the more promising direction.',
     ],
     methods: [
       'Python',

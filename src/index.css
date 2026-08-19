@@ -1202,3 +1202,110 @@ button { font: inherit; color: inherit; }
 @media (min-width: 900px) {
   .detail .viz-plot { height: 380px; }
 }
+
+/* --- Model race chart ----------------------------------------------------- */
+
+.race-switch {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+  border: 1px solid var(--rule-strong);
+  border-radius: 100px;
+  padding: 2px;
+}
+
+.race-tab {
+  background: none;
+  border: 0;
+  border-radius: 100px;
+  padding: 0.3rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.race-tab:hover { color: var(--ink); }
+.race-tab.is-on { background: var(--ink); color: var(--page); }
+
+.race-plot { position: relative; }
+
+.race-row {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 46px;
+  display: grid;
+  grid-template-columns: minmax(96px, 148px) minmax(0, 1fr) 68px;
+  align-items: center;
+  gap: 0.85rem;
+  /* The two properties that make this chart work: length and rank animate
+     together, so a model visibly overtakes another when the metric changes. */
+  transition: transform 0.62s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.race-name {
+  font-size: 0.88rem;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.race-track {
+  display: block;
+  height: 22px;
+  background: var(--surface-2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.race-bar {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.62s cubic-bezier(0.22, 0.61, 0.36, 1), background 0.3s ease;
+}
+.race-bar--best { background: var(--div-pos); }
+.race-bar--worst { background: var(--div-neg); }
+.race-bar--mid { background: var(--rule-strong); }
+
+.race-value {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-align: right;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.race-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.race-key {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  display: inline-block;
+}
+.race-key--best { background: var(--div-pos); }
+.race-key--worst { background: var(--div-neg); margin-left: 0.75rem; }
+.race-unit { margin-left: auto; text-transform: none; letter-spacing: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .race-row, .race-bar { transition: none; }
+}
+
+@media (max-width: 560px) {
+  .race-row { grid-template-columns: minmax(84px, 110px) minmax(0, 1fr) 56px; gap: 0.5rem; }
+  .race-name { font-size: 0.8rem; }
+}

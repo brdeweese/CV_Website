@@ -12,6 +12,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import ModelRace from './ModelRace.jsx'
 
 /**
  * Interactive charts for a project detail page.
@@ -420,6 +421,21 @@ function Chart({ spec, width, height, t }) {
 }
 
 function Viz({ spec }) {
+  // The race chart is plain HTML, not Recharts: it animates rank and length at
+  // the same time, which CSS does for free and SVG attributes cannot.
+  if (spec.kind === 'race') {
+    return (
+      <ModelRace
+        data={spec.data}
+        metrics={spec.metrics}
+        title={spec.title}
+        source={spec.source}
+        note={spec.note}
+        unitNote={spec.unitNote}
+      />
+    )
+  }
+
   const [run, setRun] = useState(0)
   const [ref, { width, height }] = useElementSize()
   const t = useTween(run)

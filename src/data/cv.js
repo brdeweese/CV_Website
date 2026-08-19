@@ -522,7 +522,8 @@ export const projects = [
     // The funnel and the market comparison from the original dashboard lead.
     hero: 'marketing',
     title: 'Marketing Performance Dashboard',
-    subtitle: 'Where the money goes, and where it comes back from',
+    subtitle:
+      'Tracking the marketing funnel and weighing average order value against acquisition cost, by customer type and market',
     discipline: 'data',
     year: '2025',
     kind: 'Interactive dashboard',

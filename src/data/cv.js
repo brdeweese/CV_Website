@@ -594,7 +594,12 @@ export const projects = [
     // Renders the animated map from the original dashboard as the lead visual.
     hero: 'migration',
     title: 'US to UK Migration Dashboard',
-    subtitle: 'Who actually moves, and it is not who you would guess',
+    subtitle: '',
+    intro: [
+      'The figures are National Insurance number registrations by US nationals, published by the UK Home Office and the DWP through Stat-Xplore.',
+      'A National Insurance number is required in order to work in the UK, so these registrations are used here as a proxy for Americans moving over to work. The proxy has a limit worth stating: it will not count anyone who moves without taking a job.',
+      'Across 53 quarters, from the start of 2013 to the start of 2026, 156,924 Americans registered. Among 18 to 34 year olds, close to twice as many were women. That ratio crossed two to one in 2021 and has stayed above it every year since.',
+    ],
     discipline: 'economics',
     year: '2026',
     kind: 'Interactive dashboard',
@@ -648,7 +653,7 @@ export const projects = [
       },
     ],
     body: [
-      'Source: UK Home Office and DWP Stat-Xplore. 156,924 registrations across 53 consecutive quarters, Q1 2013 to Q1 2026, by age band and sex. Registration is a requirement for working, so it tracks people arriving to work rather than to visit.',
+      'The dashboard is built in React. The map, the trend and the age breakdown all recompute against whichever age bands and gender are selected, so the size of the gap depends on which ages you include.',
     ],
     methods: [
       'React',

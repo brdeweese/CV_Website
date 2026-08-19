@@ -2037,3 +2037,18 @@ button { font: inherit; color: inherit; }
   background: color-mix(in srgb, var(--fem) 16%, transparent);
   border-color: var(--fem);
 }
+
+/* Sourcing and headline finding, above the visuals. Plain prose rather than
+   the display face, because it is there to be read quickly, not admired. */
+.detail-intro {
+  max-width: 68ch;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  display: grid;
+  gap: 0.9rem;
+}
+.detail-intro p {
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.detail-intro p:last-child { color: var(--ink); }

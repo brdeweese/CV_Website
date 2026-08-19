@@ -126,6 +126,15 @@ export default function ProjectDetail() {
 
         <div className="detail-rule" />
 
+        {/* Sets up the data and the finding before the visuals arrive. */}
+        {project.intro?.length > 0 && (
+          <div className="detail-intro">
+            {project.intro.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+        )}
+
         {isVisual ? (
           <>
             {HeroVisual && (

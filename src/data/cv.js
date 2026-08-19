@@ -597,7 +597,7 @@ export const projects = [
     subtitle: '',
     intro: [
       'The figures are National Insurance number registrations by US nationals, published by the UK Home Office and the DWP through Stat-Xplore.',
-      'A National Insurance number is required in order to work in the UK, so these registrations are used here as a proxy for Americans moving over to work. The proxy has a limit worth stating: it will not count anyone who moves without taking a job.',
+      'A National Insurance number is required in order to work in the UK, so these registrations are used here as a proxy for Americans moving over to work.',
       'Across 53 quarters, from the start of 2013 to the start of 2026, 156,924 Americans registered. Among 18 to 34 year olds, close to twice as many were women. That ratio crossed two to one in 2021 and has stayed above it every year since.',
     ],
     discipline: 'economics',

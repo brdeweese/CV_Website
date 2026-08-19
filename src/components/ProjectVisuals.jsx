@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import {
   Bar,
   BarChart,
@@ -16,17 +16,24 @@ import {
 /**
  * Interactive charts for a project detail page.
  *
- * Each chart animates on mount and can be replayed. Hovering gives a tooltip on
- * every form. Two series use the validated categorical slots; the diverging
- * form uses the documented blue/red poles with a neutral zero line, because it
- * encodes direction (more women / more men) rather than identity.
+ * Each chart grows in on mount, can be replayed, and shows a tooltip on hover.
+ * Two series use the validated categorical slots; the diverging form uses the
+ * documented blue/red poles with a neutral zero line, because it encodes
+ * direction (more women / more men) rather than identity.
  *
- * SIZING: this deliberately does NOT use Recharts' ResponsiveContainer. That
- * component renders nothing until its ResizeObserver fires, which leaves a
- * blank box in any environment where observer callbacks are deferred.
- * Measuring the wrapper synchronously in useLayoutEffect gives the chart real
- * dimensions on the very first paint, with a ResizeObserver attached afterwards
- * only to handle later resizing.
+ * SIZING: this deliberately does NOT use Recharts' ResponsiveContainer, which
+ * renders nothing until its ResizeObserver fires. The wrapper is measured
+ * synchronously in useLayoutEffect so the chart has real dimensions on the
+ * first paint.
+ *
+ * ANIMATION: Recharts' own animation is switched off and the growth is driven
+ * here instead. Recharts' bar animation renders empty <g> wrappers in a
+ * production build (verified in Chrome: ten wrappers, zero rectangles, long
+ * after the animation window), which silently produces a blank chart. Tweening
+ * the values ourselves avoids that path entirely and, critically, a timeout
+ * failsafe forces the final frame if requestAnimationFrame never runs — so the
+ * worst case is a chart that appears without animating, never a blank one.
+ * Reduced-motion users jump straight to the final state.
  *
  * A project renders charts only if it declares a `visuals` array, so nothing is
  * ever invented for a project that has no data.
@@ -34,7 +41,9 @@ import {
 
 const SERIES = ['var(--series-1)', 'var(--series-2)']
 const axisTick = { fontFamily: 'var(--font-mono)', fontSize: 11, fill: 'var(--ink-3)' }
-const DURATION = 1100
+const DURATION = 950
+
+/* --- hooks ---------------------------------------------------------------- */
 
 function useElementSize() {
   const ref = useRef(null)
@@ -52,7 +61,6 @@ function useElementSize() {
     )
   }, [])
 
-  // Synchronous first measurement, before paint.
   useLayoutEffect(() => {
     measure()
   }, [measure])
@@ -70,21 +78,78 @@ function useElementSize() {
   return [ref, size]
 }
 
-function VizTooltip({ active, payload, label, unit = '' }) {
+const easeOut = (p) => 1 - Math.pow(1 - p, 3)
+
+/** Progress from 0 to 1, with a failsafe so the end state always arrives. */
+function useTween(runKey, duration = DURATION) {
+  const [t, setT] = useState(0)
+
+  useEffect(() => {
+    const reduced =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (reduced || typeof requestAnimationFrame === 'undefined') {
+      setT(1)
+      return undefined
+    }
+
+    setT(0)
+    let raf = 0
+    let startTs
+    const step = (ts) => {
+      if (startTs === undefined) startTs = ts
+      const p = Math.min(1, (ts - startTs) / duration)
+      setT(p >= 1 ? 1 : easeOut(p))
+      if (p < 1) raf = requestAnimationFrame(step)
+    }
+    raf = requestAnimationFrame(step)
+
+    // If rAF never advances, land on the final frame anyway.
+    const failsafe = window.setTimeout(() => setT(1), duration + 500)
+
+    return () => {
+      cancelAnimationFrame(raf)
+      window.clearTimeout(failsafe)
+    }
+  }, [runKey, duration])
+
+  return t
+}
+
+/* --- helpers -------------------------------------------------------------- */
+
+function niceBound(v) {
+  if (v === 0) return 0
+  const sign = v < 0 ? -1 : 1
+  const abs = Math.abs(v)
+  const mag = Math.pow(10, Math.floor(Math.log10(abs)))
+  return sign * Math.ceil(abs / (mag / 2)) * (mag / 2)
+}
+
+/* --- pieces --------------------------------------------------------------- */
+
+function VizTooltip({ active, payload, label, unit = '', full, xKey }) {
   if (!active || !payload?.length) return null
+  // Read from the un-animated data so the tooltip never shows a partial value
+  // mid-animation.
+  const row = full?.find((d) => d[xKey] === label)
   return (
     <div className="viz-tip">
       <div className="viz-tip-label">{label}</div>
-      {payload.map((p) => (
-        <div className="viz-tip-row" key={p.dataKey ?? p.name}>
-          <span className="viz-tip-dot" style={{ background: p.color || p.fill }} />
-          <span>{p.name}</span>
-          <strong>
-            {typeof p.value === 'number' ? p.value.toLocaleString() : p.value}
-            {unit}
-          </strong>
-        </div>
-      ))}
+      {payload.map((p) => {
+        const value = row?.[p.dataKey] ?? p.value
+        return (
+          <div className="viz-tip-row" key={p.dataKey ?? p.name}>
+            <span className="viz-tip-dot" style={{ background: p.color || p.fill }} />
+            <span>{p.name}</span>
+            <strong>
+              {typeof value === 'number' ? Math.round(value * 10) / 10 : value}
+              {unit}
+            </strong>
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -103,9 +168,40 @@ function ReplayIcon() {
   )
 }
 
-function Chart({ spec, width, height }) {
+function Chart({ spec, width, height, t }) {
   const { kind, data, xKey, series = [], unit = '', valueKey, xInterval, xFormat } = spec
-  const common = { width, height, data }
+
+  const keys = kind === 'diverging' ? [valueKey] : series.map((s) => s.key)
+
+  // Fixed axis bounds from the FINAL data, so the scale does not rescale while
+  // the values grow in.
+  const { min, max } = useMemo(() => {
+    let lo = 0
+    let hi = 0
+    data.forEach((d) => {
+      keys.forEach((k) => {
+        const v = d[k]
+        if (typeof v !== 'number') return
+        if (v < lo) lo = v
+        if (v > hi) hi = v
+      })
+    })
+    return { min: niceBound(lo), max: niceBound(hi) }
+  }, [data, keys.join('|')])
+
+  const animated = useMemo(() => {
+    if (t >= 1) return data
+    return data.map((d) => {
+      const row = { ...d }
+      keys.forEach((k) => {
+        if (typeof row[k] === 'number') row[k] = row[k] * t
+      })
+      return row
+    })
+  }, [data, keys.join('|'), t])
+
+  const common = { width, height, data: animated }
+  const tip = <VizTooltip unit={unit} full={data} xKey={xKey} />
 
   if (kind === 'line') {
     return (
@@ -119,11 +215,15 @@ function Chart({ spec, width, height }) {
           interval={xInterval ?? 'preserveStartEnd'}
           tickFormatter={xFormat === 'year' ? (v) => String(v).split(' ')[1] : undefined}
         />
-        <YAxis tick={axisTick} tickLine={false} axisLine={false} width={52} />
-        <Tooltip
-          content={<VizTooltip unit={unit} />}
-          cursor={{ stroke: 'var(--ink-3)', strokeDasharray: '3 3' }}
+        <YAxis
+          tick={axisTick}
+          tickLine={false}
+          axisLine={false}
+          width={52}
+          domain={[0, max]}
+          allowDataOverflow
         />
+        <Tooltip content={tip} cursor={{ stroke: 'var(--ink-3)', strokeDasharray: '3 3' }} />
         <Legend wrapperStyle={{ fontSize: 12, color: 'var(--ink-2)', paddingTop: 6 }} />
         {series.map((s, i) => (
           <Line
@@ -135,7 +235,7 @@ function Chart({ spec, width, height }) {
             strokeWidth={2}
             dot={false}
             activeDot={{ r: 5, strokeWidth: 2, stroke: 'var(--surface)' }}
-            animationDuration={DURATION}
+            isAnimationActive={false}
           />
         ))}
       </LineChart>
@@ -151,7 +251,9 @@ function Chart({ spec, width, height }) {
           tick={axisTick}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(v) => `${v > 0 ? '+' : ''}${v}${unit}`}
+          domain={[min, max]}
+          allowDataOverflow
+          tickFormatter={(v) => `${v > 0 ? '+' : ''}${Math.round(v)}${unit}`}
         />
         <YAxis
           type="category"
@@ -162,13 +264,12 @@ function Chart({ spec, width, height }) {
           interval={0}
           width={96}
         />
-        <Tooltip content={<VizTooltip unit={unit} />} cursor={{ fill: 'var(--surface-2)' }} />
+        <Tooltip content={tip} cursor={{ fill: 'var(--surface-2)' }} />
         <ReferenceLine x={0} stroke="var(--rule-strong)" strokeWidth={1.5} />
         <Bar
           dataKey={valueKey}
           name={spec.valueLabel ?? 'Difference'}
-          radius={3}
-          animationDuration={DURATION}
+          isAnimationActive={false}
         >
           {data.map((d) => (
             <Cell key={d[xKey]} fill={d[valueKey] >= 0 ? 'var(--div-pos)' : 'var(--div-neg)'} />
@@ -193,9 +294,11 @@ function Chart({ spec, width, height }) {
         tickLine={false}
         axisLine={false}
         width={52}
-        tickFormatter={(v) => `${v}${unit}`}
+        domain={[0, max]}
+        allowDataOverflow
+        tickFormatter={(v) => `${Math.round(v)}${unit}`}
       />
-      <Tooltip content={<VizTooltip unit={unit} />} cursor={{ fill: 'var(--surface-2)' }} />
+      <Tooltip content={tip} cursor={{ fill: 'var(--surface-2)' }} />
       <Legend wrapperStyle={{ fontSize: 12, color: 'var(--ink-2)', paddingTop: 6 }} />
       {series.map((s, i) => (
         <Bar
@@ -205,7 +308,7 @@ function Chart({ spec, width, height }) {
           fill={SERIES[i % SERIES.length]}
           radius={[4, 4, 0, 0]}
           maxBarSize={54}
-          animationDuration={DURATION}
+          isAnimationActive={false}
         />
       ))}
     </BarChart>
@@ -215,6 +318,7 @@ function Chart({ spec, width, height }) {
 function Viz({ spec }) {
   const [run, setRun] = useState(0)
   const [ref, { width, height }] = useElementSize()
+  const t = useTween(run)
 
   return (
     <figure className="viz">
@@ -230,7 +334,7 @@ function Viz({ spec }) {
 
       <div className="viz-plot" ref={ref}>
         {width > 0 && height > 0 && (
-          <Chart key={run} spec={spec} width={width} height={height} />
+          <Chart spec={spec} width={width} height={height} t={t} />
         )}
       </div>
 

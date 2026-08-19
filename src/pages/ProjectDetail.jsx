@@ -102,6 +102,16 @@ export default function ProjectDetail() {
   // A project can name a bespoke lead visual; it renders above the takeaways.
   const HeroVisual = project.hero ? HEROES[project.hero] : null
 
+  // Sourcing and the headline finding. Sits under the lead visual, so the
+  // graph lands first and the explanation follows it.
+  const intro = project.intro?.length > 0 && (
+    <div className="detail-intro">
+      {project.intro.map((p, i) => (
+        <p key={i}>{p}</p>
+      ))}
+    </div>
+  )
+
   const visuals = project.visuals?.length > 0 && (
     <Suspense fallback={<div className="viz-loading">Loading charts…</div>}>
       <ProjectVisuals visuals={project.visuals} />
@@ -126,15 +136,6 @@ export default function ProjectDetail() {
 
         <div className="detail-rule" />
 
-        {/* Sets up the data and the finding before the visuals arrive. */}
-        {project.intro?.length > 0 && (
-          <div className="detail-intro">
-            {project.intro.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-          </div>
-        )}
-
         {isVisual ? (
           <>
             {HeroVisual && (
@@ -142,6 +143,7 @@ export default function ProjectDetail() {
                 <HeroVisual />
               </Suspense>
             )}
+            {intro}
             <Takeaways items={project.takeaways} />
             {visuals}
             {project.body?.length > 0 && (
@@ -156,6 +158,7 @@ export default function ProjectDetail() {
         ) : (
           <div className="detail-grid">
             <div className="detail-body">
+              {intro}
               {project.body.map((p, i) => (
                 <p key={i}>{p}</p>
               ))}

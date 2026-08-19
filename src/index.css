@@ -1310,7 +1310,8 @@ button { font: inherit; color: inherit; }
   .race-name { font-size: 0.8rem; }
 }
 
-/* --- Hero diagram + flying MSc -------------------------------------------- */
+
+/* --- Hero orbit + flying MSc ---------------------------------------------- */
 
 .sr-only {
   position: absolute;
@@ -1324,65 +1325,117 @@ button { font: inherit; color: inherit; }
   border: 0;
 }
 
+/* Zero-height and baseline-aligned, so its top edge is exactly the text
+   baseline. Used to work out where the x-height of "eese" begins. */
+.baseline-probe {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  vertical-align: baseline;
+}
+
 .hero-figure {
   position: absolute;
-  right: clamp(0rem, 2vw, 3rem);
+  right: clamp(-1rem, 1vw, 2rem);
   top: 50%;
-  transform: translateY(-46%);
-  width: clamp(200px, 26vw, 330px);
+  width: clamp(260px, 33vw, 430px);
+  aspect-ratio: 1;
   pointer-events: none;
   z-index: 0;
+  animation: orbit-drift 12s ease-in-out infinite;
 }
 
-.hero-venn { width: 100%; height: auto; overflow: visible; }
-
-/* Rotate about the middle of the viewBox, which is also where all four
-   circles meet and where the badge lands. */
-.hero-venn-spin {
-  transform-origin: 120px 120px;
-  animation: venn-spin 54s linear infinite;
+@keyframes orbit-drift {
+  0%, 100% { transform: translateY(-48%); }
+  50% { transform: translateY(calc(-48% - 14px)); }
 }
 
-.hero-venn-circle {
-  fill: var(--accent);
-  fill-opacity: 0.11;
-  stroke: var(--accent);
-  stroke-opacity: 0.5;
-  stroke-width: 1.25;
-}
-.hero-venn-circle--ink {
-  fill: var(--ink);
-  fill-opacity: 0.06;
-  stroke: var(--ink);
-  stroke-opacity: 0.32;
+/* Tilting the stage is what sells the depth. Kept mild so the labels are not
+   visibly distorted. */
+.orbit-stage {
+  width: 100%;
+  height: 100%;
+  perspective: 900px;
+  perspective-origin: 50% 40%;
 }
 
-@keyframes venn-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.orbit {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(18deg);
+  animation: orbit-spin 46s linear infinite;
 }
 
-/* Gentle drift, on a different cycle to the spin so the motion never looks
-   mechanical. */
-.hero-figure { animation: venn-drift 11s ease-in-out infinite; }
-
-@keyframes venn-drift {
-  0%, 100% { transform: translateY(-46%); }
-  50% { transform: translateY(calc(-46% - 12px)); }
+@keyframes orbit-spin {
+  from { transform: rotateX(18deg) rotateZ(0deg); }
+  to { transform: rotateX(18deg) rotateZ(360deg); }
 }
 
-/* The heading text must sit above the diagram. */
+.orb {
+  position: absolute;
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  /* Off-centre highlight plus a darker rim reads as a lit sphere. */
+  background:
+    radial-gradient(circle at 34% 26%,
+      rgba(255, 255, 255, 0.72) 0%,
+      rgba(255, 255, 255, 0.18) 22%,
+      transparent 46%),
+    radial-gradient(circle at 50% 50%,
+      color-mix(in srgb, var(--accent) 42%, transparent) 0%,
+      color-mix(in srgb, var(--accent) 62%, transparent) 100%);
+  box-shadow:
+    inset -14px -20px 38px rgba(0, 0, 0, 0.16),
+    inset 12px 14px 26px rgba(255, 255, 255, 0.28),
+    0 22px 44px rgba(11, 11, 11, 0.14);
+  mix-blend-mode: multiply;
+}
+
+.orb--tl { left: 4%; top: 4%; }
+.orb--tr { right: 4%; top: 4%; }
+.orb--bl { left: 4%; bottom: 4%; }
+.orb--br { right: 4%; bottom: 4%; }
+
+.orb--ink {
+  background:
+    radial-gradient(circle at 34% 26%,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(255, 255, 255, 0.14) 22%,
+      transparent 46%),
+    radial-gradient(circle at 50% 50%,
+      rgba(11, 11, 11, 0.18) 0%,
+      rgba(11, 11, 11, 0.3) 100%);
+}
+
+/* The label runs the orbit backwards at the same speed, so it rides around
+   with its sphere and never turns upside down. */
+.orb-label {
+  max-width: 74%;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: clamp(0.56rem, 1vw, 0.72rem);
+  line-height: 1.35;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+  animation: orbit-spin-reverse 46s linear infinite;
+}
+
+@keyframes orbit-spin-reverse {
+  from { transform: rotateZ(0deg); }
+  to { transform: rotateZ(-360deg); }
+}
+
 .hero-name,
 .hero-eyebrow,
 .hero-tagline,
 .hero-actions { position: relative; z-index: 1; }
-
-.msc-anchor {
-  display: inline-block;
-  width: 0;
-  height: 1em;
-  vertical-align: baseline;
-}
 
 .hero-msc {
   position: absolute;
@@ -1390,31 +1443,51 @@ button { font: inherit; color: inherit; }
   top: 0;
   z-index: 2;
   font-family: var(--font-mono);
-  font-size: clamp(0.85rem, 1.5vw, 1.15rem);
+  font-size: clamp(0.8rem, 1.4vw, 1.05rem);
   letter-spacing: 0.1em;
-  color: var(--ink-2);
+  color: var(--ink-3);
   opacity: 0;
-  transition: opacity 0.3s ease 0.4s;
+  transition: opacity 0.25s ease 0.5s;
   will-change: transform;
   pointer-events: none;
 }
 .hero-msc.is-ready { opacity: 1; }
 
-/* Below the breakpoint the diagram is hidden, so the badge stays put beside
-   the name and simply reads as part of it. */
-@media (max-width: 780px) {
-  .hero-figure { display: none; }
-  .hero-msc {
-    position: static;
-    opacity: 1;
-    transform: none !important;
-    margin-left: 0.5rem;
-    vertical-align: super;
-    color: var(--ink-3);
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .orb { mix-blend-mode: screen; }
+  :root:where(:not([data-theme="light"])) .orb--ink {
+    background:
+      radial-gradient(circle at 34% 26%,
+        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 255, 255, 0.12) 22%,
+        transparent 46%),
+      radial-gradient(circle at 50% 50%,
+        rgba(255, 255, 255, 0.16) 0%,
+        rgba(255, 255, 255, 0.26) 100%);
   }
+  :root:where(:not([data-theme="light"])) .orb-label {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+  }
+}
+:root[data-theme="dark"] .orb { mix-blend-mode: screen; }
+:root[data-theme="dark"] .orb--ink {
+  background:
+    radial-gradient(circle at 34% 26%,
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(255, 255, 255, 0.12) 22%,
+      transparent 46%),
+    radial-gradient(circle at 50% 50%,
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(255, 255, 255, 0.26) 100%);
+}
+:root[data-theme="dark"] .orb-label { text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75); }
+
+/* The orbit needs room the small layout does not have. The badge still flies,
+   because it now lands on the name itself rather than on the diagram. */
+@media (max-width: 860px) {
+  .hero-figure { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-venn-spin { animation: none; }
-  .hero-figure { animation: none; }
+  .orbit, .orb-label, .hero-figure { animation: none; }
 }

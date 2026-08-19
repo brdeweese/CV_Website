@@ -18,7 +18,7 @@ import { formatPeriod } from '../utils/period.js'
 import CareerTimeline from '../components/CareerTimeline.jsx'
 import DisciplineTag from '../components/DisciplineTag.jsx'
 import DisciplineVenn from '../components/DisciplineVenn.jsx'
-import HeroVenn from '../components/HeroVenn.jsx'
+import HeroOrbit from '../components/HeroOrbit.jsx'
 import { useMscFlight } from '../hooks/useMscFlight.js'
 
 function SectionHead({ id }) {
@@ -41,7 +41,7 @@ function Arrow() {
 
 export default function Home() {
   const { hash } = useLocation()
-  const { hostRef, anchorRef, badgeRef, targetRef } = useMscFlight()
+  const { hostRef, badgeRef, fromRef, viaRef, toRef, baselineRef } = useMscFlight()
   useReveal()
 
   // Support /#section links arriving from a detail page.
@@ -58,8 +58,8 @@ export default function Home() {
       {/* ---------- Hero ---------- */}
       <section className="hero" data-discipline="data">
         <div className="wrap hero-inner" ref={hostRef}>
-          <div className="hero-figure" ref={targetRef}>
-            <HeroVenn />
+          <div className="hero-figure">
+            <HeroOrbit />
           </div>
 
           <div className="hero-eyebrow">
@@ -69,15 +69,19 @@ export default function Home() {
           </div>
 
           <h1 className="hero-name">
-            Brina
+            {/* The badge bounces a -> e, then rests above "eese". Those three
+                letters are wrapped so their positions can be measured. */}
+            Brin<span ref={fromRef}>a</span>
             <br />
-            DeWeese
-            {/* Zero-width marker: where the badge starts its flight from. */}
-            <span className="msc-anchor" ref={anchorRef} aria-hidden="true" />
+            D<span ref={viaRef}>e</span>W
+            <span ref={toRef} className="msc-rest">
+              eese
+              {/* Zero-height, baseline-aligned: its top IS the baseline. */}
+              <span className="baseline-probe" ref={baselineRef} aria-hidden="true" />
+            </span>
             <span className="sr-only">, MSc</span>
           </h1>
 
-          {/* Flies from the name into the centre of the diagram. */}
           <span className="hero-msc" ref={badgeRef} aria-hidden="true">
             MSc
           </span>

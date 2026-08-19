@@ -76,3 +76,24 @@ export const IMMIGRATION_AGE_GAP = [
   {"band":"55-59","pct":-16.3},
   {"band":"60+","pct":-27},
 ]
+
+/**
+ * Women per man aged 18 to 34, by calendar year. The ratio sits near 1.8 for
+ * most of the 2010s and crosses 2.0 in 2021, staying there since.
+ * 2026 is excluded because only one quarter of it exists so far.
+ */
+export const IMMIGRATION_RATIO = [
+  {"year":"2013","ratio":1.78},
+  {"year":"2014","ratio":1.87},
+  {"year":"2015","ratio":1.87},
+  {"year":"2016","ratio":1.81},
+  {"year":"2017","ratio":1.86},
+  {"year":"2018","ratio":1.79},
+  {"year":"2019","ratio":1.96},
+  {"year":"2020","ratio":1.94},
+  {"year":"2021","ratio":2.01},
+  {"year":"2022","ratio":2.19},
+  {"year":"2023","ratio":2.26},
+  {"year":"2024","ratio":2.15},
+  {"year":"2025","ratio":2.22},
+]

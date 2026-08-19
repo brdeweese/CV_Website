@@ -170,6 +170,47 @@ function VizTooltip({ active, payload, label, unit = '', full, xKey }) {
   )
 }
 
+/**
+ * Category labels that wrap instead of disappearing.
+ *
+ * Every category on these charts has to stay labelled, so the axis uses
+ * interval={0}. Left as single-line text that collides on narrow screens, which
+ * is exactly why Recharts drops labels by default. Wrapping on spaces keeps all
+ * of them readable down to phone width.
+ */
+function WrapTick({ x, y, payload, maxChars = 14 }) {
+  const words = String(payload?.value ?? '').split(' ')
+  const lines = []
+  let line = ''
+  words.forEach((w) => {
+    const candidate = line ? `${line} ${w}` : w
+    if (candidate.length <= maxChars) {
+      line = candidate
+    } else {
+      if (line) lines.push(line)
+      line = w
+    }
+  })
+  if (line) lines.push(line)
+
+  return (
+    <text
+      x={x}
+      y={y + 10}
+      textAnchor="middle"
+      fill="var(--ink-3)"
+      fontFamily="var(--font-mono)"
+      fontSize={11}
+    >
+      {lines.map((l, i) => (
+        <tspan key={l} x={x} dy={i === 0 ? 0 : 12}>
+          {l}
+        </tspan>
+      ))}
+    </text>
+  )
+}
+
 function ReplayIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -185,15 +226,30 @@ function ReplayIcon() {
 }
 
 function Chart({ spec, width, height, t }) {
-  const { kind, data, xKey, series = [], unit = '', valueKey, xInterval, xFormat } = spec
+  const {
+    kind,
+    data,
+    xKey,
+    series = [],
+    unit = '',
+    valueKey,
+    xInterval,
+    xFormat,
+    zeroBased = true,
+    refLine,
+    yFormat,
+  } = spec
 
   const keys = kind === 'diverging' ? [valueKey] : series.map((s) => s.key)
 
   // Fixed axis bounds from the FINAL data, so the scale does not rescale while
   // the values grow in.
   const scale = useMemo(() => {
-    let lo = 0
-    let hi = 0
+    // A magnitude scale must start at zero. A ratio hovering around 2.0 would
+    // be a flat line if forced to, so those opt out via zeroBased: false and
+    // carry a labelled reference line instead.
+    let lo = zeroBased ? 0 : Infinity
+    let hi = zeroBased ? 0 : -Infinity
     data.forEach((d) => {
       keys.forEach((k) => {
         const v = d[k]
@@ -202,19 +258,26 @@ function Chart({ spec, width, height, t }) {
         if (v > hi) hi = v
       })
     })
-    return niceScale(lo, hi)
-  }, [data, keys.join('|')])
+    if (!Number.isFinite(lo) || !Number.isFinite(hi)) return { domain: [0, 1], ticks: [0, 1] }
+    // Fewer ticks on a narrow chart. Asking for five on a phone produces labels
+    // that overlap, which is why Recharts was silently dropping some of them.
+    const target = width < 420 ? 3 : width < 700 ? 4 : 5
+    return niceScale(lo, hi, target)
+  }, [data, keys.join('|'), zeroBased, width])
 
+  const floor = zeroBased ? 0 : scale.domain[0]
   const animated = useMemo(() => {
     if (t >= 1) return data
     return data.map((d) => {
       const row = { ...d }
       keys.forEach((k) => {
-        if (typeof row[k] === 'number') row[k] = row[k] * t
+        // Grow from the axis floor so a truncated scale animates upward from
+        // the bottom of the plot rather than flying in from zero.
+        if (typeof row[k] === 'number') row[k] = floor + (row[k] - floor) * t
       })
       return row
     })
-  }, [data, keys.join('|'), t])
+  }, [data, keys.join('|'), t, floor])
 
   const common = { width, height, data: animated }
   const tip = <VizTooltip unit={unit} full={data} xKey={xKey} />
@@ -239,9 +302,26 @@ function Chart({ spec, width, height, t }) {
           domain={scale.domain}
           ticks={scale.ticks}
           allowDataOverflow
+          tickFormatter={yFormat === 'ratio' ? (v) => `${v}x` : undefined}
         />
         <Tooltip content={tip} cursor={{ stroke: 'var(--ink-3)', strokeDasharray: '3 3' }} />
-        <Legend wrapperStyle={{ fontSize: 12, color: 'var(--ink-2)', paddingTop: 6 }} />
+        {series.length > 1 && (
+          <Legend wrapperStyle={{ fontSize: 12, color: 'var(--ink-2)', paddingTop: 6 }} />
+        )}
+        {refLine && (
+          <ReferenceLine
+            y={refLine.y}
+            stroke="var(--ink-3)"
+            strokeDasharray="4 4"
+            label={{
+              value: refLine.label,
+              position: 'insideTopLeft',
+              fill: 'var(--ink-3)',
+              fontSize: 11,
+              fontFamily: 'var(--font-mono)',
+            }}
+          />
+        )}
         {series.map((s, i) => (
           <Line
             key={s.key}
@@ -268,6 +348,7 @@ function Chart({ spec, width, height, t }) {
           tick={axisTick}
           tickLine={false}
           axisLine={false}
+          interval={0}
           domain={scale.domain}
           ticks={scale.ticks}
           allowDataOverflow
@@ -298,13 +379,17 @@ function Chart({ spec, width, height, t }) {
   }
 
   // grouped bars
+  // Roughly 7px per character at this font size, so a category gets as many
+  // characters as its slice of the plot can actually hold.
+  const catChars = Math.max(6, Math.floor(width / Math.max(1, data.length) / 7))
   return (
-    <BarChart {...common} margin={{ top: 8, right: 14, bottom: 0, left: -14 }}>
+    <BarChart {...common} margin={{ top: 8, right: 14, bottom: 14, left: -14 }}>
       <CartesianGrid stroke="var(--rule)" vertical={false} />
       <XAxis
         dataKey={xKey}
-        tick={axisTick}
+        tick={<WrapTick maxChars={catChars} />}
         tickLine={false}
+        interval={0}
         axisLine={{ stroke: 'var(--rule-strong)' }}
       />
       <YAxis

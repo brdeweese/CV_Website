@@ -1149,3 +1149,56 @@ button { font: inherit; color: inherit; }
   color: var(--ink-3);
   padding: 2.5rem 0;
 }
+
+/* --- Chart-led project layout --------------------------------------------- */
+
+.takeaways {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 1.1rem;
+  max-width: 68ch;
+  margin-bottom: clamp(2.25rem, 5vw, 3.25rem);
+}
+
+.takeaway {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.1vw, 1.4rem);
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.takeaway-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--accent, var(--ink-3));
+  transform: translateY(-0.15em);
+}
+
+/* Charts run the full column width here rather than sharing it with an aside. */
+.detail .viz-set { max-width: none; }
+.detail-body--after {
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  max-width: 68ch;
+}
+.detail-body--after p:first-child { color: var(--ink-2); font-size: 1rem; }
+
+.aside-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: flex-start;
+  border-top: 1px solid var(--rule);
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding-top: clamp(1.5rem, 3vw, 2rem);
+}
+.aside-row > div { flex: 1 1 260px; }
+
+@media (min-width: 900px) {
+  .detail .viz-plot { height: 380px; }
+}

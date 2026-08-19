@@ -9,6 +9,72 @@ import NotFound from './NotFound.jsx'
 const ProjectChart = lazy(() => import('../components/ProjectChart.jsx'))
 const ProjectVisuals = lazy(() => import('../components/ProjectVisuals.jsx'))
 
+function Takeaways({ items }) {
+  if (!items?.length) return null
+  return (
+    <ul className="takeaways">
+      {items.map((text, i) => (
+        <li className="takeaway" key={i}>
+          <span className="takeaway-num">{String(i + 1).padStart(2, '0')}</span>
+          <span>{text}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function Aside({ project, className = 'aside-box' }) {
+  const hasMethods = project.methods?.length > 0
+  const hasLinks = project.links?.length > 0
+  if (!hasMethods && !hasLinks) return null
+
+  return (
+    <aside className={className}>
+      {hasMethods && (
+        <div>
+          <h2 className="sub-head" style={{ marginBottom: '0.9rem' }}>
+            Methods &amp; tools
+          </h2>
+          <div className="tags">
+            {project.methods.map((m) => (
+              <span className="tag" key={m}>
+                {m}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {hasLinks && (
+        <div>
+          <h2 className="sub-head" style={{ marginBottom: '0.9rem' }}>
+            Read it
+          </h2>
+          <div className="detail-links">
+            {project.links.map((l) =>
+              l.internal ? (
+                <Link className="detail-link" to={`/${l.href}`} key={l.href}>
+                  {l.label} <span aria-hidden="true">→</span>
+                </Link>
+              ) : (
+                <a
+                  className="detail-link"
+                  href={l.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  key={l.href}
+                >
+                  {l.label} <span aria-hidden="true">↗</span>
+                </a>
+              ),
+            )}
+          </div>
+        </div>
+      )}
+    </aside>
+  )
+}
+
 export default function ProjectDetail() {
   const { slug } = useParams()
   const index = visibleProjects.findIndex((p) => p.slug === slug)
@@ -25,6 +91,16 @@ export default function ProjectDetail() {
 
   const prev = visibleProjects[index - 1]
   const next = visibleProjects[index + 1]
+
+  // 'visual' puts the charts at full width and leads with short takeaways
+  // instead of prose, for projects where the finding is the graph.
+  const isVisual = project.layout === 'visual'
+
+  const visuals = project.visuals?.length > 0 && (
+    <Suspense fallback={<div className="viz-loading">Loading charts…</div>}>
+      <ProjectVisuals visuals={project.visuals} />
+    </Suspense>
+  )
 
   return (
     <main className="detail" id="main">
@@ -44,68 +120,35 @@ export default function ProjectDetail() {
 
         <div className="detail-rule" />
 
-        <div className="detail-grid">
-          <div className="detail-body">
-            {project.body.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-            {project.visuals?.length > 0 && (
-              <Suspense fallback={<div className="viz-loading">Loading charts…</div>}>
-                <ProjectVisuals visuals={project.visuals} />
-              </Suspense>
+        {isVisual ? (
+          <>
+            <Takeaways items={project.takeaways} />
+            {visuals}
+            {project.body?.length > 0 && (
+              <div className="detail-body detail-body--after">
+                {project.body.map((p, i) => (
+                  <p key={i}>{p}</p>
+                ))}
+              </div>
             )}
-
-            {project.chart?.data?.length > 0 && (
-              <Suspense fallback={null}>
-                <ProjectChart chart={project.chart} />
-              </Suspense>
-            )}
+            <Aside project={project} className="aside-row" />
+          </>
+        ) : (
+          <div className="detail-grid">
+            <div className="detail-body">
+              {project.body.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+              {visuals}
+              {project.chart?.data?.length > 0 && (
+                <Suspense fallback={null}>
+                  <ProjectChart chart={project.chart} />
+                </Suspense>
+              )}
+            </div>
+            <Aside project={project} />
           </div>
-
-          <aside className="aside-box">
-            {project.methods?.length > 0 && (
-              <div>
-                <h2 className="sub-head" style={{ marginBottom: '0.9rem' }}>
-                  Methods & tools
-                </h2>
-                <div className="tags">
-                  {project.methods.map((m) => (
-                    <span className="tag" key={m}>
-                      {m}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {project.links?.length > 0 && (
-              <div>
-                <h2 className="sub-head" style={{ marginBottom: '0.9rem' }}>
-                  Read it
-                </h2>
-                <div className="detail-links">
-                  {project.links.map((l) =>
-                    l.internal ? (
-                      <Link className="detail-link" to={`/${l.href}`} key={l.href}>
-                        {l.label} <span aria-hidden="true">→</span>
-                      </Link>
-                    ) : (
-                      <a
-                        className="detail-link"
-                        href={l.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        key={l.href}
-                      >
-                        {l.label} <span aria-hidden="true">↗</span>
-                      </a>
-                    ),
-                  )}
-                </div>
-              </div>
-            )}
-          </aside>
-        </div>
+        )}
 
         <nav className="detail-nav" aria-label="Other projects">
           {prev ? (

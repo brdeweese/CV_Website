@@ -2197,11 +2197,11 @@ button { font: inherit; color: inherit; }
    shrinks the outline and hands that space back to the journey. */
 @media (max-width: 620px) {
   .mmap-stage { min-height: 0; }
-  .mmap-canvas { height: 280px; }
+  .mmap-canvas { height: 230px; }
 
   /* Pinned to the canvas rather than the card, which now runs taller than the
      canvas because the readouts sit beneath it. */
-  .mmap-country { bottom: auto; top: 250px; }
+  .mmap-country { display: none; }
 
   /* The counts and the legend overlapped each other over the map. Below phone
      width they drop out of the overlay and sit under it, which also leaves the
@@ -2217,7 +2217,7 @@ button { font: inherit; color: inherit; }
   }
 
   .mmap-counts {
-    margin: 0.9rem 1rem 0;
+    margin: -3.1rem 1rem 0;
     gap: 0.75rem;
   }
   .mmap-count {
@@ -2244,7 +2244,31 @@ button { font: inherit; color: inherit; }
 
   /* The year readout and controls share the top strip with less room. */
   .mmap-year-num { font-size: 2.3rem; }
-  .mmap-year-q { font-size: 0.62rem; }
+  .mmap-year-q {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-2);
+    letter-spacing: 0.16em;
+  }
   .mmap-era { font-size: 0.55rem; padding: 0.25rem 0.55rem; }
   .mmap-btn { width: 30px; height: 30px; }
+
+  /* Thirteen year ticks across a phone-width track is one label every 25px for
+     type that needs about 28px, so they ran together. The track keeps its era
+     colours and loses the numbers; the readout above already gives the year. */
+  .mmap-tl-year { display: none; }
+
+  /* The same collision, worse: four event callouts of two lines each, sharing
+     the same 334px. The era legend under the track still names the periods. */
+  .mmap-tl-marks { display: none; }
+
+  /* Duplicates the colour-coded counts. Only the arc scale is worth keeping. */
+  .mmap-legend-title,
+  .mmap-legend-row { display: none; }
+
+  .mmap-timeline { padding: 0.85rem 1rem 1rem; }
+  .mmap-tl-head { display: none; }
+  .mmap-tl-track { height: 30px; }
+  .mmap-tl-legend { gap: 0.55rem; font-size: 0.58rem; }
+  .mmap-tl-legend-item { font-size: 0.58rem; }
 }

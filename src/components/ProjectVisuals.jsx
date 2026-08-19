@@ -119,12 +119,28 @@ function useTween(runKey, duration = DURATION) {
 
 /* --- helpers -------------------------------------------------------------- */
 
-function niceBound(v) {
-  if (v === 0) return 0
-  const sign = v < 0 ? -1 : 1
-  const abs = Math.abs(v)
-  const mag = Math.pow(10, Math.floor(Math.log10(abs)))
-  return sign * Math.ceil(abs / (mag / 2)) * (mag / 2)
+/**
+ * A domain and tick list that land on round numbers and always include zero.
+ * Letting Recharts derive ticks from a raw data domain produces labels like
+ * "+28%" and "+143%"; this snaps the step to 1, 2, 2.5, 5 or 10 times a power
+ * of ten so the axis reads +50, +100, +150 instead.
+ */
+function niceScale(lo, hi, targetTicks = 5) {
+  if (!Number.isFinite(lo) || !Number.isFinite(hi) || lo === hi) {
+    return { domain: [0, 1], ticks: [0, 1] }
+  }
+  const rawStep = (hi - lo) / targetTicks
+  const mag = Math.pow(10, Math.floor(Math.log10(rawStep)))
+  const norm = rawStep / mag
+  const step = (norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 2.5 ? 2.5 : norm <= 5 ? 5 : 10) * mag
+
+  const start = Math.floor(lo / step) * step
+  const end = Math.ceil(hi / step) * step
+  const ticks = []
+  for (let v = start; v <= end + step / 1000; v += step) {
+    ticks.push(Math.round(v * 1e6) / 1e6)
+  }
+  return { domain: [start, end], ticks }
 }
 
 /* --- pieces --------------------------------------------------------------- */
@@ -175,7 +191,7 @@ function Chart({ spec, width, height, t }) {
 
   // Fixed axis bounds from the FINAL data, so the scale does not rescale while
   // the values grow in.
-  const { min, max } = useMemo(() => {
+  const scale = useMemo(() => {
     let lo = 0
     let hi = 0
     data.forEach((d) => {
@@ -186,7 +202,7 @@ function Chart({ spec, width, height, t }) {
         if (v > hi) hi = v
       })
     })
-    return { min: niceBound(lo), max: niceBound(hi) }
+    return niceScale(lo, hi)
   }, [data, keys.join('|')])
 
   const animated = useMemo(() => {
@@ -220,7 +236,8 @@ function Chart({ spec, width, height, t }) {
           tickLine={false}
           axisLine={false}
           width={52}
-          domain={[0, max]}
+          domain={scale.domain}
+          ticks={scale.ticks}
           allowDataOverflow
         />
         <Tooltip content={tip} cursor={{ stroke: 'var(--ink-3)', strokeDasharray: '3 3' }} />
@@ -251,7 +268,8 @@ function Chart({ spec, width, height, t }) {
           tick={axisTick}
           tickLine={false}
           axisLine={false}
-          domain={[min, max]}
+          domain={scale.domain}
+          ticks={scale.ticks}
           allowDataOverflow
           tickFormatter={(v) => `${v > 0 ? '+' : ''}${Math.round(v)}${unit}`}
         />
@@ -294,7 +312,8 @@ function Chart({ spec, width, height, t }) {
         tickLine={false}
         axisLine={false}
         width={52}
-        domain={[0, max]}
+        domain={scale.domain}
+        ticks={scale.ticks}
         allowDataOverflow
         tickFormatter={(v) => `${Math.round(v)}${unit}`}
       />

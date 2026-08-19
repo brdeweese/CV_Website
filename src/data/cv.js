@@ -704,7 +704,31 @@ export const projects = [
  * What the site actually renders. Anything flagged `draft: true` is withheld,
  * so a half-written entry can sit in the file without appearing publicly.
  */
-export const visibleProjects = projects.filter((p) => !p.draft)
+/**
+ * Display order, independent of how the entries happen to sit in the array
+ * above. Change the order here rather than shuffling large objects around.
+ * Anything not listed falls to the end.
+ */
+const PROJECT_ORDER = [
+  'usa-to-uk-migration',
+  'marketing-performance-dashboard',
+  'new-gold-rush-bitcoin',
+  'cost-of-living-crime-chicago',
+  'the-eras-analysis',
+  'tourism-resilience',
+  'technology-in-the-classroom',
+  'module-feedback-sentiment-classifier',
+]
+
+export const visibleProjects = projects
+  .filter((p) => !p.draft)
+  .sort((a, b) => {
+    const rank = (slug) => {
+      const i = PROJECT_ORDER.indexOf(slug)
+      return i === -1 ? Number.MAX_SAFE_INTEGER : i
+    }
+    return rank(a.slug) - rank(b.slug)
+  })
 
 /** Lecturing activities, from the teaching examples. */
 export const teaching = [

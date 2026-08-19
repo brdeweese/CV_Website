@@ -1544,3 +1544,73 @@ button { font: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .orbit, .orb-label, .hero-figure { animation: none; }
 }
+
+/* --- Project picker ------------------------------------------------------- */
+
+.projects-intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+.projects-intro .lede { flex: 1 1 32ch; margin: 0; }
+
+.picker {
+  flex: 0 1 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.picker-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.picker-control { position: relative; display: block; }
+
+/* Only the wrapper is styled. The control stays a native select so it keeps
+   platform keyboard behaviour and the system picker on a phone. */
+.picker-select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  padding: 0.8rem 2.6rem 0.8rem 1rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 100px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease;
+  text-overflow: ellipsis;
+}
+.picker-select:hover { border-color: var(--ink); }
+
+.picker-chevron {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-2);
+  pointer-events: none;
+}
+
+/* The native dropdown list is drawn by the OS, so its colours come from the
+   control's own scheme rather than from these tokens. */
+.picker-select option {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+@media (max-width: 720px) {
+  .projects-intro { flex-direction: column; align-items: stretch; }
+  .picker { flex: 1 1 auto; }
+}

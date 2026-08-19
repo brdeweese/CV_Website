@@ -99,13 +99,12 @@ export default function Home() {
             <a className="btn btn-primary" href="#projects">
               View projects <Arrow />
             </a>
-            {profile.cvUrl ? (
-              <a className="btn btn-ghost" href={profile.cvUrl} target="_blank" rel="noreferrer">
+            <a className="btn btn-ghost" href="#contact">
+              Get in touch
+            </a>
+            {profile.cvUrl && (
+              <a className="btn btn-ghost" href={profile.cvUrl} download>
                 Download CV
-              </a>
-            ) : (
-              <a className="btn btn-ghost" href="#contact">
-                Get in touch
               </a>
             )}
           </div>
@@ -315,7 +314,7 @@ export default function Home() {
             </a>
             <div className="hero-actions">
               {profile.cvUrl && (
-                <a className="btn btn-ghost" href={profile.cvUrl} target="_blank" rel="noreferrer">
+                <a className="btn btn-ghost" href={profile.cvUrl} download>
                   Download CV
                 </a>
               )}

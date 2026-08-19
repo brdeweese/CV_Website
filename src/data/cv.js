@@ -28,14 +28,12 @@ export const profile = {
   github: '',
 
   /**
-   * TODO (Brina): your CV PDF is not linked yet, deliberately.
-   * The version on the old Wix site is out of date, and the current
-   * Brina_DeWeese_CV_LSE_2026.docx has your mobile number in the header, which
-   * you probably do not want on a public page. Export a phone-free version to
-   * `public/files/brina-deweese-cv.pdf` and set this to `${FILES}brina-deweese-cv.pdf`.
-   * While this is empty the download buttons are simply not rendered.
+   * The phone-free export. The earlier .docx carried a mobile number in its
+   * header, so it was deliberately never published; this version carries only
+   * the email, the city, and the two profile links. Empty would hide the
+   * download buttons rather than render a dead one.
    */
-  cvUrl: '',
+  cvUrl: `${FILES}brina-deweese-cv-2026.pdf`,
 
   // NOTE: the big hero sentence is NOT here. It lives in src/pages/Home.jsx
   // because individual words inside it are highlighted, which needs markup.

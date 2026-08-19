@@ -1547,72 +1547,99 @@ button { font: inherit; color: inherit; }
   .orbit, .orb-label, .hero-figure { animation: none; }
 }
 
-/* --- Project picker ------------------------------------------------------- */
 
-.projects-intro {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: clamp(1.25rem, 3vw, 2.5rem);
-  margin-bottom: clamp(2rem, 4vw, 3rem);
-}
-.projects-intro .lede { flex: 1 1 32ch; margin: 0; }
+/* --- Projects menu in the nav --------------------------------------------- */
 
-.picker {
-  flex: 0 1 320px;
+/* The nav row is 62px tall but a link is only as tall as its text. Stretching
+   the item to the full height means the dropdown can hang off the bottom of
+   the bar with no gap for the pointer to fall through on the way down. */
+.nav-links { height: 100%; }
+
+.nav-item--menu {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  min-width: 0;
+  align-items: center;
+  height: 100%;
 }
 
-.picker-label {
+.nav-link--menu {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.nav-caret {
+  transition: transform 0.18s ease;
+  opacity: 0.7;
+}
+.nav-item--menu:hover .nav-caret,
+.nav-item--menu:focus-within .nav-caret {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.nav-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 290px;
+  max-width: min(380px, 80vw);
+  display: grid;
+  gap: 1px;
+  padding: 0.45rem;
+  background: var(--page);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  box-shadow: 0 20px 44px var(--shadow);
+  z-index: 120;
+}
+.nav-dropdown[hidden] { display: none; }
+
+.nav-dropdown-head {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.62rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-3);
+  padding: 0.4rem 0.65rem 0.5rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 0.25rem;
 }
 
-.picker-control { position: relative; display: block; }
-
-/* Only the wrapper is styled. The control stays a native select so it keeps
-   platform keyboard behaviour and the system picker on a phone. */
-.picker-select {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 100%;
-  padding: 0.8rem 2.6rem 0.8rem 1rem;
-  border: 1px solid var(--rule-strong);
-  border-radius: 100px;
-  background: var(--surface);
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: border-color 0.18s ease, background 0.18s ease;
-  text-overflow: ellipsis;
-}
-.picker-select:hover { border-color: var(--ink); }
-
-.picker-chevron {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
+.nav-dropdown-item {
+  display: block;
+  padding: 0.55rem 0.65rem;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  text-decoration: none;
   color: var(--ink-2);
-  pointer-events: none;
+  transition: background 0.15s ease, color 0.15s ease;
 }
-
-/* The native dropdown list is drawn by the OS, so its colours come from the
-   control's own scheme rather than from these tokens. */
-.picker-select option {
-  background: var(--surface);
+.nav-dropdown-item:hover,
+.nav-dropdown-item:focus-visible {
+  background: var(--surface-2);
   color: var(--ink);
 }
 
+/* Touch screens have no hover, so the drawer lists the projects outright. */
+.nav-drawer-sub {
+  display: grid;
+  gap: 1px;
+  padding: 0.2rem 0 0.6rem 2.2rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.nav-drawer-sub-link {
+  display: block;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+.nav-drawer-sub-link:active { color: var(--ink); }
+
+/* The wrapper is a div, so the rule that hides .nav-link does not catch it. */
 @media (max-width: 720px) {
-  .projects-intro { flex-direction: column; align-items: stretch; }
-  .picker { flex: 1 1 auto; }
+  .nav-item--menu { display: none; }
 }

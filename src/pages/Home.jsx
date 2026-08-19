@@ -19,7 +19,6 @@ import CareerTimeline from '../components/CareerTimeline.jsx'
 import DisciplineTag from '../components/DisciplineTag.jsx'
 import DisciplineVenn from '../components/DisciplineVenn.jsx'
 import HeroOrbit from '../components/HeroOrbit.jsx'
-import ProjectPicker from '../components/ProjectPicker.jsx'
 import { useMscFlight } from '../hooks/useMscFlight.js'
 
 function SectionHead({ id }) {
@@ -219,13 +218,10 @@ export default function Home() {
         <section className="section" id="projects">
           <div className="wrap">
             <SectionHead id="projects" />
-            <div className="projects-intro">
-              <p className="lede">
-                Applied work across econometrics, analytics, and pedagogy. Each one opens
-                into a fuller write-up.
-              </p>
-              <ProjectPicker />
-            </div>
+            <p className="lede" style={{ marginBottom: 'clamp(2rem, 4vw, 3rem)' }}>
+              Applied work across econometrics, analytics, and pedagogy. Each one opens
+              into a fuller write-up, or pick one from the Projects menu above.
+            </p>
             <div className="proj-grid">
               {visibleProjects.map((p) => (
                 <Link

@@ -34,8 +34,8 @@ export const profile = {
 
   intro: [
     'I am a Lecturer and Module Lead with Master’s degrees in Data Science and Econometrics and in Tourism Management. I lead the delivery of a foundation year capstone module across five campuses, coordinating a teaching team of 12 to 15 lecturers for more than 800 students each cycle.',
-    'My background is econometrics and applied data science, and it shapes how I run a programme. I build the reporting and quality assurance tools that keep delivery consistent at scale, most recently a Power BI dashboard and an automated reporting template now used by module leads on every campus.',
-    'The analysis I am most confident in is the kind that survives being questioned. That usually means segmenting a dataset until a blended average stops hiding the real story, checking whether a convincing correlation still holds once seasonality and confounders are accounted for, or reporting honestly that a model fits the history well and still cannot forecast.',
+    'My background is in economics, econometrics, and applied data science. I am particularly interested in doughnut economics and its practical, quantitative application to managing a tourism destination.',
+    'I enjoy solving puzzles using research, data, and applied theory, and I enjoy a well-constructed dashboard that showcases data in a meaningful and impactful way. A well-made graph can tell a story.',
   ],
 }
 

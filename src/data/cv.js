@@ -591,6 +591,8 @@ export const projects = [
   },
   {
     slug: 'usa-to-uk-migration',
+    // Renders the animated map from the original dashboard as the lead visual.
+    hero: 'migration',
     title: 'US to UK Migration Dashboard',
     subtitle: 'Who actually moves, and it is not who you would guess',
     discipline: 'economics',

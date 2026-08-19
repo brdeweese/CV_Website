@@ -1643,3 +1643,361 @@ button { font: inherit; color: inherit; }
 @media (max-width: 720px) {
   .nav-item--menu { display: none; }
 }
+
+/* --- Migration map, ported from the original dashboard -------------------- */
+
+.mexplore {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 250px;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+@media (max-width: 900px) {
+  .mexplore { grid-template-columns: 1fr; }
+}
+
+.mmap {
+  background: var(--surface);
+  overflow: hidden;
+  min-width: 0;
+}
+
+.mmap-stage { position: relative; min-height: 460px; }
+.mmap-canvas { width: 100%; display: block; height: 460px; }
+
+.mmap-year {
+  position: absolute;
+  top: 0.85rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+}
+.mmap-year-num {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.mmap-year-q {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 0.2rem;
+}
+
+.mmap-eras {
+  position: absolute;
+  top: 0.85rem;
+  right: 1rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+}
+.mmap-era {
+  padding: 0.3rem 0.7rem;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mmap-controls {
+  position: absolute;
+  top: 0.85rem;
+  left: 1rem;
+  z-index: 3;
+  display: flex;
+  gap: 0.4rem;
+}
+.mmap-btn {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--rule-strong);
+  background: var(--page);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: border-color 0.18s ease, color 0.18s ease;
+}
+.mmap-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+.mmap-tut { position: absolute; z-index: 3; pointer-events: none; }
+.mmap-tut-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 100px;
+  background: var(--page);
+  border: 1px solid var(--rule-strong);
+  box-shadow: 0 8px 20px var(--shadow);
+}
+.mmap-tut-text {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.mmap-swatch { width: 26px; border-radius: 2px; }
+
+.mmap-country {
+  position: absolute;
+  bottom: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+  pointer-events: none;
+  user-select: none;
+}
+.mmap-country--usa { left: 1rem; }
+.mmap-country--uk { right: 1rem; }
+
+.mmap-counts {
+  position: absolute;
+  bottom: 2.4rem;
+  left: 1rem;
+  z-index: 3;
+  display: flex;
+  gap: 0.5rem;
+}
+.mmap-count {
+  padding: 0.4rem 0.7rem;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--page) 92%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--rule);
+}
+.mmap-count--f { border-left: 3px solid var(--series-1); }
+.mmap-count--m { border-left: 3px solid var(--series-2); }
+.mmap-count-label {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mmap-count-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.mmap-legend {
+  position: absolute;
+  bottom: 2.4rem;
+  right: 1rem;
+  z-index: 3;
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--page) 92%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--rule);
+  font-size: 0.74rem;
+}
+.mmap-legend-title {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+.mmap-legend-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
+.mmap-legend-name { color: var(--ink-2); }
+.mmap-legend-note {
+  color: var(--ink-3);
+  font-size: 0.62rem;
+  margin-top: 0.4rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--rule);
+}
+
+.mmap-timeline { padding: 1rem 1.15rem 1.15rem; }
+.mmap-tl-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  margin-bottom: 0.35rem;
+}
+.mmap-tl-now { color: var(--ink); }
+
+.mmap-tl-marks { position: relative; user-select: none; pointer-events: none; }
+.mmap-tl-marks--top { height: 22px; }
+.mmap-tl-marks--bottom { height: 24px; margin-top: 0.2rem; }
+.mmap-tl-mark { position: absolute; transform: translateX(-50%); text-align: center; }
+.mmap-tl-mark-line {
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+}
+
+.mmap-tl-track {
+  position: relative;
+  height: 40px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 6px;
+  background: var(--surface-2);
+  cursor: pointer;
+  user-select: none;
+}
+.mmap-tl-era { position: absolute; top: 0; height: 100%; pointer-events: none; }
+.mmap-tl-playhead { position: absolute; top: 0; height: 100%; pointer-events: none; }
+.mmap-tl-needle { width: 2px; height: 100%; background: var(--ink); opacity: 0.8; }
+.mmap-tl-knob {
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 2px solid var(--page);
+  box-shadow: 0 2px 6px var(--shadow);
+}
+.mmap-tl-year { position: absolute; bottom: 4px; transform: translateX(-50%); pointer-events: none; }
+.mmap-tl-year-label { font-family: var(--font-mono); font-size: 0.56rem; color: var(--ink-3); }
+
+.mmap-tl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 0.7rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--rule);
+}
+.mmap-tl-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.mmap-tl-legend-swatch { width: 14px; height: 9px; border-radius: 2px; display: inline-block; }
+
+/* Filters */
+.mfilters {
+  background: var(--surface);
+  padding: 1.15rem;
+  display: grid;
+  gap: 1.35rem;
+  align-content: start;
+}
+
+.mfilter-head {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mfilter-head-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+.mfilter-group > .mfilter-head { display: block; margin-bottom: 0.6rem; }
+
+.mfilter-row { display: flex; gap: 0.3rem; }
+.mfilter-btn {
+  flex: 1;
+  padding: 0.45rem 0.4rem;
+  border-radius: 100px;
+  border: 1px solid var(--rule-strong);
+  background: var(--page);
+  color: var(--ink-2);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+}
+.mfilter-btn:hover { border-color: var(--ink); color: var(--ink); }
+.mfilter-btn.is-on { background: var(--ink); color: var(--page); border-color: var(--ink); }
+
+.mfilter-toggle-all {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  cursor: pointer;
+  text-decoration: underline;
+}
+.mfilter-toggle-all:hover { color: var(--ink); }
+
+.mfilter-bands { display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem; }
+.mfilter-band {
+  padding: 0.4rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--rule-strong);
+  background: var(--page);
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+}
+.mfilter-band:hover { color: var(--ink); border-color: var(--ink); }
+.mfilter-band.is-on {
+  background: color-mix(in srgb, var(--series-1) 16%, transparent);
+  border-color: var(--series-1);
+  color: var(--ink);
+}
+
+.mfilter-reset {
+  padding: 0.5rem;
+  border-radius: 100px;
+  border: 1px solid var(--rule-strong);
+  background: none;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.mfilter-reset:hover { border-color: var(--ink); color: var(--ink); }
+
+/* Canvas ink for the migration map. The map paints to a bitmap, so it cannot
+   inherit page colours; the component reads these two and repaints. */
+.mmap { --map-ink: #1e3a8a; --map-ink-line: rgba(30, 58, 138, 0.8); }
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .mmap {
+    --map-ink: #9dc0ee;
+    --map-ink-line: rgba(157, 192, 238, 0.75);
+  }
+}
+:root[data-theme="dark"] .mmap {
+  --map-ink: #9dc0ee;
+  --map-ink-line: rgba(157, 192, 238, 0.75);
+}

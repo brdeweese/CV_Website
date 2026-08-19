@@ -8,6 +8,10 @@ import NotFound from './NotFound.jsx'
 // is only fetched on a project page that actually has chart data.
 const ProjectChart = lazy(() => import('../components/ProjectChart.jsx'))
 const ProjectVisuals = lazy(() => import('../components/ProjectVisuals.jsx'))
+// Pulls in a topojson world atlas, so it loads only on the page that uses it.
+const MigrationExplorer = lazy(() => import('../components/MigrationExplorer.jsx'))
+
+const HEROES = { migration: MigrationExplorer }
 
 function Takeaways({ items }) {
   if (!items?.length) return null
@@ -95,6 +99,8 @@ export default function ProjectDetail() {
   // 'visual' puts the charts at full width and leads with short takeaways
   // instead of prose, for projects where the finding is the graph.
   const isVisual = project.layout === 'visual'
+  // A project can name a bespoke lead visual; it renders above the takeaways.
+  const HeroVisual = project.hero ? HEROES[project.hero] : null
 
   const visuals = project.visuals?.length > 0 && (
     <Suspense fallback={<div className="viz-loading">Loading charts…</div>}>
@@ -122,6 +128,11 @@ export default function ProjectDetail() {
 
         {isVisual ? (
           <>
+            {HeroVisual && (
+              <Suspense fallback={<div className="viz-loading">Loading the map…</div>}>
+                <HeroVisual />
+              </Suspense>
+            )}
             <Takeaways items={project.takeaways} />
             {visuals}
             {project.body?.length > 0 && (

@@ -18,6 +18,8 @@ import { formatPeriod } from '../utils/period.js'
 import CareerTimeline from '../components/CareerTimeline.jsx'
 import DisciplineTag from '../components/DisciplineTag.jsx'
 import DisciplineVenn from '../components/DisciplineVenn.jsx'
+import HeroVenn from '../components/HeroVenn.jsx'
+import { useMscFlight } from '../hooks/useMscFlight.js'
 
 function SectionHead({ id }) {
   const s = sections.find((x) => x.id === id)
@@ -39,6 +41,7 @@ function Arrow() {
 
 export default function Home() {
   const { hash } = useLocation()
+  const { hostRef, anchorRef, badgeRef, targetRef } = useMscFlight()
   useReveal()
 
   // Support /#section links arriving from a detail page.
@@ -54,7 +57,11 @@ export default function Home() {
     <>
       {/* ---------- Hero ---------- */}
       <section className="hero" data-discipline="data">
-        <div className="wrap hero-inner">
+        <div className="wrap hero-inner" ref={hostRef}>
+          <div className="hero-figure" ref={targetRef}>
+            <HeroVenn />
+          </div>
+
           <div className="hero-eyebrow">
             <span className="mono">{profile.role}</span>
             <span className="mono">/</span>
@@ -64,8 +71,16 @@ export default function Home() {
           <h1 className="hero-name">
             Brina
             <br />
-            DeWeese <span className="cred">MSc</span>
+            DeWeese
+            {/* Zero-width marker: where the badge starts its flight from. */}
+            <span className="msc-anchor" ref={anchorRef} aria-hidden="true" />
+            <span className="sr-only">, MSc</span>
           </h1>
+
+          {/* Flies from the name into the centre of the diagram. */}
+          <span className="hero-msc" ref={badgeRef} aria-hidden="true">
+            MSc
+          </span>
 
           <p className="hero-tagline">
             I lead a teaching programme across five campuses and build the data behind

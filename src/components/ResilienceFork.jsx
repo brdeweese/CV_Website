@@ -42,8 +42,18 @@ const PATHS = {
    half carries its own colour. Written once for the upper half and mirrored,
    so the two can never drift out of register. */
 const HALF = [
-  [22, 0], [9, -2.6], [4, -3], [-6, -19], [-11.5, -19], [-9, -3.3],
-  [-16, -3], [-19, -10.5], [-23.5, -10.5], [-21.5, -2.9], [-24, -1.6], [-24, 0],
+  [22, 0],
+  [9, -2.6],
+  [4, -3],
+  [-6, -19],
+  [-11.5, -19],
+  [-9, -3.3],
+  [-16, -3],
+  [-19, -10.5],
+  [-23.5, -10.5],
+  [-21.5, -2.9],
+  [-24, -1.6],
+  [-24, 0],
 ]
 const toPath = (pts) => 'M' + pts.map(([x, y]) => x + ' ' + y).join(' L') + ' Z'
 const PLANE_TOP = toPath(HALF)
@@ -53,19 +63,28 @@ const PLANE_BOT = toPath(HALF.map(([x, y]) => [x, -y]))
    is shared by both halves, so they interlock until the impact and read as one
    broken thing afterwards. Sweep 0 wraps the left, sweep 1 the right. */
 const SEAM = [
-  [0, -46], [-7, -34], [5, -22], [-6, -10], [6, 2], [-5, 14], [7, 26], [-4, 36], [0, 46],
+  [0, -46],
+  [-7, -34],
+  [5, -22],
+  [-6, -10],
+  [6, 2],
+  [-5, 14],
+  [7, 26],
+  [-4, 36],
+  [0, 46],
 ]
 const seamPath = 'M' + SEAM.map(([x, y]) => x + ' ' + y).join(' L')
 const SHELL_L = seamPath + ' A 46 46 0 0 0 0 -46 Z'
 const SHELL_R = seamPath + ' A 46 46 0 0 1 0 -46 Z'
 
 const T = {
-  fall: [0, 0.2], // the plane comes down
-  rattle: [0.2, 0.48], // the shell shakes itself apart, coping
-  crack: [0.48, 0.64], // it splits longways and the halves drop off the frame
-  branch: [0.64, 1], // only then do the two planes leave
+  fall: [0, 0.17], // the plane comes down
+  rattle: [0.17, 0.42], // the shell shakes itself apart, coping
+  split: [0.42, 0.58], // it parts longways, all the way, and stays put
+  drop: [0.58, 0.72], // only then do the halves fall off the frame
+  branch: [0.72, 1], // and only then do the two planes leave
 }
-const RUN_MS = 7800
+const RUN_MS = 8600
 
 const DEFS = [
   {
@@ -78,7 +97,8 @@ const DEFS = [
     id: 'adv',
     term: 'Coping',
     where: 'at the adversity',
-    detail: 'Accepting the adversity, then implementing solutions. Both paths get this far.',
+    detail:
+      'Accepting the adversity, then implementing solutions. Both paths get this far.',
   },
   {
     id: 'adapt',
@@ -114,7 +134,13 @@ const mix = (a, b, t) => {
   const [x, y] = [hex(a), hex(b)]
   return (
     '#' +
-    x.map((v, i) => Math.round(v + (y[i] - v) * clamp01(t)).toString(16).padStart(2, '0')).join('')
+    x
+      .map((v, i) =>
+        Math.round(v + (y[i] - v) * clamp01(t))
+          .toString(16)
+          .padStart(2, '0'),
+      )
+      .join('')
   )
 }
 
@@ -171,7 +197,11 @@ export default function ResilienceFork() {
     readColors()
     readColorsRef.current = readColors
 
-    const L = { fall: fall.getTotalLength(), back: back.getTotalLength(), fwd: fwd.getTotalLength() }
+    const L = {
+      fall: fall.getTotalLength(),
+      back: back.getTotalLength(),
+      fwd: fwd.getTotalLength(),
+    }
 
     /* Place a group on a path and turn it to face the direction of travel. */
     const put = (el, path, len, u, scale) => {
@@ -204,9 +234,10 @@ export default function ResilienceFork() {
       const flying = t < T.rattle[0]
       const branching = t >= T.branch[0]
       whole.style.opacity = flying ? '1' : '0'
-      /* The halves wait inside the wreck until the shell is gone. */
-      green.style.opacity = branching ? '1' : '0'
-      burg.style.opacity = branching ? '1' : '0'
+      /* The halves exist from the moment of impact. They are behind the shell
+         in paint order, so they are simply hidden by it until it opens. */
+      green.style.opacity = flying ? '0' : '1'
+      burg.style.opacity = flying ? '0' : '1'
 
       if (flying) {
         put(whole, fall, L.fall, ease(span(T.fall, t)), 0.86)
@@ -222,14 +253,17 @@ export default function ResilienceFork() {
         return
       }
 
-      if (t < T.crack[0]) {
+      if (t < T.split[0]) {
         /* Coping: the shell rattles harder and harder and turns a full circle,
            finishing upright so the split starts from a still egg. */
         const r = span(T.rattle, t)
         const amp = 2 + 5 * r
         const jx = Math.sin(r * 46) * amp
         const jy = Math.cos(r * 37) * amp * 0.7
-        egg?.setAttribute('transform', `translate(${jx.toFixed(2)} ${jy.toFixed(2)}) rotate(${(r * r * 360).toFixed(1)})`)
+        egg?.setAttribute(
+          'transform',
+          `translate(${jx.toFixed(2)} ${jy.toFixed(2)}) rotate(${(r * r * 360).toFixed(1)})`,
+        )
         shellL?.removeAttribute('transform')
         shellR?.removeAttribute('transform')
         if (crack) crack.style.opacity = '0'
@@ -238,19 +272,52 @@ export default function ResilienceFork() {
           label.setAttribute('fill', '#ffffff')
         }
       } else {
-        /* The split, then both halves drop off the bottom of the frame. */
-        const c = ease(span(T.crack, t))
         egg?.removeAttribute('transform')
-        shellL?.setAttribute('transform', `translate(${(-96 * c).toFixed(1)} ${(320 * c).toFixed(1)}) rotate(${(-58 * c).toFixed(1)})`)
-        shellR?.setAttribute('transform', `translate(${(96 * c).toFixed(1)} ${(320 * c).toFixed(1)}) rotate(${(58 * c).toFixed(1)})`)
+        const sp = ease(span(T.split, t))
+        const dp = t >= T.drop[0] ? ease(span(T.drop, t)) : 0
+
+        /* Part first, all the way, and only then fall. Separating and dropping
+           at once read as one motion and you never saw it come apart. */
+        const dx = 78 * sp + 26 * dp
+        const dy = -4 * sp + 400 * dp
+        const rot = 12 * sp + 52 * dp
+        shellL?.setAttribute(
+          'transform',
+          `translate(${(-dx).toFixed(1)} ${dy.toFixed(1)}) rotate(${(-rot).toFixed(1)})`,
+        )
+        shellR?.setAttribute(
+          'transform',
+          `translate(${dx.toFixed(1)} ${dy.toFixed(1)}) rotate(${rot.toFixed(1)})`,
+        )
+
         if (crack) {
-          crack.style.opacity = String(Math.max(0, 1 - c * 1.4))
-          crack.setAttribute('transform', `translate(0 ${(260 * c).toFixed(1)})`)
+          crack.style.opacity = String(Math.max(0, 1 - dp * 1.4))
+          crack.setAttribute('transform', `translate(0 ${(300 * dp).toFixed(1)})`)
         }
         if (label) {
           label.textContent = 'Coping'
-          label.setAttribute('fill', c > 0.3 ? INK : '#ffffff')
+          label.setAttribute('fill', sp > 0.45 ? INK : '#ffffff')
         }
+      }
+
+      if (t < T.branch[0]) {
+        const emerge = ease(span(T.split, t))
+        const seat = (el, path) => {
+          const head = path.getPointAtLength(0)
+          const next = path.getPointAtLength(1.5)
+          const a = (Math.atan2(next.y - head.y, next.x - head.x) * 180) / Math.PI
+          const x = NODES.adversity.x + (head.x - NODES.adversity.x) * emerge
+          const y = NODES.adversity.y + (head.y - NODES.adversity.y) * emerge
+          el.setAttribute(
+            'transform',
+            `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${a.toFixed(1)}) scale(0.62)`,
+          )
+        }
+        seat(green, back)
+        seat(burg, fwd)
+        paint(green, GREEN, PALE)
+        paint(burg, PALE, BURG)
+        return
       }
 
       const b = ease(span(T.branch, t))
@@ -306,7 +373,10 @@ export default function ResilienceFork() {
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
     mq.addEventListener('change', repaint)
     const mo = new MutationObserver(repaint)
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+    mo.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    })
     return () => {
       mq.removeEventListener('change', repaint)
       mo.disconnect()
@@ -353,18 +423,10 @@ export default function ResilienceFork() {
             markerEnd="url(#rfArrow)"
           />
           <g data-tone="back" data-dim={dim('back')}>
-            <path
-              ref={backRef}
-              className="rf-route rf-route--branch"
-              d={PATHS.back}
-            />
+            <path ref={backRef} className="rf-route rf-route--branch" d={PATHS.back} />
           </g>
           <g data-tone="fwd" data-dim={dim('fwd')}>
-            <path
-              ref={fwdRef}
-              className="rf-route rf-route--branch"
-              d={PATHS.forward}
-            />
+            <path ref={fwdRef} className="rf-route rf-route--branch" d={PATHS.forward} />
           </g>
 
           {/* Nodes are deliberately neutral: the green and the burgundy belong
@@ -386,6 +448,31 @@ export default function ResilienceFork() {
                 ))}
               </g>
             ))}
+
+          {/* Painted before the shell, so the shell hides them. The halves are
+              already there through the impact; the split is what reveals them. */}
+          <g ref={planeRef} className="rf-plane">
+            <path className="rf-plane-top" d={PLANE_TOP} />
+            <path className="rf-plane-bot" d={PLANE_BOT} />
+          </g>
+          <g
+            ref={greenRef}
+            className="rf-plane"
+            data-dim={dim('back')}
+            style={{ opacity: 0 }}
+          >
+            <path className="rf-plane-top" d={PLANE_TOP} />
+            <path className="rf-plane-bot" d={PLANE_BOT} />
+          </g>
+          <g
+            ref={burgRef}
+            className="rf-plane"
+            data-dim={dim('fwd')}
+            style={{ opacity: 0 }}
+          >
+            <path className="rf-plane-top" d={PLANE_TOP} />
+            <path className="rf-plane-bot" d={PLANE_BOT} />
+          </g>
 
           {/* The adversity is two interlocking shells sharing one jagged seam.
               On impact they part and the word sits in the opening. */}
@@ -437,19 +524,6 @@ export default function ResilienceFork() {
               Backwards-thinking resilience
             </text>
           </g>
-
-          <g ref={planeRef} className="rf-plane">
-            <path className="rf-plane-top" d={PLANE_TOP} />
-            <path className="rf-plane-bot" d={PLANE_BOT} />
-          </g>
-          <g ref={greenRef} className="rf-plane" data-dim={dim('back')} style={{ opacity: 0 }}>
-            <path className="rf-plane-top" d={PLANE_TOP} />
-            <path className="rf-plane-bot" d={PLANE_BOT} />
-          </g>
-          <g ref={burgRef} className="rf-plane" data-dim={dim('fwd')} style={{ opacity: 0 }}>
-            <path className="rf-plane-top" d={PLANE_TOP} />
-            <path className="rf-plane-bot" d={PLANE_BOT} />
-          </g>
         </svg>
       </div>
 
@@ -494,8 +568,8 @@ export default function ResilienceFork() {
       ))}
 
       <p className="rfork-foot">
-        After the categorisation in Weking, P&eacute;rez and Schaffer (2021), with the stages
-        from Duchek (2019). A diagram of the argument, not measured data.
+        After the categorisation in Weking, P&eacute;rez and Schaffer (2021), with the
+        stages from Duchek (2019). A diagram of the argument, not measured data.
       </p>
     </figure>
   )

@@ -35,11 +35,14 @@
      it, not the site-wide discipline meaning. */
   /* The plane. Green against burgundy is not colourblind-safe and cannot be
      made so, which is why nothing in the diagram depends on separating them. */
-  --cake-sponge: #e6cba8;
-  --cake-icing: #f2e3d0;
-  --cake-sponge-2: #dfbf98;
-  --cake-jam: #b8566a;
-  --cake-crumb: #cbab84;
+  --cake-red: #e2453f;
+  --cake-orange: #ee8a2c;
+  --cake-yellow: #ecc72f;
+  --cake-green: #46ab48;
+  --cake-blue: #3f9ad8;
+  --cake-purple: #8f6bc0;
+  --cake-frosting: #fbf3e6;
+  --cake-crumb: #d8c6ab;
   --cake-steel: #6f7480;
   --rf-egg: #c0392b;
   --rf-green: #1b8f5f;
@@ -107,17 +110,23 @@
     --economics: #3987e5;
     --data: #d95926;
     --tourism: #199e70;
-    --cake-sponge: #7d6449;
-    --cake-icing: #a8886a;
-    --cake-sponge-2: #8d7254;
-    --cake-jam: #9c4356;
-    --cake-sponge-2: #8d7254;
-  --cake-jam: #9c4356;
-  --cake-crumb: #5e4a35;
+    --cake-red: #d8453f;
+    --cake-orange: #dd8231;
+    --cake-yellow: #cfae32;
+    --cake-green: #429b47;
+    --cake-blue: #3d8dc4;
+    --cake-purple: #8465ad;
+    --cake-frosting: #efe4d2;
+    --cake-crumb: #6d5c46;
     --cake-steel: #a9b0bd;
-    --cake-sponge: #7d6449;
-  --cake-icing: #a8886a;
-  --cake-crumb: #5e4a35;
+    --cake-red: #d8453f;
+  --cake-orange: #dd8231;
+  --cake-yellow: #cfae32;
+  --cake-green: #429b47;
+  --cake-blue: #3d8dc4;
+  --cake-purple: #8465ad;
+  --cake-frosting: #efe4d2;
+  --cake-crumb: #6d5c46;
   --cake-steel: #a9b0bd;
   --rf-egg: #d94f3d;
     --rf-egg: #d94f3d;
@@ -2685,6 +2694,7 @@ button { font: inherit; color: inherit; }
   .rfork-pick { font-size: 0.56rem; padding: 0.28rem 0.5rem; }
 }
 
+
 /* --- Chicago: the cake of explained variance ------------------------------ */
 
 .cake {
@@ -2703,7 +2713,7 @@ button { font: inherit; color: inherit; }
   color: var(--ink);
   margin: 0 0 0.3rem;
 }
-.cake-sub { font-size: 0.82rem; color: var(--ink-3); margin: 0; max-width: 66ch; }
+.cake-sub { font-size: 0.82rem; color: var(--ink-3); margin: 0; max-width: 68ch; }
 
 .cake-plot { overflow-x: auto; }
 .cake-plot svg { display: block; width: 100%; height: auto; }
@@ -2714,38 +2724,44 @@ button { font: inherit; color: inherit; }
   stroke-width: 1;
   stroke-dasharray: 4 5;
 }
-.cake-slab { fill: var(--cake-sponge); stroke: var(--cake-crumb); stroke-width: 1; }
-/* Alternating sponge so the stack reads as layers. Decorative only: identity
-   is carried by the row label and the utensil silhouettes. */
-.cake-layer:nth-child(even) .cake-slab { fill: var(--cake-sponge-2); }
-.cake-icing { fill: var(--cake-icing); }
-.cake-filling { fill: var(--cake-jam); }
+
+/* Frosting shows between the sponge layers and around the cut edge. */
+.cake-frostingfill { fill: var(--cake-frosting); }
+.cake-band[data-sponge='red'] { fill: var(--cake-red); }
+.cake-band[data-sponge='orange'] { fill: var(--cake-orange); }
+.cake-band[data-sponge='yellow'] { fill: var(--cake-yellow); }
+.cake-band[data-sponge='green'] { fill: var(--cake-green); }
+.cake-band[data-sponge='blue'] { fill: var(--cake-blue); }
+.cake-band[data-sponge='purple'] { fill: var(--cake-purple); }
+
+.cake-edge {
+  fill: none;
+  stroke: var(--cake-frosting);
+  stroke-width: 5;
+  stroke-linejoin: round;
+}
+
 .cake-plate { fill: var(--rule-strong); }
+.cake-stem { fill: var(--rule-strong); }
+.cake-foot { fill: var(--rule-strong); }
+
+.cake-hit { fill: transparent; }
+.cake-col[data-hover='true'] .cake-edge { stroke: var(--ink); }
+.cake-col[data-hover='true'] .cake-name { fill: var(--ink); }
 
 .cake-name {
   font-family: var(--font-mono);
-  font-size: 13px;
-  fill: var(--ink-2);
+  font-size: 11px;
+  fill: var(--ink-3);
 }
 .cake-pct {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 600;
   fill: var(--ink);
 }
-.cake-axis {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  fill: var(--ink-3);
-}
-.cake-rule { stroke: var(--rule); stroke-width: 1; }
 
 .cake-utensil path { fill: var(--cake-steel); }
-.cake-utensil--rest { opacity: 0.75; }
-.cake-layer[data-hover='true'] .cake-utensil--rest { opacity: 1; }
-.cake-layer[data-hover='true'] .cake-slab { stroke: var(--ink); }
 
 .cake-legend {
   display: grid;
@@ -2756,7 +2772,7 @@ button { font: inherit; color: inherit; }
   border-top: 1px solid var(--rule);
 }
 .cake-key { display: flex; align-items: center; gap: 0.6rem; }
-.cake-key-icon { width: 42px; height: 16px; flex: none; }
+.cake-key-icon { width: 44px; height: 17px; flex: none; }
 .cake-key-icon path { fill: var(--cake-steel); }
 .cake-key-text { font-size: 0.78rem; color: var(--ink-3); margin: 0; }
 .cake-key-text b {
@@ -2801,7 +2817,7 @@ button { font: inherit; color: inherit; }
 
 @media (max-width: 620px) {
   .cake { padding: 1rem 0.9rem; }
-  .cake-plot svg { min-width: 780px; }
+  .cake-plot svg { min-width: 800px; }
   .cake-legend { grid-template-columns: 1fr; }
   .cake-controls { flex-direction: column; align-items: stretch; }
 }

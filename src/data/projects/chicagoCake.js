@@ -30,18 +30,55 @@ export const UTENSILS = [
 
 /** Sorted by how much gets eaten, so the cut edge falls as a staircase. */
 export const CAKE_LAYERS = [
-  { id: 'property', name: 'Property-related', eaten: 0.96, by: ['knife', 'spork', 'fork'] },
+  {
+    id: 'property',
+    name: 'Property-related',
+    lines: ['Property-', 'related'],
+    eaten: 0.96,
+    by: ['knife', 'spork', 'fork'],
+  },
   {
     id: 'econ',
     name: 'Economically motivated',
+    lines: ['Economically', 'motivated'],
     eaten: 0.92,
     by: ['fork', 'knife', 'spork'],
   },
-  { id: 'misc', name: 'Miscellaneous', eaten: 0.86, by: ['knife', 'fork'] },
-  { id: 'violent', name: 'Violent', eaten: 0.86, by: ['knife', 'fork'] },
-  { id: 'drug', name: 'Drug-related', eaten: 0.8, by: ['fork'] },
-  { id: 'vulnerable', name: 'Vulnerable populations', eaten: 0.68, by: ['spoon'] },
-  { id: 'public', name: 'Public crime', eaten: 0.41, by: ['spoon'] },
+  {
+    id: 'misc',
+    name: 'Miscellaneous',
+    lines: ['Miscel-', 'laneous'],
+    eaten: 0.86,
+    by: ['knife', 'fork'],
+  },
+  {
+    id: 'violent',
+    name: 'Violent',
+    lines: ['Violent'],
+    eaten: 0.86,
+    by: ['knife', 'fork'],
+  },
+  {
+    id: 'drug',
+    name: 'Drug-related',
+    lines: ['Drug-', 'related'],
+    eaten: 0.8,
+    by: ['fork'],
+  },
+  {
+    id: 'vulnerable',
+    name: 'Vulnerable populations',
+    lines: ['Vulnerable', 'populations'],
+    eaten: 0.68,
+    by: ['spoon'],
+  },
+  {
+    id: 'public',
+    name: 'Public crime',
+    lines: ['Public', 'crime'],
+    eaten: 0.41,
+    by: ['spoon'],
+  },
 ]
 
 /**

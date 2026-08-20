@@ -35,6 +35,17 @@
      it, not the site-wide discipline meaning. */
   /* The plane. Green against burgundy is not colourblind-safe and cannot be
      made so, which is why nothing in the diagram depends on separating them. */
+  --era-debut: #6f9c86;
+  --era-fearless: #a87f1e;
+  --era-speakNow: #7a55a3;
+  --era-red: #b03a3a;
+  --era-nineteen89: #5d92bd;
+  --era-reputation: #4a4a52;
+  --era-lover: #cc76a6;
+  --era-folklore: #7e7a70;
+  --era-evermore: #a4622d;
+  --era-midnights: #3f5088;
+  --era-steel: #6f7480;
   --cake-vanilla: #efe3cd;
   --cake-rose: #dcbdb8;
   --cake-pistachio: #c3cbae;
@@ -109,7 +120,29 @@
     --economics: #3987e5;
     --data: #d95926;
     --tourism: #199e70;
-    --cake-vanilla: #c4b294;
+    --era-debut: #7fb69c;
+    --era-fearless: #d4ad46;
+    --era-speakNow: #a184cc;
+    --era-red: #cf6262;
+    --era-nineteen89: #7db2da;
+    --era-reputation: #a0a0ac;
+    --era-lover: #e29ac2;
+    --era-folklore: #a8a397;
+    --era-evermore: #c98551;
+    --era-midnights: #7f90c8;
+    --era-steel: #a9b0bd;
+    --era-debut: #7fb69c;
+  --era-fearless: #d4ad46;
+  --era-speakNow: #a184cc;
+  --era-red: #cf6262;
+  --era-nineteen89: #7db2da;
+  --era-reputation: #a0a0ac;
+  --era-lover: #e29ac2;
+  --era-folklore: #a8a397;
+  --era-evermore: #c98551;
+  --era-midnights: #7f90c8;
+  --era-steel: #a9b0bd;
+  --cake-vanilla: #c4b294;
     --cake-rose: #b08a86;
     --cake-pistachio: #93a17e;
     --cake-caramel: #ab8760;
@@ -2852,4 +2885,159 @@ button { font: inherit; color: inherit; }
   .cake-plot svg { min-width: 800px; }
   .cake-legend { grid-template-columns: 1fr; }
   .cake-controls { flex-direction: column; align-items: stretch; }
+}
+
+/* --- Eras: album popularity, played out of its instrument ----------------- */
+
+.eras {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 1.35rem;
+  margin: 0;
+}
+.eras-head { margin-bottom: 0.9rem; }
+.eras-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 0.3rem;
+}
+.eras-sub { font-size: 0.82rem; line-height: 1.65; color: var(--ink-3); margin: 0; }
+
+.eras-plot { overflow-x: auto; }
+.eras-plot svg { display: block; width: 100%; height: auto; }
+
+.eras-grid { stroke: var(--rule); stroke-width: 1; }
+.eras-tick,
+.eras-axistitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--ink-3);
+}
+.eras-axistitle { letter-spacing: 0.12em; text-transform: uppercase; }
+
+.eras-name { font-family: var(--font-mono); font-size: 13px; fill: var(--ink-2); }
+.eras-value { font-family: var(--font-mono); font-size: 13px; font-weight: 600; fill: var(--ink); }
+.eras-hit { fill: transparent; }
+
+.eras-bar { fill: var(--era); }
+.eras-inst { fill: var(--era); }
+.eras-soundhole { fill: var(--surface); }
+
+[data-era='debut'] { --era: var(--era-debut); }
+[data-era='fearless'] { --era: var(--era-fearless); }
+[data-era='speakNow'] { --era: var(--era-speakNow); }
+[data-era='red'] { --era: var(--era-red); }
+[data-era='nineteen89'] { --era: var(--era-nineteen89); }
+[data-era='reputation'] { --era: var(--era-reputation); }
+[data-era='lover'] { --era: var(--era-lover); }
+[data-era='folklore'] { --era: var(--era-folklore); }
+[data-era='evermore'] { --era: var(--era-evermore); }
+[data-era='midnights'] { --era: var(--era-midnights); }
+
+.eras-row[data-hover='true'] .eras-name { fill: var(--ink); }
+.eras-row[data-hover='true'] .eras-bar { stroke: var(--ink); stroke-width: 1.5; }
+
+.eras-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+.eras-key { display: flex; align-items: center; gap: 0.6rem; }
+.eras-key-icon { width: 22px; height: 28px; flex: none; }
+.eras-key-icon .eras-inst { fill: var(--era-steel); }
+.eras-key-icon .eras-soundhole { fill: var(--surface); }
+.eras-key-text { font-size: 0.78rem; color: var(--ink-3); margin: 0; }
+.eras-key-text b {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.eras-pairs { margin-top: 1rem; padding-top: 0.9rem; border-top: 1px solid var(--rule); }
+.eras-pairtitle {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 0.6rem;
+}
+.eras-pairgrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+.eras-pair {
+  border-left: 3px solid var(--era);
+  padding: 0.15rem 0 0.15rem 0.65rem;
+}
+.eras-pairname {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-2);
+}
+.eras-pairnums {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--ink-3);
+  margin-top: 0.15rem;
+}
+.eras-arrow { color: var(--ink-3); }
+.eras-gain {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--ink);
+  margin-top: 0.1rem;
+}
+
+.eras-controls {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.eras-note { font-size: 0.84rem; line-height: 1.55; color: var(--ink-2); margin: 0; max-width: 64ch; }
+.eras-replay {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.32rem 0.8rem;
+  cursor: pointer;
+  flex: none;
+}
+.eras-replay:hover { color: var(--ink); border-color: var(--rule-strong); }
+
+.eras-foot {
+  font-size: 0.72rem;
+  color: var(--ink-3);
+  margin: 1rem 0 0;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+}
+
+@media (max-width: 620px) {
+  .eras { padding: 1rem 0.9rem; }
+  .eras-plot svg { min-width: 820px; }
+  .eras-pairgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .eras-controls { flex-direction: column; align-items: stretch; }
 }

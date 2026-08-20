@@ -505,6 +505,9 @@ export const projects = [
   },
   {
     slug: 'the-eras-analysis',
+    // The album popularity comparison leads the page.
+    hero: 'eras',
+    layout: 'visual',
     title: 'The Eras Analysis',
     subtitle:
       'Exploratory analysis and era-matched data visualisation across Taylor Swift’s discography and tours',

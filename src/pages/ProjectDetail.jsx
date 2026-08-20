@@ -15,8 +15,9 @@ const MarketingVisuals = lazy(() => import('../components/MarketingVisuals.jsx')
 const BtcForecast = lazy(() => import('../components/BtcForecast.jsx'))
 const ResilienceFork = lazy(() => import('../components/ResilienceFork.jsx'))
 const CakeLayers = lazy(() => import('../components/CakeLayers.jsx'))
+const ErasBars = lazy(() => import('../components/ErasBars.jsx'))
 
-const HEROES = { migration: MigrationExplorer, marketing: MarketingVisuals, btc: BtcForecast, resilience: ResilienceFork, cake: CakeLayers }
+const HEROES = { migration: MigrationExplorer, marketing: MarketingVisuals, btc: BtcForecast, resilience: ResilienceFork, cake: CakeLayers, eras: ErasBars }
 
 function Takeaways({ items }) {
   if (!items?.length) return null

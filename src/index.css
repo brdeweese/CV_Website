@@ -33,6 +33,11 @@
   /* Chart series. Same validated hues as the disciplines, but named separately
      so a colour inside a chart carries only the meaning its own legend gives
      it, not the site-wide discipline meaning. */
+  --btc-lr: #7a2a8c;
+  --btc-rf: #a04070;
+  --btc-ardl: #c2610a;
+  --btc-sardl: #9c4a12;
+  --btc-arima: #0f6b3f;
   --series-1: #2a78d6;
   --series-2: #eb6834;
   /* Diverging pair: two poles that read as opposite, neutral gray midpoint. */
@@ -87,6 +92,11 @@
     --economics: #3987e5;
     --data: #d95926;
     --tourism: #199e70;
+    --btc-lr: #c07fdd;
+    --btc-rf: #e290bb;
+    --btc-ardl: #f0932b;
+    --btc-sardl: #d98b4a;
+    --btc-arima: #3fc98a;
     --series-1: #3987e5;
     --series-2: #d95926;
     --div-pos: #3987e5;
@@ -104,6 +114,11 @@
 }
 
 :root[data-theme="dark"] {
+  --btc-lr: #c07fdd;
+  --btc-rf: #e290bb;
+  --btc-ardl: #f0932b;
+  --btc-sardl: #d98b4a;
+  --btc-arima: #3fc98a;
   color-scheme: dark;
   --page: #0d0d0d;
   --surface: #1a1a19;
@@ -2289,4 +2304,170 @@ button { font: inherit; color: inherit; }
   .mmap-tl-track { height: 30px; }
   .mmap-tl-legend { gap: 0.55rem; font-size: 0.58rem; }
   .mmap-tl-legend-item { font-size: 0.58rem; }
+}
+
+/* --- Bitcoin forecast, models revealed one at a time ---------------------- */
+
+.btcf {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 1.35rem 1.35rem 1.15rem;
+  margin: 0;
+}
+
+.btcf-head { margin-bottom: 0.9rem; }
+.btcf-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 0.3rem;
+}
+.btcf-sub { font-size: 0.82rem; color: var(--ink-3); margin: 0; }
+
+.btcf-plot { position: relative; }
+.btcf-plot svg { display: block; overflow: visible; }
+
+.btcf-grid { stroke: var(--rule); stroke-width: 1; }
+.btcf-tick {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  fill: var(--ink-3);
+}
+
+.btcf-line { fill: none; stroke-linejoin: round; stroke-linecap: round; }
+
+/* Already introduced: present for comparison, not competing for attention. */
+.btcf-line--past { stroke: var(--ink-3); stroke-width: 1.25; opacity: 0.45; }
+
+.btcf-line--active { stroke: var(--tone); stroke-width: 2.5; }
+.btcf-line--actual { stroke: var(--ink); stroke-width: 2.5; }
+
+.btcf-endlabel {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+}
+.btcf-endlabel--past { fill: var(--ink-3); opacity: 0.6; }
+.btcf-endlabel--active { fill: var(--tone); font-weight: 600; }
+.btcf-endlabel--actual { fill: var(--ink); font-weight: 600; }
+
+.btcf-cross line { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 3 3; }
+.btcf-dot { stroke: var(--surface); stroke-width: 2; }
+.btcf-dot--actual { fill: var(--ink); }
+.btcf-dot--active { fill: var(--tone); }
+
+/* Tones. Set once on the element, read by stroke/fill above. */
+[data-tone='lr'] { --tone: var(--btc-lr); }
+[data-tone='rf'] { --tone: var(--btc-rf); }
+[data-tone='ardl'] { --tone: var(--btc-ardl); }
+[data-tone='sardl'] { --tone: var(--btc-sardl); }
+[data-tone='arima'] { --tone: var(--btc-arima); }
+
+.btcf-tip {
+  position: absolute;
+  top: 0.4rem;
+  transform: translateX(0.6rem);
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  border-radius: 6px;
+  padding: 0.5rem 0.65rem;
+  box-shadow: 0 6px 18px var(--shadow);
+  pointer-events: none;
+  min-width: 9.5rem;
+}
+.btcf-tip[data-side='left'] { transform: translateX(calc(-100% - 0.6rem)); }
+.btcf-tip-date {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 0.3rem;
+}
+.btcf-tip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.9rem;
+  font-size: 0.74rem;
+  color: var(--ink-2);
+  margin: 0.1rem 0 0;
+}
+.btcf-tip-row b { font-family: var(--font-mono); color: var(--ink); }
+.btcf-tip-row[data-tone] span { color: var(--tone); }
+
+.btcf-note {
+  font-size: 0.85rem;
+  color: var(--ink-2);
+  line-height: 1.5;
+  margin: 1rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+.btcf-note-name { color: var(--tone); margin-right: 0.5rem; }
+.btcf-mae {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  margin-right: 0.6rem;
+}
+
+.btcf-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+.btcf-steps { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.btcf-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.32rem 0.65rem;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.btcf-step:hover { color: var(--ink); border-color: var(--rule-strong); }
+.btcf-step[aria-pressed='true'] {
+  color: var(--ink);
+  border-color: var(--ink);
+  background: var(--surface-2);
+}
+.btcf-swatch {
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--tone);
+  flex: none;
+}
+.btcf-replay {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.32rem 0.8rem;
+  cursor: pointer;
+}
+.btcf-replay:hover { color: var(--ink); border-color: var(--rule-strong); }
+
+@media (max-width: 620px) {
+  .btcf { padding: 1rem 0.9rem; }
+  .btcf-step { font-size: 0.57rem; padding: 0.28rem 0.5rem; }
+  .btcf-tip { min-width: 8rem; }
 }

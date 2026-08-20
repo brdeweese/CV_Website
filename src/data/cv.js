@@ -371,6 +371,8 @@ export const certifications = [
 export const projects = [
   {
     slug: 'new-gold-rush-bitcoin',
+    // The 30-day out-of-sample forecast leads the page.
+    hero: 'btc',
     title: 'The New Gold Rush',
     subtitle:
       'Comparing econometric and machine learning models for Bitcoin prices using only freely accessible data',

@@ -12,8 +12,9 @@ const ProjectVisuals = lazy(() => import('../components/ProjectVisuals.jsx'))
 const MigrationExplorer = lazy(() => import('../components/MigrationExplorer.jsx'))
 
 const MarketingVisuals = lazy(() => import('../components/MarketingVisuals.jsx'))
+const BtcForecast = lazy(() => import('../components/BtcForecast.jsx'))
 
-const HEROES = { migration: MigrationExplorer, marketing: MarketingVisuals }
+const HEROES = { migration: MigrationExplorer, marketing: MarketingVisuals, btc: BtcForecast }
 
 function Takeaways({ items }) {
   if (!items?.length) return null

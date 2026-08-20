@@ -9,7 +9,7 @@
  *   mse  Mean squared error, in USD squared (hence the very large numbers)
  */
 export const BTC_MODELS = [
-  { model: 'ARIMA', mae: 2598.01, rmse: 3148.56, mse: 9913447 },
+  { model: 'ARIMA', mae: 2596.01, rmse: 3148.56, mse: 9913447 },
   { model: 'Scaled ARDL', mae: 2678.04, rmse: 3078.59, mse: 9477730 },
   { model: 'Linear Regression', mae: 3662.73, rmse: 4408.68, mse: 19436490 },
   { model: 'ARDL', mae: 9202.01, rmse: 9420.56, mse: 88746870 },

@@ -468,6 +468,9 @@ export const projects = [
   },
   {
     slug: 'tourism-resilience',
+    // The categorisation is the contribution, so the diagram of it leads.
+    hero: 'resilience',
+    layout: 'visual',
     title: 'Forwards and Backwards Thinking',
     subtitle: 'Resilience in the post-pandemic tourism industry',
     discipline: 'tourism',

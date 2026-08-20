@@ -42,7 +42,7 @@ export const BTC_FORECASTS = [
   {
     key: 'ARDL',
     tone: 'ardl',
-    note: 'Tracks the right shape but sits roughly ten thousand dollars low for the whole window.',
+    note: 'Below the actual price on all 30 days, by between $4,816 and $12,386. The shape is not far off; the level is.',
     values: [
       57347.09, 57975.49, 58128.83, 57977.89, 58171.41, 58251.57, 58572.49,
       58547.74, 58562.64, 58567.94, 58524.84, 58523.4, 58612.26, 58696.53,
@@ -67,7 +67,7 @@ export const BTC_FORECASTS = [
   {
     key: 'Scaled ARDL',
     tone: 'sardl',
-    note: 'The same ARDL model after scaling. The correction lifts it into the range the price actually traded in.',
+    note: 'The same ARDL model after scaling. The correction lifts it into the range the price actually traded in, close enough to cross above the real price on four of the 30 days.',
     values: [
       64096.2, 64798.56, 64969.94, 64801.24, 65017.53, 65107.13, 65465.82,
       65438.15, 65454.81, 65460.73, 65412.56, 65410.95, 65510.27, 65604.45,
@@ -79,7 +79,7 @@ export const BTC_FORECASTS = [
   {
     key: 'ARIMA',
     tone: 'arima',
-    note: 'Lowest average error of the five. Linear, but it holds the level the price spent most of the month near.',
+    note: 'Almost a flat line, rising just $728 across the month and sitting a little above $70,000. Close through early June, when the price peaked at $71,083, but the price fell away in the second half while the forecast held, ending $6,658 apart. Even so, the lowest average error of the five.',
     values: [
       70026.42, 70051.52, 70076.63, 70101.73, 70126.84, 70151.94, 70177.04,
       70202.15, 70227.25, 70252.36, 70277.46, 70302.57, 70327.67, 70352.78,

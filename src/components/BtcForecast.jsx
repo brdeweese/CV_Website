@@ -193,7 +193,7 @@ export default function BtcForecast() {
   return (
     <figure className="btcf">
       <figcaption className="btcf-head">
-        <h3 className="btcf-title">Thirty days the models had never seen</h3>
+        <h3 className="btcf-title">Model testing on 30 days of out-of-sample data</h3>
         <p className="btcf-sub">
           Actual Bitcoin price, 23 May to 21 June 2024, against each forecast in turn.
         </p>

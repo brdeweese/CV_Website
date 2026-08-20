@@ -2710,7 +2710,15 @@ button { font: inherit; color: inherit; }
   color: var(--ink);
   margin: 0 0 0.3rem;
 }
-.cake-sub { font-size: 0.82rem; color: var(--ink-3); margin: 0; max-width: 68ch; }
+/* Runs the full width of the card rather than a narrow column, so the block
+   is a couple of lines deep instead of six. */
+.cake-sub {
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--ink-3);
+  margin: 0;
+  max-width: none;
+}
 
 .cake-plot { overflow-x: auto; }
 .cake-plot svg { display: block; width: 100%; height: auto; }

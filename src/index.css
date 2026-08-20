@@ -36,11 +36,11 @@
   /* The plane. Green against burgundy is not colourblind-safe and cannot be
      made so, which is why nothing in the diagram depends on separating them. */
   --rf-green: #1b8f5f;
-  --rf-burgundy: #8c2740;
-  --rf-burgundy-deep: #5e1526;
+  --rf-burgundy: #7b2450;
+  --rf-burgundy-deep: #4e1440;
   --rf-pale: #d3d8d4;
   --rfork-back: #1b8f5f;
-  --rfork-fwd: #8c2740;
+  --rfork-fwd: #7b2450;
   --btc-lr: #7a2a8c;
   --btc-rf: #a04070;
   --btc-ardl: #c2610a;
@@ -101,11 +101,11 @@
     --data: #d95926;
     --tourism: #199e70;
     --rf-green: #35b380;
-    --rf-burgundy: #d4667f;
-    --rf-burgundy-deep: #b13f5c;
+    --rf-burgundy: #cd6a95;
+    --rf-burgundy-deep: #b04a80;
     --rf-pale: #4a4a47;
     --rfork-back: #35b380;
-    --rfork-fwd: #d4667f;
+    --rfork-fwd: #cd6a95;
     --btc-lr: #c07fdd;
     --btc-rf: #e290bb;
     --btc-ardl: #f0932b;
@@ -129,11 +129,11 @@
 
 :root[data-theme="dark"] {
   --rf-green: #35b380;
-  --rf-burgundy: #d4667f;
-  --rf-burgundy-deep: #b13f5c;
+  --rf-burgundy: #cd6a95;
+  --rf-burgundy-deep: #b04a80;
   --rf-pale: #4a4a47;
   --rfork-back: #35b380;
-  --rfork-fwd: #d4667f;
+  --rfork-fwd: #cd6a95;
   --btc-lr: #c07fdd;
   --btc-rf: #e290bb;
   --btc-ardl: #f0932b;
@@ -2525,6 +2525,12 @@ button { font: inherit; color: inherit; }
 .rf-arrowhead { fill: context-stroke, var(--ink-3); }
 .rf-route--fall { marker-end: url(#rfArrow); }
 
+.rf-node--shell path {
+  fill: var(--surface-2);
+  stroke: var(--rule-strong);
+  stroke-width: 1.5;
+}
+.rf-node--shell g { transition: none; }
 .rf-node circle {
   fill: var(--surface-2);
   stroke: var(--rule-strong);
@@ -2538,12 +2544,13 @@ button { font: inherit; color: inherit; }
   fill: var(--ink);
 }
 
-.rf-crack path { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linejoin: round; }
 .rf-crack circle { fill: var(--ink-3); }
 
 .rf-routelabel text {
   font-family: var(--font-mono);
-  font-size: 13.5px;
+  /* 12px, not larger: at 13.5 the two forwards labels grew wide enough to
+     clip the cracked shell on one side and the landing plane on the other. */
+  font-size: 12px;
   letter-spacing: 0.05em;
   fill: var(--ink-2);
 }
@@ -2571,6 +2578,14 @@ button { font: inherit; color: inherit; }
   text-transform: uppercase;
   color: var(--ink);
   margin: 0 0 0.25rem;
+}
+.rfork-where {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: var(--ink-3);
+  margin-left: 0.5rem;
 }
 .rfork-detail { font-size: 0.76rem; color: var(--ink-3); margin: 0; line-height: 1.45; }
 

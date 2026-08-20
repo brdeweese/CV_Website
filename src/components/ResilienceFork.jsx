@@ -34,14 +34,29 @@ const NODES = {
    follows the drawn line exactly rather than a second copy of the maths. */
 const PATHS = {
   fall: `M ${NODES.origin.x} ${NODES.origin.y + NODES.origin.r + 6} L ${NODES.adversity.x} ${NODES.adversity.y - NODES.adversity.r - 8}`,
-  back: `M ${NODES.adversity.x - 36} ${NODES.adversity.y - 28} C 250 300, 132 288, 132 208 C 132 128, 268 74, ${NODES.origin.x - NODES.origin.r - 8} ${NODES.origin.y}`,
-  forward: `M ${NODES.adversity.x + NODES.adversity.r + 6} ${NODES.adversity.y} L ${NODES.future.x - NODES.future.r - 8} ${NODES.future.y}`,
+  back: `M ${NODES.adversity.x - 36} ${NODES.adversity.y - 28} C 250 300, 132 288, 132 208 C 132 128, 268 74, ${NODES.origin.x - NODES.origin.r - 26} ${NODES.origin.y}`,
+  forward: `M ${NODES.adversity.x + NODES.adversity.r + 6} ${NODES.adversity.y} L ${NODES.future.x - NODES.future.r - 20} ${NODES.future.y}`,
 }
 
-/* Paper-plane silhouette, nose at +x, split along its centreline so the two
-   halves can be coloured independently. */
-const PLANE_TOP = 'M20 0 L-15 -13 L-8 0 Z'
-const PLANE_BOT = 'M20 0 L-8 0 L-15 13 Z'
+/* Aircraft seen from above, nose at +x, split along the centreline so each
+   half carries its own colour. Written once for the upper half and mirrored,
+   so the two can never drift out of register. */
+const HALF = [
+  [22, 0], [9, -2.6], [4, -3], [-6, -19], [-11.5, -19], [-9, -3.3],
+  [-16, -3], [-19, -10.5], [-23.5, -10.5], [-21.5, -2.9], [-24, -1.6], [-24, 0],
+]
+const toPath = (pts) => 'M' + pts.map(([x, y]) => x + ' ' + y).join(' L') + ' Z'
+const PLANE_TOP = toPath(HALF)
+const PLANE_BOT = toPath(HALF.map(([x, y]) => [x, -y]))
+
+/* The adversity shell. One jagged seam, used by both halves, so they interlock
+   before the impact and read as one broken thing after it. */
+const SEAM = [
+  [-46, 0], [-34, -7], [-22, 5], [-10, -6], [2, 6], [14, -5], [26, 7], [36, -4], [46, 0],
+]
+const seamPath = 'M' + SEAM.map(([x, y]) => x + ' ' + y).join(' L')
+const SHELL_TOP = seamPath + ' A 46 46 0 0 0 -46 0 Z'
+const SHELL_BOT = seamPath + ' A 46 46 0 0 1 -46 0 Z'
 
 const T = { fall: [0, 0.3], impact: [0.3, 0.4], branch: [0.42, 1] }
 const RUN_MS = 6200
@@ -49,17 +64,20 @@ const RUN_MS = 6200
 const DEFS = [
   {
     id: 'prep',
-    term: 'Preparedness',
+    term: 'Anticipation',
+    where: 'the preparedness arrow',
     detail: 'Detecting critical developments inside the firm and in its environment.',
   },
   {
     id: 'adv',
-    term: 'Adversity',
+    term: 'Coping',
+    where: 'at the adversity',
     detail: 'Accepting the adversity, then implementing solutions. Both paths get this far.',
   },
   {
     id: 'adapt',
-    term: 'Adaptation and innovation',
+    term: 'Adaptation',
+    where: 'the forwards route only',
     detail: 'Reflection and learning, then change. Only one of the two paths goes here.',
   },
 ]
@@ -106,6 +124,8 @@ export default function ResilienceFork() {
   const greenRef = useRef(null)
   const burgRef = useRef(null)
   const crackRef = useRef(null)
+  const shellTopRef = useRef(null)
+  const shellBotRef = useRef(null)
   /* The theme watcher repaints the frame that is already on screen, so these
      three are how it reaches the running animation without restarting it. */
   const colorsRef = useRef(null)
@@ -173,25 +193,34 @@ export default function ResilienceFork() {
       burg.style.opacity = flying ? '0' : '1'
 
       if (flying) {
-        put(whole, fall, L.fall, ease(span(T.fall, t)), 1)
+        put(whole, fall, L.fall, ease(span(T.fall, t)), 0.86)
         paint(whole, GREEN, BURG)
         if (crack) crack.style.opacity = '0'
+        if (shellTopRef.current) shellTopRef.current.removeAttribute('transform')
+        if (shellBotRef.current) shellBotRef.current.removeAttribute('transform')
         return
       }
 
-      /* Impact: the node takes the hit and the plane comes apart. */
-      if (crack) crack.style.opacity = String(Math.min(1, span(T.impact, t) * 3))
+      /* Impact: the shell breaks open and the plane comes apart with it. */
+      const k = ease(span(T.impact, t))
+      if (crack) crack.style.opacity = String(Math.min(1, k * 2))
+      if (shellTopRef.current) {
+        shellTopRef.current.setAttribute('transform', `translate(${-7 * k} ${-30 * k}) rotate(${-9 * k})`)
+      }
+      if (shellBotRef.current) {
+        shellBotRef.current.setAttribute('transform', `translate(${5 * k} ${24 * k}) rotate(${6 * k})`)
+      }
 
       const b = ease(span(T.branch, t))
 
       /* The green half flies the return arc and picks its burgundy back up,
          arriving exactly as it left. Fill completeness carries the same story
          for anyone who cannot separate the two hues. */
-      put(green, back, L.back, b, 0.7 + 0.3 * b)
+      put(green, back, L.back, b, 0.62 + 0.24 * b)
       paint(green, GREEN, mix(PALE, BURG, b))
 
       /* The burgundy half flies on and deepens. */
-      put(burg, fwd, L.fwd, b, 0.7 + 0.45 * b)
+      put(burg, fwd, L.fwd, b, 0.62 + 0.36 * b)
       paint(burg, mix(PALE, BURG, Math.min(1, b * 1.6)), mix(BURG, DEEP, b))
     }
 
@@ -298,32 +327,47 @@ export default function ResilienceFork() {
 
           {/* Nodes are deliberately neutral: the green and the burgundy belong
               to the plane, and a coloured node would compete with it. */}
-          {Object.entries(NODES).map(([k, n]) => (
-            <g className="rf-node" key={k}>
-              <circle cx={n.x} cy={n.y} r={n.r} />
-              {n.label.map((line, i) => (
-                <text
-                  key={line}
-                  x={n.x}
-                  y={n.y + (i - (n.label.length - 1) / 2) * 17 + 5}
-                  textAnchor="middle"
-                >
-                  {line}
-                </text>
-              ))}
-            </g>
-          ))}
+          {Object.entries(NODES)
+            .filter(([k]) => k !== 'adversity')
+            .map(([k, n]) => (
+              <g className="rf-node" key={k}>
+                <circle cx={n.x} cy={n.y} r={n.r} />
+                {n.label.map((line, i) => (
+                  <text
+                    key={line}
+                    x={n.x}
+                    y={n.y + (i - (n.label.length - 1) / 2) * 19 + 5}
+                    textAnchor="middle"
+                  >
+                    {line}
+                  </text>
+                ))}
+              </g>
+            ))}
 
-          {/* The break, revealed on impact. */}
+          {/* The adversity is two interlocking shells sharing one jagged seam.
+              On impact they part and the word sits in the opening. */}
+          <g
+            className="rf-node rf-node--shell"
+            transform={`translate(${NODES.adversity.x} ${NODES.adversity.y})`}
+          >
+            <g ref={shellTopRef}>
+              <path d={SHELL_TOP} />
+            </g>
+            <g ref={shellBotRef}>
+              <path d={SHELL_BOT} />
+            </g>
+            <text x="0" y="5" textAnchor="middle">
+              Adversity
+            </text>
+          </g>
+
+          {/* Shards thrown off by the impact. The break itself is the seam. */}
           <g ref={crackRef} className="rf-crack" style={{ opacity: 0 }}>
-            <path
-              /* Upper-left quadrant only: a crack through the middle of the
-                 node would run straight across its label. */
-              d={`M ${NODES.adversity.x - 14} ${NODES.adversity.y - 42} l -14 12 l 10 9 l -16 11`}
-            />
-            <circle cx={NODES.adversity.x - 48} cy={NODES.adversity.y - 40} r="3" />
-            <circle cx={NODES.adversity.x + 32} cy={NODES.adversity.y - 46} r="2.5" />
-            <circle cx={NODES.adversity.x - 6} cy={NODES.adversity.y - 62} r="2" />
+            <circle cx={NODES.adversity.x - 62} cy={NODES.adversity.y - 44} r="3" />
+            <circle cx={NODES.adversity.x + 44} cy={NODES.adversity.y - 52} r="2.5" />
+            <circle cx={NODES.adversity.x - 10} cy={NODES.adversity.y - 74} r="2" />
+            <circle cx={NODES.adversity.x + 20} cy={NODES.adversity.y - 70} r="1.8" />
           </g>
 
           <g className="rf-routelabel">
@@ -332,26 +376,18 @@ export default function ResilienceFork() {
             </text>
           </g>
           <g className="rf-routelabel" data-tone="fwd" data-dim={dim('fwd')}>
-            <text
-              x={(NODES.adversity.x + NODES.future.x) / 2}
-              y={NODES.adversity.y - 20}
-              textAnchor="middle"
-            >
+            <text x={600} y={NODES.adversity.y - 20} textAnchor="middle">
               Forwards-thinking resilience
             </text>
-            <text
-              x={(NODES.adversity.x + NODES.future.x) / 2}
-              y={NODES.adversity.y + 32}
-              textAnchor="middle"
-            >
+            <text x={600} y={NODES.adversity.y + 32} textAnchor="middle">
               Adaptation and innovation
             </text>
           </g>
           <g className="rf-routelabel" data-tone="back" data-dim={dim('back')}>
-            <text x={258} y={196} textAnchor="middle">
+            <text x={276} y={196} textAnchor="middle">
               Return to original state
             </text>
-            <text x={258} y={216} textAnchor="middle">
+            <text x={276} y={216} textAnchor="middle">
               Backwards-thinking resilience
             </text>
           </g>
@@ -374,7 +410,10 @@ export default function ResilienceFork() {
       <div className="rfork-defs">
         {DEFS.map((d) => (
           <div className="rfork-def" key={d.id}>
-            <p className="rfork-term">{d.term}</p>
+            <p className="rfork-term">
+              {d.term}
+              <span className="rfork-where">{d.where}</span>
+            </p>
             <p className="rfork-detail">{d.detail}</p>
           </div>
         ))}

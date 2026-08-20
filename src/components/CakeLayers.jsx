@@ -2,56 +2,53 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { CAKE_LAYERS, UTENSILS, UTENSIL_PATHS } from '../data/projects/chicagoCake.js'
 
 /**
- * The forward-selection results as one rainbow cake, eaten from the top down.
+ * The forward-selection results as one cake, eaten from the top down.
  *
- * A cake is the right shape for this because R-squared already is one: the
- * share of a crime category's variation the model accounts for. What gets
- * eaten is explained, what stays on the stand is not.
+ * R-squared already is a cake: the share of a crime category's year-to-year
+ * variation the selected cost of living factors account for. What gets eaten
+ * is explained; what stays on the stand is not.
  *
- * The categories run ACROSS the cake, one column each, and the rainbow layers
- * run THROUGH it, the same six in every column. That is what makes the colour
- * safe: it is the cake's own layering, shared by every category, so nothing
- * categorical rides on it. Identity comes from the label under each column and
- * from the utensils, whose silhouettes carry which factors did the eating.
- * Four categorical hues cannot be made colourblind-safe here in any case; see
- * chicagoCake.js for the search behind that.
- *
- * Sorted by how much goes, the bitten top edge falls as a staircase, and the
- * finding is legible from the silhouette before anyone reads a number.
+ * THE LAYERS ARE THE SCALE. Five of them, each exactly a fifth of the cake, so
+ * a layer is twenty percentage points and the axis can be read straight off the
+ * sponge. That is also why the colours are safe to choose freely: they run
+ * through every column alike, marking height rather than category, so nothing
+ * categorical rides on them. Category identity comes from the label under each
+ * column, and which factors did the eating comes from the utensil silhouettes.
+ * Four categorical hues could not have been made colourblind-safe here anyway;
+ * chicagoCake.js records that search.
  */
 
-const VB = { w: 960, h: 640 }
+const VB = { w: 980, h: 700 }
 const SLICE = 96
-const CAKE = { x: 128, y: 150, h: 340 }
+const CAKE = { x: 152, y: 190, h: 340 }
 const FULL_W = SLICE * CAKE_LAYERS.length
 
-/* Six sponge layers with frosting between, as in a rainbow cake. Decorative:
-   they span every column, so they encode nothing. */
-const BANDS = 6
-const FROSTING = 6
-const BAND_H = (CAKE.h - FROSTING * (BANDS - 1)) / BANDS
-const SPONGE = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
+/* Five layers, one fifth each, with the frosting line centred on the boundary
+   so the gridline and the seam are the same thing. */
+const BANDS = 5
+const STEP = CAKE.h / BANDS
+const FROSTING = 7
+const SPONGE = ['vanilla', 'rose', 'pistachio', 'caramel', 'cocoa']
+
+const DECOR_H = 26 // frill and cherries sit above the top layer
 
 const BITE_MS = 780
 const GAP_MS = 220
-const LEAD_MS = 480
+const LEAD_MS = 900 // long enough to see the cake whole before it is touched
 
 const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v)
 const ease = (t) => 1 - (1 - t) ** 3
 
 const colX = (i) => CAKE.x + i * SLICE
+/** y for a share eaten from the top: 0 is an untouched cake, 1 is the stand. */
+const yFor = (eaten) => CAKE.y + CAKE.h * eaten
 
-/**
- * One column's remaining cake. The top edge is scalloped once it has been
- * bitten and flat while it has not, so an untouched column looks baked rather
- * than nibbled.
- */
-function columnPath(i, remain) {
+function columnPath(i, eaten) {
   const x0 = colX(i)
   const x1 = x0 + SLICE
-  const yTop = CAKE.y + CAKE.h * (1 - remain)
+  const yTop = yFor(eaten)
   const yBot = CAKE.y + CAKE.h
-  if (remain >= 0.999) {
+  if (eaten <= 0.001) {
     return `M${x0} ${yTop} L${x1} ${yTop} L${x1} ${yBot} L${x0} ${yBot} Z`
   }
   const r = SLICE / 4
@@ -63,6 +60,18 @@ function columnPath(i, remain) {
     `L${x0} ${yBot}`,
     'Z',
   ].join(' ')
+}
+
+/** A run of piped swirls along the top of a column. */
+function frillPath(i) {
+  const x0 = colX(i)
+  const n = 4
+  const w = SLICE / n
+  const r = w / 2
+  let d = `M${x0} ${CAKE.y}`
+  for (let k = 0; k < n; k++) d += ` a ${r} ${r} 0 0 1 ${w} 0`
+  d += ` L${x0 + SLICE} ${CAKE.y + 7} L${x0} ${CAKE.y + 7} Z`
+  return d
 }
 
 export default function CakeLayers() {
@@ -131,25 +140,24 @@ export default function CakeLayers() {
 
   const replay = useCallback(() => setRunId((n) => n + 1), [])
 
-  const remainOf = (i) => {
-    if (i < done) return 1 - CAKE_LAYERS[i].eaten
-    if (i === cutting) return 1 - CAKE_LAYERS[i].eaten * ease(progress)
-    return 1
-  }
-  const pctOf = (i) => {
+  const eatenOf = (i) => {
     if (i < done) return CAKE_LAYERS[i].eaten
     if (i === cutting) return CAKE_LAYERS[i].eaten * ease(progress)
     return 0
   }
+  /* The icing goes first, because the bite starts at the top. */
+  const decorOf = (i) => clamp01(1 - eatenOf(i) * 14)
 
   return (
     <figure className="cake">
       <figcaption className="cake-head">
         <h3 className="cake-title">How much of each crime the cost of living explains</h3>
         <p className="cake-sub">
-          Every column starts as a whole cake. What gets eaten is the share of that
-          crime&rsquo;s variation the selected cost of living factors account for; what
-          stays on the stand is the share they do not.
+          Each column starts as a whole cake standing for one crime category, and every
+          layer is a fifth of it. The percentage is how much of that crime&rsquo;s
+          year-to-year variation the cost of living factors account for, so it is also how
+          far down the cake the utensils get. What stays on the stand is the share nothing
+          here explains.
         </p>
       </figcaption>
 
@@ -157,18 +165,39 @@ export default function CakeLayers() {
         <svg
           viewBox={`0 0 ${VB.w} ${VB.h}`}
           role="img"
-          aria-label="A rainbow layer cake in seven columns, one per crime category, each eaten down from the top by the share of its variation the model explains: property-related 96 percent down to public crime 41 percent"
+          aria-label="A layer cake in seven columns, one per crime category, each eaten down from the top by the share of its variation the model explains, from property-related at 96 percent to public crime at 41 percent. Each of the five layers is twenty percentage points."
         >
           <defs>
-            {/* The sponge is drawn once across the whole cake and clipped to
-                whatever is left standing, so the layers line up between columns
-                the way they would in a real cake. */}
             <clipPath id="cakeStanding">
               {CAKE_LAYERS.map((l, i) => (
-                <path key={l.id} d={columnPath(i, remainOf(i))} />
+                <path key={l.id} d={columnPath(i, eatenOf(i))} />
               ))}
             </clipPath>
           </defs>
+
+          {/* Scale. The layer seams are the gridlines. */}
+          <text className="cake-axistitle" x={20} y={CAKE.y - 104}>
+            Share of the crime explained, and how far down the cake that reaches
+          </text>
+          {Array.from({ length: BANDS + 1 }, (_, k) => (
+            <g key={k}>
+              <line
+                className="cake-grid"
+                x1={CAKE.x - 12}
+                x2={CAKE.x + FULL_W}
+                y1={yFor(k / BANDS)}
+                y2={yFor(k / BANDS)}
+              />
+              <text
+                className="cake-tick"
+                x={CAKE.x - 22}
+                y={yFor(k / BANDS) + 4}
+                textAnchor="end"
+              >
+                {(k / BANDS) * 100}%
+              </text>
+            </g>
+          ))}
 
           {/* The whole cake, before anyone got to it. */}
           <rect
@@ -194,25 +223,50 @@ export default function CakeLayers() {
                 className="cake-band"
                 data-sponge={SPONGE[b]}
                 x={CAKE.x}
-                y={CAKE.y + b * (BAND_H + FROSTING)}
+                y={CAKE.y + b * STEP + FROSTING / 2}
                 width={FULL_W}
-                height={BAND_H}
+                height={STEP - FROSTING}
               />
             ))}
           </g>
 
-          {/* A frosted edge following whatever is left of each column. */}
+          {/* Piped icing and a cherry per column, on top while the cake is
+              whole. Both go with the first mouthful, since the bite starts
+              where they sit. */}
           {CAKE_LAYERS.map((l, i) => (
-            <path key={l.id} className="cake-edge" d={columnPath(i, remainOf(i))} />
+            <g key={l.id} className="cake-decor" style={{ opacity: decorOf(i) }}>
+              <path className="cake-frill" d={frillPath(i)} />
+              <line
+                className="cake-stalk"
+                x1={colX(i) + SLICE / 2}
+                x2={colX(i) + SLICE / 2 + 5}
+                y1={CAKE.y - DECOR_H + 4}
+                y2={CAKE.y - 12}
+              />
+              <circle
+                className="cake-cherry"
+                cx={colX(i) + SLICE / 2}
+                cy={CAKE.y - DECOR_H + 9}
+                r="8"
+              />
+              <circle
+                className="cake-glint"
+                cx={colX(i) + SLICE / 2 - 2.6}
+                cy={CAKE.y - DECOR_H + 6}
+                r="2.2"
+              />
+            </g>
+          ))}
+
+          {CAKE_LAYERS.map((l, i) => (
+            <path key={l.id} className="cake-edge" d={columnPath(i, eatenOf(i))} />
           ))}
 
           {CAKE_LAYERS.map((l, i) => {
             const x = colX(i)
             const mid = x + SLICE / 2
-            const remain = remainOf(i)
-            const yTop = CAKE.y + CAKE.h * (1 - remain)
-            const pct = pctOf(i)
-            const words = l.lines
+            const eaten = eatenOf(i)
+            const yTop = yFor(eaten)
             return (
               <g
                 key={l.id}
@@ -224,19 +278,17 @@ export default function CakeLayers() {
                 <rect
                   className="cake-hit"
                   x={x}
-                  y={CAKE.y - 60}
+                  y={CAKE.y - 70}
                   width={SLICE}
-                  height={CAKE.h + 60}
+                  height={CAKE.h + 70}
                 />
 
-                {pct > 0.02 && (
-                  <text className="cake-pct" x={mid} y={CAKE.y - 34} textAnchor="middle">
-                    {Math.round(pct * 100)}%
+                {eaten > 0.02 && (
+                  <text className="cake-pct" x={mid} y={CAKE.y - 62} textAnchor="middle">
+                    {Math.round(eaten * 100)}%
                   </text>
                 )}
 
-                {/* The utensils that took this column, hanging in the space they
-                    cleared. Turned to face down, the direction of the eating. */}
                 {i < done &&
                   l.by.map((id, k) => (
                     <g
@@ -248,12 +300,12 @@ export default function CakeLayers() {
                     </g>
                   ))}
 
-                {words.map((word, k) => (
+                {l.lines.map((word, k) => (
                   <text
                     key={word}
                     className="cake-name"
                     x={mid}
-                    y={CAKE.y + CAKE.h + 62 + k * 15 - ((words.length - 1) * 15) / 2}
+                    y={CAKE.y + CAKE.h + 62 + k * 15 - ((l.lines.length - 1) * 15) / 2}
                     textAnchor="middle"
                   >
                     {word}
@@ -262,6 +314,15 @@ export default function CakeLayers() {
               </g>
             )
           })}
+
+          <text
+            className="cake-axistitle"
+            x={CAKE.x + FULL_W / 2}
+            y={CAKE.y + CAKE.h + 108}
+            textAnchor="middle"
+          >
+            Crime category
+          </text>
 
           <rect
             className="cake-plate"
@@ -292,7 +353,7 @@ export default function CakeLayers() {
       <div className="cake-legend">
         {UTENSILS.map((u) => (
           <div className="cake-key" key={u.id}>
-            <svg viewBox="-40 -15 80 30" className="cake-key-icon" aria-hidden="true">
+            <svg viewBox="-44 -15 88 30" className="cake-key-icon" aria-hidden="true">
               <path d={UTENSIL_PATHS[u.id]} fillRule="evenodd" />
             </svg>
             <p className="cake-key-text">

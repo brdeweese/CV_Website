@@ -114,10 +114,19 @@ export const UTENSIL_PATHS = {
     'M-11 -3 L35 -2.2 L35 2.2 L-11 3 Z',
   ].join(' '),
 
-  /* A broad flat blade, rounded at the tip and deeper than either bowl, so the
-     outline differs from the spoon by more than a few pixels. */
   knife: [
-    'M-38 0 Q-38 -10 -27 -10.8 L-12 -8.2 L-12 8.2 L-27 10.8 Q-38 10 -38 0 Z',
-    'M-13 -3 L35 -2.2 L35 2.2 L-13 3 Z',
+    'M-41 0',
+    'Q-41 -9.6 -31 -10.4',
+    'L-12 -7.4',
+    'Q-5 -6 -3 -3.4',
+    'L18 -4.4',
+    'Q39 -5.4 39 -2',
+    'L39 2',
+    'Q39 5.4 18 4.4',
+    'L-3 3.4',
+    'Q-5 6 -12 7.4',
+    'L-31 10.4',
+    'Q-41 9.6 -41 0',
+    'Z',
   ].join(' '),
 }

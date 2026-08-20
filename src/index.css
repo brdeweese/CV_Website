@@ -35,14 +35,13 @@
      it, not the site-wide discipline meaning. */
   /* The plane. Green against burgundy is not colourblind-safe and cannot be
      made so, which is why nothing in the diagram depends on separating them. */
-  --cake-red: #e2453f;
-  --cake-orange: #ee8a2c;
-  --cake-yellow: #ecc72f;
-  --cake-green: #46ab48;
-  --cake-blue: #3f9ad8;
-  --cake-purple: #8f6bc0;
-  --cake-frosting: #fbf3e6;
-  --cake-crumb: #d8c6ab;
+  --cake-vanilla: #efe3cd;
+  --cake-rose: #dcbdb8;
+  --cake-pistachio: #c3cbae;
+  --cake-caramel: #d5b189;
+  --cake-cocoa: #a98a6e;
+  --cake-frosting: #fbf5ea;
+  --cake-cherry: #a8323f;
   --cake-steel: #6f7480;
   --rf-egg: #c0392b;
   --rf-green: #1b8f5f;
@@ -110,23 +109,21 @@
     --economics: #3987e5;
     --data: #d95926;
     --tourism: #199e70;
-    --cake-red: #d8453f;
-    --cake-orange: #dd8231;
-    --cake-yellow: #cfae32;
-    --cake-green: #429b47;
-    --cake-blue: #3d8dc4;
-    --cake-purple: #8465ad;
-    --cake-frosting: #efe4d2;
-    --cake-crumb: #6d5c46;
+    --cake-vanilla: #c4b294;
+    --cake-rose: #b08a86;
+    --cake-pistachio: #93a17e;
+    --cake-caramel: #ab8760;
+    --cake-cocoa: #7d6248;
+    --cake-frosting: #e7dbc8;
+    --cake-cherry: #c0505c;
     --cake-steel: #a9b0bd;
-    --cake-red: #d8453f;
-  --cake-orange: #dd8231;
-  --cake-yellow: #cfae32;
-  --cake-green: #429b47;
-  --cake-blue: #3d8dc4;
-  --cake-purple: #8465ad;
-  --cake-frosting: #efe4d2;
-  --cake-crumb: #6d5c46;
+    --cake-vanilla: #c4b294;
+  --cake-rose: #b08a86;
+  --cake-pistachio: #93a17e;
+  --cake-caramel: #ab8760;
+  --cake-cocoa: #7d6248;
+  --cake-frosting: #e7dbc8;
+  --cake-cherry: #c0505c;
   --cake-steel: #a9b0bd;
   --rf-egg: #d94f3d;
     --rf-egg: #d94f3d;
@@ -2727,18 +2724,45 @@ button { font: inherit; color: inherit; }
 
 /* Frosting shows between the sponge layers and around the cut edge. */
 .cake-frostingfill { fill: var(--cake-frosting); }
-.cake-band[data-sponge='red'] { fill: var(--cake-red); }
-.cake-band[data-sponge='orange'] { fill: var(--cake-orange); }
-.cake-band[data-sponge='yellow'] { fill: var(--cake-yellow); }
-.cake-band[data-sponge='green'] { fill: var(--cake-green); }
-.cake-band[data-sponge='blue'] { fill: var(--cake-blue); }
-.cake-band[data-sponge='purple'] { fill: var(--cake-purple); }
+.cake-band[data-sponge='vanilla'] { fill: var(--cake-vanilla); }
+.cake-band[data-sponge='rose'] { fill: var(--cake-rose); }
+.cake-band[data-sponge='pistachio'] { fill: var(--cake-pistachio); }
+.cake-band[data-sponge='caramel'] { fill: var(--cake-caramel); }
+.cake-band[data-sponge='cocoa'] { fill: var(--cake-cocoa); }
 
 .cake-edge {
   fill: none;
   stroke: var(--cake-frosting);
   stroke-width: 5;
   stroke-linejoin: round;
+}
+
+/* Decoration on the whole cake. Both go with the first mouthful. */
+.cake-frill { fill: var(--cake-frosting); }
+.cake-cherry { fill: var(--cake-cherry); }
+.cake-glint { fill: #ffffff; opacity: 0.55; }
+.cake-stalk { stroke: var(--cake-cocoa); stroke-width: 2.4; stroke-linecap: round; fill: none; }
+.cake-decor { transition: opacity 0.14s linear; }
+
+.cake-grid { stroke: var(--rule); stroke-width: 1; }
+.cake-tick {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  fill: var(--ink-3);
+}
+.cake-axistitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  fill: var(--ink-3);
+}
+.cake-pctlabel {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  fill: var(--ink-3);
 }
 
 .cake-plate { fill: var(--rule-strong); }

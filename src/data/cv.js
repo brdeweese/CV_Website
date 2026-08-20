@@ -428,6 +428,9 @@ export const projects = [
   },
   {
     slug: 'cost-of-living-crime-chicago',
+    // The forward-selection results lead the page.
+    hero: 'cake',
+    layout: 'visual',
     title: 'Will We Eat the Rich If We Run Out of Cake?',
     subtitle: 'Analysing the cost of living’s impact on crime rates in the City of Chicago',
     discipline: 'economics',
@@ -440,7 +443,7 @@ export const projects = [
       'Modern America shows a similar pattern. In 1980 the annual cost of living was around $25,000 against an average salary of $19,500. By 2022 the cost of living had reached $60,000, a 140% increase, while the average salary had grown to $55,000. Salary growth has not kept pace. So do fluctuations in the cost of living lead to changes in crime rates, and at what point do today’s American peasants metaphorically storm the Bastille if the proverbial cake becomes unaffordable?',
       'National research indicates that fluctuations in consumer prices strongly predict financially motivated crime in the United States, but costs and crime vary significantly between cities. Rosenfeld (2018) examined 17 US cities and found that in Chicago the influence of inflation on acquisitive crime was not statistically significant, which makes Chicago an interesting case study and points to the need to examine alternative crime types and diverse cost of living factors.',
       'The pipeline was built in Python: cost of living indicators web-scraped from Numbeo, combined with a 1.8 million row Chicago crimes dataset, with feature engineering and imputation benchmarked against US inflation data. Crimes were grouped into drug-related, economically motivated, miscellaneous, property-related, public, violent, and vulnerable populations categories, so the analysis could ask which kinds of crime respond to which cost of living factors.',
-      'The study revealed significant negative correlations between economic indicators such as average rent, restaurant meal price, drink price and grocery costs, and drug-related, economically motivated, miscellaneous and property-related crime. Higher average monthly net salaries and mortgage interest rates were also inversely correlated with crime rates, suggesting that improved economic conditions could lead to a decrease in crime. Caution must be exercised in interpreting these correlations, as establishing causality requires more in-depth research.',
+      'The study revealed significant negative correlations between economic indicators such as average rent, restaurant meal price, drink price and grocery costs, and drug-related, economically motivated, miscellaneous and property-related crime. Higher average monthly net salaries were also inversely correlated with crime rates, suggesting that improved economic conditions could lead to a decrease in crime. The mortgage interest rate ran the other way, positively correlated with crime in every category measured. Caution must be exercised in interpreting these correlations, as establishing causality requires more in-depth research.',
       'Model fit varied sharply by category, from an adjusted R² of 0.96 for property-related crime down to 0.41 for public crime. Despite challenges including reliance on crowdsourced data, discrepancies in government crime data, limited training data and high mean squared errors, the project constructed a Gradient Boosting Regressor to forecast changes in crime rates in response to cost of living fluctuations. Predictive power was constrained by those limitations, so the model is a foundation for future refinement, and the findings can still serve city planners, policymakers, and community organisations as a basis for targeted crime prevention.',
     ],
     methods: [

@@ -35,6 +35,12 @@
      it, not the site-wide discipline meaning. */
   /* The plane. Green against burgundy is not colourblind-safe and cannot be
      made so, which is why nothing in the diagram depends on separating them. */
+  --cake-sponge: #e6cba8;
+  --cake-icing: #f2e3d0;
+  --cake-sponge-2: #dfbf98;
+  --cake-jam: #b8566a;
+  --cake-crumb: #cbab84;
+  --cake-steel: #6f7480;
   --rf-egg: #c0392b;
   --rf-green: #1b8f5f;
   --rf-burgundy: #7b2450;
@@ -101,7 +107,19 @@
     --economics: #3987e5;
     --data: #d95926;
     --tourism: #199e70;
-    --rf-egg: #d94f3d;
+    --cake-sponge: #7d6449;
+    --cake-icing: #a8886a;
+    --cake-sponge-2: #8d7254;
+    --cake-jam: #9c4356;
+    --cake-sponge-2: #8d7254;
+  --cake-jam: #9c4356;
+  --cake-crumb: #5e4a35;
+    --cake-steel: #a9b0bd;
+    --cake-sponge: #7d6449;
+  --cake-icing: #a8886a;
+  --cake-crumb: #5e4a35;
+  --cake-steel: #a9b0bd;
+  --rf-egg: #d94f3d;
     --rf-egg: #d94f3d;
   --rf-green: #35b380;
     --rf-burgundy: #cd6a95;
@@ -2665,4 +2683,125 @@ button { font: inherit; color: inherit; }
   .rfork-plot svg { min-width: 760px; }
   .rfork-defs { grid-template-columns: 1fr; gap: 0.7rem; }
   .rfork-pick { font-size: 0.56rem; padding: 0.28rem 0.5rem; }
+}
+
+/* --- Chicago: the cake of explained variance ------------------------------ */
+
+.cake {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 1.35rem;
+  margin: 0;
+}
+.cake-head { margin-bottom: 0.9rem; }
+.cake-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 0.3rem;
+}
+.cake-sub { font-size: 0.82rem; color: var(--ink-3); margin: 0; max-width: 66ch; }
+
+.cake-plot { overflow-x: auto; }
+.cake-plot svg { display: block; width: 100%; height: auto; }
+
+.cake-ghost {
+  fill: none;
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+  stroke-dasharray: 4 5;
+}
+.cake-slab { fill: var(--cake-sponge); stroke: var(--cake-crumb); stroke-width: 1; }
+/* Alternating sponge so the stack reads as layers. Decorative only: identity
+   is carried by the row label and the utensil silhouettes. */
+.cake-layer:nth-child(even) .cake-slab { fill: var(--cake-sponge-2); }
+.cake-icing { fill: var(--cake-icing); }
+.cake-filling { fill: var(--cake-jam); }
+.cake-plate { fill: var(--rule-strong); }
+
+.cake-name {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  fill: var(--ink-2);
+}
+.cake-pct {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--ink);
+}
+.cake-axis {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  fill: var(--ink-3);
+}
+.cake-rule { stroke: var(--rule); stroke-width: 1; }
+
+.cake-utensil path { fill: var(--cake-steel); }
+.cake-utensil--rest { opacity: 0.75; }
+.cake-layer[data-hover='true'] .cake-utensil--rest { opacity: 1; }
+.cake-layer[data-hover='true'] .cake-slab { stroke: var(--ink); }
+
+.cake-legend {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem 1.4rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+.cake-key { display: flex; align-items: center; gap: 0.6rem; }
+.cake-key-icon { width: 42px; height: 16px; flex: none; }
+.cake-key-icon path { fill: var(--cake-steel); }
+.cake-key-text { font-size: 0.78rem; color: var(--ink-3); margin: 0; }
+.cake-key-text b {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.cake-controls {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.cake-note { font-size: 0.84rem; line-height: 1.55; color: var(--ink-2); margin: 0; max-width: 62ch; }
+.cake-replay {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.32rem 0.8rem;
+  cursor: pointer;
+  flex: none;
+}
+.cake-replay:hover { color: var(--ink); border-color: var(--rule-strong); }
+
+.cake-foot {
+  font-size: 0.72rem;
+  color: var(--ink-3);
+  margin: 1rem 0 0;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+}
+
+@media (max-width: 620px) {
+  .cake { padding: 1rem 0.9rem; }
+  .cake-plot svg { min-width: 780px; }
+  .cake-legend { grid-template-columns: 1fr; }
+  .cake-controls { flex-direction: column; align-items: stretch; }
 }

@@ -14,8 +14,9 @@ const MigrationExplorer = lazy(() => import('../components/MigrationExplorer.jsx
 const MarketingVisuals = lazy(() => import('../components/MarketingVisuals.jsx'))
 const BtcForecast = lazy(() => import('../components/BtcForecast.jsx'))
 const ResilienceFork = lazy(() => import('../components/ResilienceFork.jsx'))
+const CakeLayers = lazy(() => import('../components/CakeLayers.jsx'))
 
-const HEROES = { migration: MigrationExplorer, marketing: MarketingVisuals, btc: BtcForecast, resilience: ResilienceFork }
+const HEROES = { migration: MigrationExplorer, marketing: MarketingVisuals, btc: BtcForecast, resilience: ResilienceFork, cake: CakeLayers }
 
 function Takeaways({ items }) {
   if (!items?.length) return null

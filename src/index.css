@@ -2924,8 +2924,7 @@ button { font: inherit; color: inherit; }
 .eras-hit { fill: transparent; }
 
 .eras-bar { fill: var(--era); }
-.eras-inst { fill: var(--era); }
-.eras-soundhole { fill: var(--surface); }
+.eras-note { fill: var(--era); }
 
 [data-era='debut'] { --era: var(--era-debut); }
 [data-era='fearless'] { --era: var(--era-fearless); }
@@ -2950,9 +2949,8 @@ button { font: inherit; color: inherit; }
   border-top: 1px solid var(--rule);
 }
 .eras-key { display: flex; align-items: center; gap: 0.6rem; }
-.eras-key-icon { width: 22px; height: 28px; flex: none; }
-.eras-key-icon .eras-inst { fill: var(--era-steel); }
-.eras-key-icon .eras-soundhole { fill: var(--surface); }
+.eras-key-icon { width: 26px; height: 22px; flex: none; }
+.eras-key-icon .eras-note { fill: var(--era-steel); }
 .eras-key-text { font-size: 0.78rem; color: var(--ink-3); margin: 0; }
 .eras-key-text b {
   display: block;
@@ -3011,7 +3009,7 @@ button { font: inherit; color: inherit; }
   gap: 1rem;
   margin-top: 1rem;
 }
-.eras-note { font-size: 0.84rem; line-height: 1.55; color: var(--ink-2); margin: 0; max-width: 64ch; }
+.eras-note-text { font-size: 0.84rem; line-height: 1.55; color: var(--ink-2); margin: 0; max-width: 64ch; }
 .eras-replay {
   font-family: var(--font-mono);
   font-size: 0.62rem;

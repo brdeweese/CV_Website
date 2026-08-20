@@ -2,19 +2,28 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { ALBUMS, PAIRS } from '../data/projects/erasAlbums.js'
 
 /**
- * Average Spotify popularity per album, each bar played out of an instrument.
+ * Average Spotify popularity per album, each bar condensed out of a drift of
+ * musical notes.
  *
- * The instrument is not decoration. A microphone marks a re-recording and a
- * guitar an original release, which is the comparison the analysis is actually
- * about, so that distinction is carried by shape and survives colourblindness
- * and a greyscale print. Read the shapes alone and the finding is already
- * there: every microphone sits above the guitar of the album it replaced.
+ * Every row starts as a scatter of notes wandering and shimmering across the
+ * space its bar will occupy. When the row's turn comes the notes slide home,
+ * left to right, and the bar sets behind them as they land and fade.
+ *
+ * TWO KINDS OF NOTE, and that is the one piece of encoding here: a beamed pair
+ * marks a re-recording and a single quaver an original release, which is the
+ * comparison the analysis is about. Shape carries it, so it survives
+ * colourblindness and a greyscale print, and the pairs strip underneath states
+ * it in numbers besides.
  *
  * Colour is the album's own era. Fourteen hues cannot be validated as a
- * categorical set, and are not asked to be: every bar is named on the axis, so
- * the colour says which era a bar belongs to rather than carrying the reading.
- * Each is checked for contrast against both surfaces, which is the requirement
- * that does apply to a filled mark this size.
+ * categorical set and are not asked to be: every bar is named on the axis. Each
+ * is checked for contrast against both surfaces, which is the requirement that
+ * does apply to a filled mark this size.
+ *
+ * Everything animated is written straight to the DOM rather than through state.
+ * At fourteen rows of up to fifteen notes there are around a hundred and eighty
+ * moving parts, and re-rendering that tree sixty times a second is not worth
+ * doing when a transform attribute will do.
  */
 
 const VB = { w: 1000, h: 660 }
@@ -24,50 +33,60 @@ const BAR_H = 21
 const SCALE_MAX = 90 // headroom above the top album's 82.93
 const FULL = VB.w - PAD.left - PAD.right
 
-const GROW_MS = 620
-const STAGGER = 120
-const LEAD_MS = 400
+const LEAD_MS = 500
+const ROW_MS = 1500
+const STAGGER = 260
+const TOTAL = LEAD_MS + STAGGER * (ALBUMS.length - 1) + ROW_MS
+
+const NOTE_EVERY = 46 // one note per this many units of finished bar
 
 const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v)
 const ease = (t) => 1 - (1 - t) ** 3
+const lerp = (a, b, t) => a + (b - a) * t
+
+/** Deterministic scatter, so a replay lands the same way twice. */
+const rand = (i, k, salt) => {
+  const x = Math.sin(i * 127.1 + k * 311.7 + salt * 74.7) * 43758.5453
+  return x - Math.floor(x)
+}
 
 const rowY = (i) => PAD.top + i * ROW
 const barW = (v) => (v / SCALE_MAX) * FULL
 
-/** Handheld microphone, upright, sitting on the baseline. */
-function Mic() {
-  return (
-    <g className="eras-inst">
-      <path d="M0 -15 a6.4 6.4 0 0 1 6.4 6.4 v4.6 a6.4 6.4 0 0 1 -12.8 0 v-4.6 A6.4 6.4 0 0 1 0 -15 Z" />
-      <path d="M-9.4 -4.2 a9.4 9.4 0 0 0 18.8 0 h-3.1 a6.3 6.3 0 0 1 -12.6 0 Z" />
-      <rect x="-1.7" y="5" width="3.4" height="7.4" />
-      <rect x="-5.4" y="12" width="10.8" height="2.8" rx="1.4" />
-    </g>
-  )
-}
+/* A quaver, and two of them under a beam. */
+const NOTE_HEAD = 'M-3.6 3 a3.6 2.8 0 1 0 7.2 0 a3.6 2.8 0 1 0 -7.2 0 Z'
+const QUAVER = [
+  NOTE_HEAD,
+  'M2.4 3 h1.4 v-13 h-1.4 Z',
+  'M3.8 -10 q5 1.6 3.8 6.4 q-0.8 -3.4 -3.8 -4 Z',
+].join(' ')
+const BEAMED = [
+  'M-7.4 3.4 a3.4 2.6 0 1 0 6.8 0 a3.4 2.6 0 1 0 -6.8 0 Z',
+  'M-1.9 3.4 h1.3 v-12.6 h-1.3 Z',
+  'M2.6 3.4 a3.4 2.6 0 1 0 6.8 0 a3.4 2.6 0 1 0 -6.8 0 Z',
+  'M8.1 3.4 h1.3 v-12.6 h-1.3 Z',
+  'M-1.9 -9.2 h11.3 v3.1 h-11.3 Z',
+].join(' ')
 
-/** Acoustic guitar, upright. The soundhole is painted in the card colour
-    rather than cut, because a hole would show the bar through it. */
-function Guitar() {
-  return (
-    <g className="eras-inst">
-      <circle cx="0" cy="6.6" r="8.2" />
-      <circle cx="0" cy="-3" r="6" />
-      <rect x="-2.6" y="-3" width="5.2" height="10" />
-      <rect x="-1.7" y="-16" width="3.4" height="9" />
-      <rect x="-3.3" y="-20.4" width="6.6" height="5" rx="1.2" />
-      <circle className="eras-soundhole" cx="0" cy="3.4" r="2.5" />
-    </g>
-  )
+/** Where each note comes to rest along its finished bar. */
+function homes(i) {
+  const w = barW(ALBUMS[i].avg)
+  const n = Math.max(6, Math.round(w / NOTE_EVERY))
+  return Array.from({ length: n }, (_, k) => ({
+    x: PAD.left + ((k + 0.5) * w) / n,
+    y: rowY(i) + BAR_H / 2,
+  }))
 }
 
 export default function ErasBars() {
-  const [shown, setShown] = useState(0)
-  const [progress, setProgress] = useState(0)
   const [reduced, setReduced] = useState(false)
   const [runId, setRunId] = useState(0)
   const [hover, setHover] = useState(null)
-  const timers = useRef([])
+  const noteRefs = useRef([])
+  const barRefs = useRef([])
+  const valueRefs = useRef([])
+
+  const layout = ALBUMS.map((_, i) => homes(i))
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -78,56 +97,78 @@ export default function ErasBars() {
   }, [])
 
   useEffect(() => {
-    timers.current.forEach(clearTimeout)
-    timers.current = []
+    const frame = (ms) => {
+      ALBUMS.forEach((a, i) => {
+        const p = clamp01((ms - LEAD_MS - i * STAGGER) / ROW_MS)
+        const conv = clamp01((p - 0.42) / 0.58)
+        const full = barW(a.avg)
+
+        const bar = barRefs.current[i]
+        if (bar) bar.setAttribute('width', String(full * ease(conv)))
+
+        const value = valueRefs.current[i]
+        if (value) {
+          value.style.opacity = conv > 0.96 ? '1' : '0'
+          value.setAttribute('x', String(PAD.left + full * ease(conv) + 10))
+        }
+
+        const notes = noteRefs.current[i] || []
+        const home = layout[i]
+        notes.forEach((el, k) => {
+          if (!el) return
+          const h = home[k]
+          const phase = rand(i, k, 1) * 6.28
+          /* Wander and shimmer while the row waits its turn. */
+          const sx = h.x + (rand(i, k, 2) - 0.5) * 128 + Math.sin(ms / 900 + phase) * 8
+          const sy = h.y + (rand(i, k, 3) - 0.5) * 52 + Math.cos(ms / 1100 + phase) * 6
+
+          /* Notes on the left land first, so the bar sets left to right. */
+          const arrive = clamp01((conv - 0.18 * (k / home.length)) / 0.82)
+          const e = ease(arrive)
+          const x = lerp(sx, h.x, e)
+          const y = lerp(sy, h.y, e)
+          const scale = lerp(0.78 + 0.22 * Math.sin(ms / 380 + phase), 0.5, e)
+          el.setAttribute(
+            'transform',
+            `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${scale.toFixed(2)})`,
+          )
+          const shimmer = 0.45 + 0.4 * (0.5 + 0.5 * Math.sin(ms / 420 + phase))
+          el.style.opacity = String(shimmer * (1 - e))
+        })
+      })
+    }
+
     if (reduced) {
-      setShown(ALBUMS.length)
-      setProgress(1)
+      frame(TOTAL)
       return undefined
     }
-    setShown(0)
-    setProgress(0)
 
     let raf = 0
-    const play = (i) => {
-      if (i >= ALBUMS.length) return
-      setShown(i + 1)
-      let settled = false
-      const t0 = performance.now()
-      const finish = () => {
-        if (settled) return
-        settled = true
-        setProgress(1)
-        timers.current.push(setTimeout(() => play(i + 1), 0))
-      }
-      const tick = (now) => {
-        const p = clamp01((now - t0) / GROW_MS)
-        setProgress(p)
-        if (p < 1) raf = requestAnimationFrame(tick)
-        else finish()
-      }
-      setProgress(0)
-      raf = requestAnimationFrame(tick)
-      /* rAF does not run in every embedded browser and is throttled to nothing
-         in a background tab; without this no bar ever plays. */
-      timers.current.push(setTimeout(finish, STAGGER))
+    let settled = false
+    const t0 = performance.now()
+    const finish = () => {
+      if (settled) return
+      settled = true
+      frame(TOTAL)
     }
-    timers.current.push(setTimeout(() => play(0), LEAD_MS))
+    const tick = (now) => {
+      const ms = now - t0
+      frame(ms)
+      if (ms < TOTAL) raf = requestAnimationFrame(tick)
+      else finish()
+    }
+    frame(0)
+    raf = requestAnimationFrame(tick)
+    /* rAF does not run in every embedded browser and is throttled to nothing in
+       a background tab; without this no bar ever forms. */
+    const failsafe = setTimeout(finish, TOTAL + 400)
     return () => {
       cancelAnimationFrame(raf)
-      timers.current.forEach(clearTimeout)
-      timers.current = []
+      clearTimeout(failsafe)
     }
   }, [reduced, runId])
 
   const replay = useCallback(() => setRunId((n) => n + 1), [])
-
-  const growth = (i) => {
-    if (i < shown - 1) return 1
-    if (i === shown - 1) return ease(progress)
-    return 0
-  }
-
   const ticks = [0, 20, 40, 60, 80]
 
   return (
@@ -135,11 +176,11 @@ export default function ErasBars() {
       <figcaption className="eras-head">
         <h3 className="eras-title">Average track popularity, by album</h3>
         <p className="eras-sub">
-          Every bar plays out of its instrument: a microphone for a re-recording, a guitar
-          for an original release. Length is the mean Spotify popularity score of the
-          album&rsquo;s tracks, and the colour is the album&rsquo;s own era. Read the
-          instruments alone and the finding is already there, because every microphone sits
-          above the guitar of the album it replaced.
+          Each row begins as a drift of notes and settles into its bar. Length is the mean
+          Spotify popularity score of the album&rsquo;s tracks and the colour is the
+          album&rsquo;s own era. The notes come in two kinds: a beamed pair for a
+          re-recording and a single quaver for an original release, so the four
+          re-recordings can be picked out without reading a label.
         </p>
       </figcaption>
 
@@ -175,15 +216,12 @@ export default function ErasBars() {
 
           {ALBUMS.map((a, i) => {
             const y = rowY(i)
-            const g = growth(i)
-            const w = barW(a.avg) * g
-            const isHover = hover === a.id
             return (
               <g
                 key={a.id}
                 className="eras-row"
                 data-era={a.era}
-                data-hover={isHover ? 'true' : undefined}
+                data-hover={hover === a.id ? 'true' : undefined}
                 onMouseEnter={() => setHover(a.id)}
                 onMouseLeave={() => setHover(null)}
               >
@@ -191,31 +229,49 @@ export default function ErasBars() {
 
                 <text
                   className="eras-name"
-                  x={PAD.left - 52}
+                  x={PAD.left - 20}
                   y={y + BAR_H / 2 + 4}
                   textAnchor="end"
                 >
                   {a.label}
                 </text>
 
-                <g transform={`translate(${PAD.left - 26} ${y + BAR_H / 2}) scale(0.92)`}>
-                  {a.tv ? <Mic /> : <Guitar />}
-                </g>
-
                 <rect
+                  ref={(el) => {
+                    barRefs.current[i] = el
+                  }}
                   className="eras-bar"
                   x={PAD.left}
                   y={y}
-                  width={w}
+                  width={0}
                   height={BAR_H}
                   rx="3"
                 />
 
-                {g > 0.94 && (
-                  <text className="eras-value" x={PAD.left + w + 10} y={y + BAR_H / 2 + 4}>
-                    {a.avg.toFixed(1)}
-                  </text>
-                )}
+                {layout[i].map((h, k) => (
+                  <path
+                    key={k}
+                    ref={(el) => {
+                      if (!noteRefs.current[i]) noteRefs.current[i] = []
+                      noteRefs.current[i][k] = el
+                    }}
+                    className="eras-note"
+                    d={a.tv ? BEAMED : QUAVER}
+                    style={{ opacity: 0 }}
+                  />
+                ))}
+
+                <text
+                  ref={(el) => {
+                    valueRefs.current[i] = el
+                  }}
+                  className="eras-value"
+                  x={PAD.left + 10}
+                  y={y + BAR_H / 2 + 4}
+                  style={{ opacity: 0 }}
+                >
+                  {a.avg.toFixed(1)}
+                </text>
               </g>
             )
           })}
@@ -224,20 +280,20 @@ export default function ErasBars() {
 
       <div className="eras-legend">
         <div className="eras-key">
-          <svg viewBox="-16 -22 32 40" className="eras-key-icon" aria-hidden="true">
-            <Mic />
+          <svg viewBox="-14 -16 28 24" className="eras-key-icon" aria-hidden="true">
+            <path className="eras-note" d={BEAMED} />
           </svg>
           <p className="eras-key-text">
-            <b>Microphone</b>
+            <b>Beamed pair</b>
             Taylor&rsquo;s Version, re-recorded
           </p>
         </div>
         <div className="eras-key">
-          <svg viewBox="-16 -22 32 40" className="eras-key-icon" aria-hidden="true">
-            <Guitar />
+          <svg viewBox="-14 -16 28 24" className="eras-key-icon" aria-hidden="true">
+            <path className="eras-note" d={QUAVER} />
           </svg>
           <p className="eras-key-text">
-            <b>Guitar</b>
+            <b>Single quaver</b>
             Original release
           </p>
         </div>
@@ -264,7 +320,7 @@ export default function ErasBars() {
       </div>
 
       <div className="eras-controls">
-        <p className="eras-note">
+        <p className="eras-note-text">
           reputation and Lover sit at the top and neither has a re-recording, so the two
           most popular albums are absent from the comparison the rest of the chart is
           making.

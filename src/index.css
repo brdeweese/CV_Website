@@ -2523,9 +2523,16 @@ button { font: inherit; color: inherit; }
 .rfork-plot svg { display: block; width: 100%; height: auto; }
 
 .rf-route { fill: none; stroke: var(--ink-3); stroke-width: 2.5; }
-.rf-route--fall { stroke: var(--ink); stroke-width: 6; }
+/* Preparedness is a lighter, dashed line: it is a readiness rather than a
+   journey, and it should not outweigh the two routes that follow. */
+.rf-route--fall {
+  stroke: var(--ink-3);
+  stroke-width: 2.5;
+  stroke-dasharray: 9 7;
+  stroke-linecap: butt;
+}
 .rf-route--branch { stroke: var(--tone); stroke-width: 4; }
-.rf-arrowhead { fill: context-stroke, var(--ink-3); }
+.rf-arrowhead { fill: var(--ink-3); }
 .rf-route--fall { marker-end: url(#rfArrow); }
 
 /* The adversity is the one red thing on the page. */
@@ -2547,6 +2554,7 @@ button { font: inherit; color: inherit; }
   fill: var(--ink);
 }
 
+.rf-coping { font-size: 11px !important; letter-spacing: 0.06em; }
 .rf-crack circle { fill: var(--rf-egg); }
 
 .rf-routelabel text {

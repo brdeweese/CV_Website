@@ -22,19 +22,32 @@ import { useCallback, useEffect, useRef, useState } from 'react'
  * both colourblindness and greyscale printing.
  */
 
-const VB = { w: 920, h: 430 }
+const VB = { w: 920, h: 480 }
 
 const NODES = {
-  origin: { x: 430, y: 66, r: 46, label: ['Original', 'State'] },
-  adversity: { x: 430, y: 336, r: 46, label: ['Adversity'] },
-  future: { x: 812, y: 336, r: 46, label: ['New', 'state'] },
+  origin: { x: 430, y: 116, r: 46, label: ['Original', 'State'] },
+  adversity: { x: 430, y: 386, r: 46, label: ['Adversity'] },
+  future: { x: 812, y: 386, r: 46, label: ['New', 'state'] },
 }
+
+/* The opening circuit. Flattened, because a circle wide enough to clear the
+   node is taller than the frame, and because a turn seen from above reads as
+   an ellipse anyway. It closes at its own lowest point, which is exactly where
+   the descent begins, so the two join without a seam. */
+const ORBIT = { rx: 96, ry: 66 }
 
 /* The three journeys. Each is sampled with getPointAtLength, so the plane
    follows the drawn line exactly rather than a second copy of the maths. */
 const PATHS = {
-  fall: `M ${NODES.origin.x} ${NODES.origin.y + NODES.origin.r + 6} L ${NODES.adversity.x} ${NODES.adversity.y - NODES.adversity.r - 8}`,
-  back: `M ${NODES.adversity.x - 36} ${NODES.adversity.y - 28} C 250 300, 132 288, 132 208 C 132 128, 268 74, ${NODES.origin.x - NODES.origin.r - 26} ${NODES.origin.y}`,
+  orbit: [
+    `M ${NODES.origin.x} ${NODES.origin.y + ORBIT.ry}`,
+    `A ${ORBIT.rx} ${ORBIT.ry} 0 0 0 ${NODES.origin.x + ORBIT.rx} ${NODES.origin.y}`,
+    `A ${ORBIT.rx} ${ORBIT.ry} 0 0 0 ${NODES.origin.x} ${NODES.origin.y - ORBIT.ry}`,
+    `A ${ORBIT.rx} ${ORBIT.ry} 0 0 0 ${NODES.origin.x - ORBIT.rx} ${NODES.origin.y}`,
+    `A ${ORBIT.rx} ${ORBIT.ry} 0 0 0 ${NODES.origin.x} ${NODES.origin.y + ORBIT.ry}`,
+  ].join(' '),
+  fall: `M ${NODES.origin.x} ${NODES.origin.y + ORBIT.ry} L ${NODES.adversity.x} ${NODES.adversity.y - NODES.adversity.r - 8}`,
+  back: `M ${NODES.adversity.x - 36} ${NODES.adversity.y - 28} C 250 350, 132 338, 132 258 C 132 178, 268 124, ${NODES.origin.x - NODES.origin.r - 26} ${NODES.origin.y}`,
   forward: `M ${NODES.adversity.x + NODES.adversity.r + 6} ${NODES.adversity.y} L ${NODES.future.x - NODES.future.r - 20} ${NODES.future.y}`,
 }
 
@@ -78,13 +91,14 @@ const SHELL_L = seamPath + ' A 46 46 0 0 0 0 -46 Z'
 const SHELL_R = seamPath + ' A 46 46 0 0 1 0 -46 Z'
 
 const T = {
-  fall: [0, 0.17], // the plane comes down
-  rattle: [0.17, 0.42], // the shell shakes itself apart, coping
-  split: [0.42, 0.58], // it parts longways, all the way, and stays put
-  drop: [0.58, 0.72], // only then do the halves fall off the frame
-  branch: [0.72, 1], // and only then do the two planes leave
+  orbit: [0, 0.18], // one circuit of the Original State
+  fall: [0.18, 0.3], // then the descent
+  rattle: [0.3, 0.5], // the shell shakes itself apart, coping
+  split: [0.5, 0.64], // it parts longways, all the way, and stays put
+  drop: [0.64, 0.76], // only then do the halves fall off the frame
+  branch: [0.76, 1], // and only then do the two planes leave
 }
-const RUN_MS = 8600
+const RUN_MS = 9800
 
 const DEFS = [
   {
@@ -149,6 +163,7 @@ export default function ResilienceFork() {
   const [runId, setRunId] = useState(0)
   const [focus, setFocus] = useState(null)
 
+  const orbitRef = useRef(null)
   const fallRef = useRef(null)
   const backRef = useRef(null)
   const fwdRef = useRef(null)
@@ -160,6 +175,7 @@ export default function ResilienceFork() {
   const shellLRef = useRef(null)
   const shellRRef = useRef(null)
   const advLabelRef = useRef(null)
+  const copingRef = useRef(null)
   /* The theme watcher repaints the frame that is already on screen, so these
      three are how it reaches the running animation without restarting it. */
   const colorsRef = useRef(null)
@@ -176,10 +192,11 @@ export default function ResilienceFork() {
   }, [])
 
   useEffect(() => {
+    const orbit = orbitRef.current
     const fall = fallRef.current
     const back = backRef.current
     const fwd = fwdRef.current
-    if (!fall || !back || !fwd) return undefined
+    if (!orbit || !fall || !back || !fwd) return undefined
 
     /* Read fresh rather than once: the tokens change with the theme, and the
        light burgundy sits at 1.3:1 on the dark surface. */
@@ -198,6 +215,7 @@ export default function ResilienceFork() {
     readColorsRef.current = readColors
 
     const L = {
+      orbit: orbit.getTotalLength(),
       fall: fall.getTotalLength(),
       back: back.getTotalLength(),
       fwd: fwd.getTotalLength(),
@@ -230,6 +248,7 @@ export default function ResilienceFork() {
       const shellL = shellLRef.current
       const shellR = shellRRef.current
       const label = advLabelRef.current
+      const coping = copingRef.current
 
       const flying = t < T.rattle[0]
       const branching = t >= T.branch[0]
@@ -240,16 +259,23 @@ export default function ResilienceFork() {
       burg.style.opacity = flying ? '0' : '1'
 
       if (flying) {
-        put(whole, fall, L.fall, ease(span(T.fall, t)), 0.86)
+        /* A steady circuit, then an eased descent. Easing the circuit too would
+           make the plane hesitate at the top of the turn. */
+        const onOrbit = t < T.fall[0]
+        const track = onOrbit ? orbit : fall
+        const len = onOrbit ? L.orbit : L.fall
+        const u = onOrbit ? span(T.orbit, t) : ease(span(T.fall, t))
+        put(whole, track, len, u, 0.86)
         paint(whole, GREEN, BURG)
         if (crack) crack.style.opacity = '0'
         egg?.removeAttribute('transform')
         shellL?.removeAttribute('transform')
         shellR?.removeAttribute('transform')
         if (label) {
-          label.textContent = 'Adversity'
+          label.setAttribute('y', '5')
           label.setAttribute('fill', '#ffffff')
         }
+        if (coping) coping.style.opacity = '0'
         return
       }
 
@@ -268,8 +294,12 @@ export default function ResilienceFork() {
         shellR?.removeAttribute('transform')
         if (crack) crack.style.opacity = '0'
         if (label) {
-          label.textContent = 'Coping'
+          label.setAttribute('y', '10')
           label.setAttribute('fill', '#ffffff')
+        }
+        if (coping) {
+          coping.style.opacity = '1'
+          coping.setAttribute('fill', '#ffffff')
         }
       } else {
         egg?.removeAttribute('transform')
@@ -294,9 +324,14 @@ export default function ResilienceFork() {
           crack.style.opacity = String(Math.max(0, 1 - dp * 1.4))
           crack.setAttribute('transform', `translate(0 ${(300 * dp).toFixed(1)})`)
         }
+        const ink = sp > 0.45 ? INK : '#ffffff'
         if (label) {
-          label.textContent = 'Coping'
-          label.setAttribute('fill', sp > 0.45 ? INK : '#ffffff')
+          label.setAttribute('y', '10')
+          label.setAttribute('fill', ink)
+        }
+        if (coping) {
+          coping.style.opacity = '1'
+          coping.setAttribute('fill', ink)
         }
       }
 
@@ -416,6 +451,7 @@ export default function ResilienceFork() {
             </marker>
           </defs>
 
+          <path ref={orbitRef} d={PATHS.orbit} fill="none" stroke="none" aria-hidden="true" />
           <path
             ref={fallRef}
             className="rf-route rf-route--fall"
@@ -490,6 +526,17 @@ export default function ResilienceFork() {
                 <path d={SHELL_R} />
               </g>
             </g>
+            <text
+              ref={copingRef}
+              className="rf-coping"
+              x="0"
+              y="-8"
+              textAnchor="middle"
+              fill="#ffffff"
+              style={{ opacity: 0 }}
+            >
+              Coping with
+            </text>
             <text ref={advLabelRef} x="0" y="5" textAnchor="middle" fill="#ffffff">
               Adversity
             </text>
@@ -517,10 +564,10 @@ export default function ResilienceFork() {
             </text>
           </g>
           <g className="rf-routelabel" data-tone="back" data-dim={dim('back')}>
-            <text x={276} y={196} textAnchor="middle">
+            <text x={276} y={246} textAnchor="middle">
               Return to original state
             </text>
-            <text x={276} y={216} textAnchor="middle">
+            <text x={276} y={266} textAnchor="middle">
               Backwards-thinking resilience
             </text>
           </g>

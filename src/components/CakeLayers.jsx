@@ -153,11 +153,12 @@ export default function CakeLayers() {
       <figcaption className="cake-head">
         <h3 className="cake-title">How much of each crime the cost of living explains</h3>
         <p className="cake-sub">
-          Each column starts as a whole cake standing for one crime category, and every
-          layer is a fifth of it. The percentage is how much of that crime&rsquo;s
-          year-to-year variation the cost of living factors account for, so it is also how
-          far down the cake the utensils get. What stays on the stand is the share nothing
-          here explains.
+          Each column is one crime category and each of the five layers is a fifth of the
+          whole cake. For every category, forward selection kept only the cost of living
+          factors that earned their place, and the percentage is that model&rsquo;s adjusted
+          R&sup2;: the share of the year-to-year movement in those crime counts the model
+          reproduces. So it is also how far down the cake the utensils reach. What stays on
+          the stand is the movement the model leaves unexplained.
         </p>
       </figcaption>
 
@@ -177,7 +178,7 @@ export default function CakeLayers() {
 
           {/* Scale. The layer seams are the gridlines. */}
           <text className="cake-axistitle" x={20} y={CAKE.y - 104}>
-            Share of the crime explained, and how far down the cake that reaches
+            Adjusted R&sup2;: share of the year-to-year movement the model reproduces
           </text>
           {Array.from({ length: BANDS + 1 }, (_, k) => (
             <g key={k}>
@@ -340,7 +341,7 @@ export default function CakeLayers() {
             height="13"
           />
           <rect
-            className="cake-foot"
+            className="cake-standfoot"
             x={CAKE.x + FULL_W / 2 - 68}
             y={CAKE.y + CAKE.h + 24}
             width="136"
@@ -376,10 +377,14 @@ export default function CakeLayers() {
       </div>
 
       <p className="cake-foot">
-        Adjusted R&sup2; from forward-selection linear regression, per crime category.
-        Explained is not caused: across 2010 to 2022 Chicago prices rose steadily while
-        crime fell steadily, and two opposite trends fit each other well whether or not they
-        are connected.
+        One forward-selection linear regression per crime category, each fitted on 13 annual
+        observations from 2010 to 2022. Adjusted rather than plain R&sup2;, because the
+        models keep between one and three factors and plain R&sup2; can only rise when
+        another is added. R&sup2; measures fit, not cause, and it is flattered here by the
+        shape of the data: prices rose across the period and crime fell, and any two
+        opposing trends fit each other well whether or not they are connected. What the
+        chart is good for is the comparison between categories, not the size of any one
+        number.
       </p>
     </figure>
   )

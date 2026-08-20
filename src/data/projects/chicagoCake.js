@@ -114,19 +114,28 @@ export const UTENSIL_PATHS = {
     'M-11 -3 L35 -2.2 L35 2.2 L-11 3 Z',
   ].join(' '),
 
-  knife: [
-    'M-41 0',
-    'Q-41 -9.6 -31 -10.4',
-    'L-12 -7.4',
-    'Q-5 -6 -3 -3.4',
-    'L18 -4.4',
-    'Q39 -5.4 39 -2',
-    'L39 2',
-    'Q39 5.4 18 4.4',
-    'L-3 3.4',
-    'Q-5 6 -12 7.4',
-    'L-31 10.4',
-    'Q-41 9.6 -41 0',
-    'Z',
-  ].join(' '),
+  /* A table knife: essentially a straight bar, with the cutting edge given a
+     shallow serration. Amplitude is 1.2 units against a 12-unit blade, so it
+     reads as a toothed edge rather than a saw. */
+  knife: (() => {
+    const teeth = []
+    let low = true
+    for (let x = -9; x >= -37; x -= 2.6) {
+      teeth.push('L' + x.toFixed(1) + ' ' + (low ? '6.6' : '5.4'))
+      low = !low
+    }
+    return [
+      'M-40 -6.2',
+      'L-6 -5.2',
+      'L-3 -2.9',
+      'L37 -2.3',
+      'Q40 -2.3 40 0',
+      'Q40 2.3 37 2.3',
+      'L-3 2.9',
+      'L-6 5.2',
+      teeth.join(' '),
+      'L-40 6.2',
+      'Z',
+    ].join(' ')
+  })(),
 }

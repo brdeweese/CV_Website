@@ -2767,7 +2767,7 @@ button { font: inherit; color: inherit; }
 
 .cake-plate { fill: var(--rule-strong); }
 .cake-stem { fill: var(--rule-strong); }
-.cake-foot { fill: var(--rule-strong); }
+.cake-standfoot { fill: var(--rule-strong); }
 
 .cake-hit { fill: transparent; }
 .cake-col[data-hover='true'] .cake-edge { stroke: var(--ink); }

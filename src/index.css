@@ -33,8 +33,14 @@
   /* Chart series. Same validated hues as the disciplines, but named separately
      so a colour inside a chart carries only the meaning its own legend gives
      it, not the site-wide discipline meaning. */
-  --rfork-back: #2a78d6;
-  --rfork-fwd: #c2610a;
+  /* The plane. Green against burgundy is not colourblind-safe and cannot be
+     made so, which is why nothing in the diagram depends on separating them. */
+  --rf-green: #1b8f5f;
+  --rf-burgundy: #8c2740;
+  --rf-burgundy-deep: #5e1526;
+  --rf-pale: #d3d8d4;
+  --rfork-back: #1b8f5f;
+  --rfork-fwd: #8c2740;
   --btc-lr: #7a2a8c;
   --btc-rf: #a04070;
   --btc-ardl: #c2610a;
@@ -94,8 +100,12 @@
     --economics: #3987e5;
     --data: #d95926;
     --tourism: #199e70;
-    --rfork-back: #3987e5;
-    --rfork-fwd: #f0932b;
+    --rf-green: #35b380;
+    --rf-burgundy: #d4667f;
+    --rf-burgundy-deep: #b13f5c;
+    --rf-pale: #4a4a47;
+    --rfork-back: #35b380;
+    --rfork-fwd: #d4667f;
     --btc-lr: #c07fdd;
     --btc-rf: #e290bb;
     --btc-ardl: #f0932b;
@@ -118,8 +128,12 @@
 }
 
 :root[data-theme="dark"] {
-  --rfork-back: #3987e5;
-  --rfork-fwd: #f0932b;
+  --rf-green: #35b380;
+  --rf-burgundy: #d4667f;
+  --rf-burgundy-deep: #b13f5c;
+  --rf-pale: #4a4a47;
+  --rfork-back: #35b380;
+  --rfork-fwd: #d4667f;
   --btc-lr: #c07fdd;
   --btc-rf: #e290bb;
   --btc-ardl: #f0932b;
@@ -2478,7 +2492,8 @@ button { font: inherit; color: inherit; }
   .btcf-tip { min-width: 8rem; }
 }
 
-/* --- Resilience: where the two definitions diverge ------------------------ */
+
+/* --- Resilience: the journey through the adversity ------------------------ */
 
 .rfork {
   background: var(--surface);
@@ -2496,53 +2511,60 @@ button { font: inherit; color: inherit; }
   color: var(--ink);
   margin: 0 0 0.3rem;
 }
-.rfork-sub { font-size: 0.82rem; color: var(--ink-3); margin: 0; max-width: 52ch; }
+.rfork-sub { font-size: 0.82rem; color: var(--ink-3); margin: 0; max-width: 54ch; }
 
-.rfork-plot { position: relative; }
-.rfork-plot svg { display: block; }
+/* The diagram is 920 units wide. Squeezed into a phone it would render its
+   labels at about 4px, so below the breakpoint it keeps a readable minimum
+   width and scrolls sideways inside its own box instead. */
+.rfork-plot { overflow-x: auto; }
+.rfork-plot svg { display: block; width: 100%; height: auto; }
 
-.rfork-base { stroke: var(--rule-strong); stroke-width: 1; stroke-dasharray: 4 4; }
-.rfork-baselabel,
-.rfork-stage,
-.rfork-end {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.04em;
-  fill: var(--ink-3);
+.rf-route { fill: none; stroke: var(--ink-3); stroke-width: 2.5; }
+.rf-route--fall { stroke: var(--ink); stroke-width: 6; }
+.rf-route--branch { stroke: var(--tone); stroke-width: 4; }
+.rf-arrowhead { fill: context-stroke, var(--ink-3); }
+.rf-route--fall { marker-end: url(#rfArrow); }
+
+.rf-node circle {
+  fill: var(--surface-2);
+  stroke: var(--rule-strong);
+  stroke-width: 1.5;
 }
-.rfork-stage { text-transform: uppercase; letter-spacing: 0.1em; }
-.rfork-divide { stroke: var(--rule); stroke-width: 1; }
-
-.rfork-adversity line { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 2 3; }
-.rfork-adversity text {
+.rf-node text {
   font-family: var(--font-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  fill: var(--ink);
+}
+
+.rf-crack path { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linejoin: round; }
+.rf-crack circle { fill: var(--ink-3); }
+
+.rf-routelabel text {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  letter-spacing: 0.05em;
   fill: var(--ink-2);
 }
+.rf-routelabel[data-tone] text { fill: var(--tone); }
 
-.rfork-line { fill: none; stroke-linecap: round; stroke-linejoin: round; }
-.rfork-line--shared { stroke: var(--ink); stroke-width: 2.5; }
-.rfork-line--branch { stroke: var(--tone); stroke-width: 2.5; }
+.rf-plane { transition: opacity 0.18s linear; }
+.rf-plane path { stroke: var(--surface); stroke-width: 0.8; }
 
 [data-tone='back'] { --tone: var(--rfork-back); }
 [data-tone='fwd'] { --tone: var(--rfork-fwd); }
+[data-dim='true'] { opacity: 0.2; }
 
-.rfork-plot g[data-tone] circle { fill: var(--tone); }
-.rfork-plot g[data-tone] .rfork-end { fill: var(--tone); }
-.rfork-plot g[data-dim='true'] { opacity: 0.22; }
-.rfork-fork { fill: var(--ink); }
-
-.rfork-stages {
+.rfork-defs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.9rem;
-  margin-top: 0.7rem;
+  margin-top: 0.6rem;
   padding-top: 0.9rem;
   border-top: 1px solid var(--rule);
 }
-.rfork-stagename {
+.rfork-term {
   font-family: var(--font-mono);
   font-size: 0.6rem;
   letter-spacing: 0.1em;
@@ -2550,7 +2572,7 @@ button { font: inherit; color: inherit; }
   color: var(--ink);
   margin: 0 0 0.25rem;
 }
-.rfork-stagedetail { font-size: 0.76rem; color: var(--ink-3); margin: 0; line-height: 1.45; }
+.rfork-detail { font-size: 0.76rem; color: var(--ink-3); margin: 0; line-height: 1.45; }
 
 .rfork-controls {
   display: flex;
@@ -2581,7 +2603,7 @@ button { font: inherit; color: inherit; }
   border-color: var(--ink);
   background: var(--surface-2);
 }
-.rfork-swatch { width: 12px; height: 3px; border-radius: 2px; background: var(--tone); flex: none; }
+.rfork-swatch { width: 12px; height: 8px; border-radius: 2px; background: var(--tone); flex: none; }
 .rfork-replay {
   font-family: var(--font-mono);
   font-size: 0.62rem;
@@ -2614,6 +2636,7 @@ button { font: inherit; color: inherit; }
 
 @media (max-width: 620px) {
   .rfork { padding: 1rem 0.9rem; }
-  .rfork-stages { grid-template-columns: 1fr; gap: 0.7rem; }
-  .rfork-pick { font-size: 0.58rem; }
+  .rfork-plot svg { min-width: 760px; }
+  .rfork-defs { grid-template-columns: 1fr; gap: 0.7rem; }
+  .rfork-pick { font-size: 0.56rem; padding: 0.28rem 0.5rem; }
 }

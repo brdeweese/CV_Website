@@ -35,6 +35,7 @@
      it, not the site-wide discipline meaning. */
   /* The plane. Green against burgundy is not colourblind-safe and cannot be
      made so, which is why nothing in the diagram depends on separating them. */
+  --rf-egg: #c0392b;
   --rf-green: #1b8f5f;
   --rf-burgundy: #7b2450;
   --rf-burgundy-deep: #4e1440;
@@ -100,7 +101,9 @@
     --economics: #3987e5;
     --data: #d95926;
     --tourism: #199e70;
-    --rf-green: #35b380;
+    --rf-egg: #d94f3d;
+    --rf-egg: #d94f3d;
+  --rf-green: #35b380;
     --rf-burgundy: #cd6a95;
     --rf-burgundy-deep: #b04a80;
     --rf-pale: #4a4a47;
@@ -2525,10 +2528,10 @@ button { font: inherit; color: inherit; }
 .rf-arrowhead { fill: context-stroke, var(--ink-3); }
 .rf-route--fall { marker-end: url(#rfArrow); }
 
+/* The adversity is the one red thing on the page. */
 .rf-node--shell path {
-  fill: var(--surface-2);
-  stroke: var(--rule-strong);
-  stroke-width: 1.5;
+  fill: var(--rf-egg);
+  stroke: none;
 }
 .rf-node--shell g { transition: none; }
 .rf-node circle {
@@ -2544,7 +2547,7 @@ button { font: inherit; color: inherit; }
   fill: var(--ink);
 }
 
-.rf-crack circle { fill: var(--ink-3); }
+.rf-crack circle { fill: var(--rf-egg); }
 
 .rf-routelabel text {
   font-family: var(--font-mono);

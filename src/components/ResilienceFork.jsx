@@ -49,17 +49,23 @@ const toPath = (pts) => 'M' + pts.map(([x, y]) => x + ' ' + y).join(' L') + ' Z'
 const PLANE_TOP = toPath(HALF)
 const PLANE_BOT = toPath(HALF.map(([x, y]) => [x, -y]))
 
-/* The adversity shell. One jagged seam, used by both halves, so they interlock
-   before the impact and read as one broken thing after it. */
+/* The adversity shell, split longways. One jagged seam runs top to bottom and
+   is shared by both halves, so they interlock until the impact and read as one
+   broken thing afterwards. Sweep 0 wraps the left, sweep 1 the right. */
 const SEAM = [
-  [-46, 0], [-34, -7], [-22, 5], [-10, -6], [2, 6], [14, -5], [26, 7], [36, -4], [46, 0],
+  [0, -46], [-7, -34], [5, -22], [-6, -10], [6, 2], [-5, 14], [7, 26], [-4, 36], [0, 46],
 ]
 const seamPath = 'M' + SEAM.map(([x, y]) => x + ' ' + y).join(' L')
-const SHELL_TOP = seamPath + ' A 46 46 0 0 0 -46 0 Z'
-const SHELL_BOT = seamPath + ' A 46 46 0 0 1 -46 0 Z'
+const SHELL_L = seamPath + ' A 46 46 0 0 0 0 -46 Z'
+const SHELL_R = seamPath + ' A 46 46 0 0 1 0 -46 Z'
 
-const T = { fall: [0, 0.3], impact: [0.3, 0.4], branch: [0.42, 1] }
-const RUN_MS = 6200
+const T = {
+  fall: [0, 0.2], // the plane comes down
+  rattle: [0.2, 0.48], // the shell shakes itself apart, coping
+  crack: [0.48, 0.64], // it splits longways and the halves drop off the frame
+  branch: [0.64, 1], // only then do the two planes leave
+}
+const RUN_MS = 7800
 
 const DEFS = [
   {
@@ -124,8 +130,10 @@ export default function ResilienceFork() {
   const greenRef = useRef(null)
   const burgRef = useRef(null)
   const crackRef = useRef(null)
-  const shellTopRef = useRef(null)
-  const shellBotRef = useRef(null)
+  const eggRef = useRef(null)
+  const shellLRef = useRef(null)
+  const shellRRef = useRef(null)
+  const advLabelRef = useRef(null)
   /* The theme watcher repaints the frame that is already on screen, so these
      three are how it reaches the running animation without restarting it. */
   const colorsRef = useRef(null)
@@ -157,6 +165,7 @@ export default function ResilienceFork() {
         BURG: pick('--rf-burgundy', '#8c2740'),
         DEEP: pick('--rf-burgundy-deep', '#5e1526'),
         PALE: pick('--rf-pale', '#d3d8d4'),
+        INK: pick('--ink', '#0b0b0b'),
       }
     }
     readColors()
@@ -180,35 +189,68 @@ export default function ResilienceFork() {
 
     const frame = (t) => {
       lastTRef.current = t
-      const { GREEN, BURG, DEEP, PALE } = colorsRef.current
+      const { GREEN, BURG, DEEP, PALE, INK } = colorsRef.current
       const whole = planeRef.current
       const green = greenRef.current
       const burg = burgRef.current
       const crack = crackRef.current
       if (!whole || !green || !burg) return
 
-      const flying = t < T.impact[0]
+      const egg = eggRef.current
+      const shellL = shellLRef.current
+      const shellR = shellRRef.current
+      const label = advLabelRef.current
+
+      const flying = t < T.rattle[0]
+      const branching = t >= T.branch[0]
       whole.style.opacity = flying ? '1' : '0'
-      green.style.opacity = flying ? '0' : '1'
-      burg.style.opacity = flying ? '0' : '1'
+      /* The halves wait inside the wreck until the shell is gone. */
+      green.style.opacity = branching ? '1' : '0'
+      burg.style.opacity = branching ? '1' : '0'
 
       if (flying) {
         put(whole, fall, L.fall, ease(span(T.fall, t)), 0.86)
         paint(whole, GREEN, BURG)
         if (crack) crack.style.opacity = '0'
-        if (shellTopRef.current) shellTopRef.current.removeAttribute('transform')
-        if (shellBotRef.current) shellBotRef.current.removeAttribute('transform')
+        egg?.removeAttribute('transform')
+        shellL?.removeAttribute('transform')
+        shellR?.removeAttribute('transform')
+        if (label) {
+          label.textContent = 'Adversity'
+          label.setAttribute('fill', '#ffffff')
+        }
         return
       }
 
-      /* Impact: the shell breaks open and the plane comes apart with it. */
-      const k = ease(span(T.impact, t))
-      if (crack) crack.style.opacity = String(Math.min(1, k * 2))
-      if (shellTopRef.current) {
-        shellTopRef.current.setAttribute('transform', `translate(${-7 * k} ${-30 * k}) rotate(${-9 * k})`)
-      }
-      if (shellBotRef.current) {
-        shellBotRef.current.setAttribute('transform', `translate(${5 * k} ${24 * k}) rotate(${6 * k})`)
+      if (t < T.crack[0]) {
+        /* Coping: the shell rattles harder and harder and turns a full circle,
+           finishing upright so the split starts from a still egg. */
+        const r = span(T.rattle, t)
+        const amp = 2 + 5 * r
+        const jx = Math.sin(r * 46) * amp
+        const jy = Math.cos(r * 37) * amp * 0.7
+        egg?.setAttribute('transform', `translate(${jx.toFixed(2)} ${jy.toFixed(2)}) rotate(${(r * r * 360).toFixed(1)})`)
+        shellL?.removeAttribute('transform')
+        shellR?.removeAttribute('transform')
+        if (crack) crack.style.opacity = '0'
+        if (label) {
+          label.textContent = 'Coping'
+          label.setAttribute('fill', '#ffffff')
+        }
+      } else {
+        /* The split, then both halves drop off the bottom of the frame. */
+        const c = ease(span(T.crack, t))
+        egg?.removeAttribute('transform')
+        shellL?.setAttribute('transform', `translate(${(-96 * c).toFixed(1)} ${(320 * c).toFixed(1)}) rotate(${(-58 * c).toFixed(1)})`)
+        shellR?.setAttribute('transform', `translate(${(96 * c).toFixed(1)} ${(320 * c).toFixed(1)}) rotate(${(58 * c).toFixed(1)})`)
+        if (crack) {
+          crack.style.opacity = String(Math.max(0, 1 - c * 1.4))
+          crack.setAttribute('transform', `translate(0 ${(260 * c).toFixed(1)})`)
+        }
+        if (label) {
+          label.textContent = 'Coping'
+          label.setAttribute('fill', c > 0.3 ? INK : '#ffffff')
+        }
       }
 
       const b = ease(span(T.branch, t))
@@ -288,7 +330,7 @@ export default function ResilienceFork() {
         <svg
           viewBox={`0 0 ${VB.w} ${VB.h}`}
           role="img"
-          aria-label="A plane leaves the Original State, breaks on the Adversity, and splits: one half returns to the Original State, the other flies on to a New state"
+          aria-label="A plane leaves the Original State and strikes the Adversity. The adversity rattles and turns while the organisation copes, then splits longways and falls away. Only then do the two halves of the plane leave: one back to the Original State, the other on to a New state"
         >
           <defs>
             <marker
@@ -351,13 +393,17 @@ export default function ResilienceFork() {
             className="rf-node rf-node--shell"
             transform={`translate(${NODES.adversity.x} ${NODES.adversity.y})`}
           >
-            <g ref={shellTopRef}>
-              <path d={SHELL_TOP} />
+            {/* The shell rattles and turns inside this group; the label sits
+                outside it, so the word stays upright and readable. */}
+            <g ref={eggRef}>
+              <g ref={shellLRef}>
+                <path d={SHELL_L} />
+              </g>
+              <g ref={shellRRef}>
+                <path d={SHELL_R} />
+              </g>
             </g>
-            <g ref={shellBotRef}>
-              <path d={SHELL_BOT} />
-            </g>
-            <text x="0" y="5" textAnchor="middle">
+            <text ref={advLabelRef} x="0" y="5" textAnchor="middle" fill="#ffffff">
               Adversity
             </text>
           </g>

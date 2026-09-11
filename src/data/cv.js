@@ -792,16 +792,15 @@ export const curriculum = [
     title: 'Module leadership',
     points: [
       'Module Lead across the Accounting and Financial Management and Business and Tourism Management programmes, holding responsibility for delivery, assessment design, marking moderation, student progression, and cohort performance across five campuses.',
-      'Designed the Digital and Data Management module from specification stage, setting learning outcomes, assessment strategy, and content sequencing before building and delivering the teaching materials.',
       'Designed the foundation year project delivered across both the Accounting and Financial Management and Business and Tourism Management programmes, building a shared structure that works for two distinct cohorts.',
-      'Designed and deliver a consultancy-style capstone module built around a large Fáilte Ireland tourism dataset, cleaned and structured for student use, guiding students through the full analytical pipeline from data extraction to stakeholder presentation.',
-      'Developed and implemented practical guidance on ethical AI use for students, covering disclosure, verification, and where AI genuinely helps versus where it removes the thinking that the assessment is meant to test.',
+      'Analyse student performance data and present findings to fellow lecturers, tracking cohort progress and benchmarking outcomes across campuses.',
     ],
   },
   {
     title: 'Module specification and redesign',
     points: [
-      'Redesigned assessments to be AI-resilient, shifting weight towards process, applied judgement, and defence of method rather than output alone.',
+      'Designed the Digital and Data Management module from specification stage, setting learning outcomes, assessment strategy, and content sequencing before building and delivering the teaching materials.',
+      'Designed and deliver a consultancy-style capstone module built around a large Fáilte Ireland tourism dataset, cleaned and structured for student use, guiding students through the full analytical pipeline from data extraction to stakeholder presentation.',
       'Rewrote assessment briefs and rubrics to strengthen constructive alignment between learning outcomes and marking criteria, improving marking consistency across the teaching team.',
     ],
   },
@@ -809,8 +808,9 @@ export const curriculum = [
     title: 'Data and technology in teaching',
     points: [
       'Teach Python, Excel, and Power BI as working tools within economics and business modules, so that students graduate with applied analytical skills alongside theory.',
+      'Developed and implemented practical guidance on ethical AI use for students, covering disclosure, verification, and where AI genuinely helps versus where it removes the thinking that the assessment is meant to test.',
+      'Redesigned assessments to be AI-resilient, shifting weight towards process, applied judgement, and defence of method rather than output alone.',
       'Built and maintain an automated workflow for completion score analysis, improving consistency and reducing manual effort across reporting cycles.',
-      'Analyse student performance data and present findings to fellow lecturers, tracking cohort progress and benchmarking outcomes across campuses.',
     ],
   },
 ]

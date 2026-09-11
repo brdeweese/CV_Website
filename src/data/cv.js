@@ -731,15 +731,16 @@ export const projects = [
   {
     slug: 'module-feedback-sentiment-classifier',
     hero: 'feedback',
-    title: 'Module Feedback Sentiment Classifier',
+    title: 'Module Data and Sentiment Classifier',
     subtitle:
-      'Turning open-text student feedback into something a teaching team can act on',
+      'Module outcomes against target, and the open-text feedback classified for sentiment and theme',
     discipline: 'data',
     year: '2025',
     kind: 'Applied NLP',
     summary:
-      'A Python natural language classifier that reads open-text student feedback for sentiment and recurring themes, used to brief lecturers on where to focus module improvements.',
+      'The module data a recap meeting works from: outcomes against KPI by group, and a Python natural language classifier that reads the open-text feedback for sentiment and recurring themes, used to brief lecturers on where to focus module improvements.',
     body: [
+      'A module recap meeting works from two things. First the outcomes: submission, pass, attendance and marks, each against its KPI and broken down by group, so a teaching team can see which groups need something done about them. Then the evaluations.',
       'Modules collect star ratings and open-text responses. The ratings give a score. The open text gives the reasons behind the score, and it arrives in volume at the end of the cycle.',
       'This classifier, built in Python in Google Colab, reads the free-text responses for sentiment and for recurring themes. It returns a shortlist of the themes students raised and how strongly they raised them. I use that shortlist to brief lecturers on where to focus module improvements.',
     ],

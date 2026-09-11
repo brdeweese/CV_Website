@@ -18,16 +18,14 @@ import KpiBoard from './KpiBoard.jsx'
  * change and needs no frame timer to arrive.
  */
 
-const PHASES = ['land', 'sift', 'sort', 'tally']
-const STEP_MS = { land: 1500, sift: 1900, sort: 2100, tally: 0 }
+const PHASES = ['idle', 'land', 'sift', 'sort', 'tally']
+const STEP_MS = { idle: 0, land: 1500, sift: 1900, sort: 2100, tally: 0 }
 
 const GRID_COLS = 6
 
 export default function FeedbackFlow() {
-  const [phase, setPhase] = useState('land')
+  const [phase, setPhase] = useState('idle')
   const [open, setOpen] = useState(null) // sentiment id being read
-  const [live, setLive] = useState(false)
-  const hostRef = useRef(null)
   const timers = useRef([])
 
   const at = PHASES.indexOf(phase)
@@ -78,44 +76,23 @@ export default function FeedbackFlow() {
       setPhase('tally')
       return
     }
+    /* PHASES[0] is idle, which the press has already left. */
+    const rest = PHASES.slice(1)
     let t = 0
-    PHASES.slice(1).forEach((p, k) => {
-      t += STEP_MS[PHASES[k]]
+    rest.slice(1).forEach((p, k) => {
+      t += STEP_MS[rest[k]]
       timers.current.push(setTimeout(() => setPhase(p), t))
     })
   }, [])
 
-  useEffect(() => {
-    const el = hostRef.current
-    if (!el) return
-    if (typeof IntersectionObserver === 'undefined') {
-      setLive(true)
-      return
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setLive(true)
-          io.disconnect()
-        }
-      },
-      { threshold: 0.25 },
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-
-  useEffect(() => {
-    if (live) run()
-  }, [live, run])
-
   useEffect(() => () => timers.current.forEach(clearTimeout), [])
 
-  const sorted = at >= 2
+  const idle = phase === 'idle'
+  const sorted = at >= 3
   const openCards = open ? cards.filter((c) => c.s === open) : []
 
   return (
-    <figure className="ff" ref={hostRef}>
+    <figure className="ff">
       <figcaption className="ff-head">
         <p className="ff-eyebrow">Worked example</p>
         <h2 className="ff-title">What the recap meeting sees</h2>
@@ -127,24 +104,45 @@ export default function FeedbackFlow() {
       <p className="ff-eyebrow ff-second">Then, what students wrote</p>
 
       <div className="ff-counts">
-        <span className="ff-count" data-on={at >= 0 ? 'true' : undefined}>
+        <span className="ff-count" data-on={at >= 1 ? 'true' : undefined}>
           <b>{FUNNEL.returns}</b>returns
         </span>
         <span className="ff-arrow" aria-hidden="true">
           →
         </span>
-        <span className="ff-count" data-on={at >= 1 ? 'true' : undefined}>
-          <b>{at >= 1 ? FUNNEL.blank : '—'}</b>blank or &ldquo;D/A&rdquo;
+        <span className="ff-count" data-on={at >= 2 ? 'true' : undefined}>
+          <b>{at >= 2 ? FUNNEL.blank : '—'}</b>blank or &ldquo;D/A&rdquo;
         </span>
         <span className="ff-arrow" aria-hidden="true">
           →
         </span>
-        <span className="ff-count ff-count--keep" data-on={at >= 1 ? 'true' : undefined}>
-          <b>{at >= 1 ? FUNNEL.withText : '—'}</b>carried a comment
+        <span className="ff-count ff-count--keep" data-on={at >= 2 ? 'true' : undefined}>
+          <b>{at >= 2 ? FUNNEL.withText : '—'}</b>carried a comment
         </span>
       </div>
 
       <div className="ff-stage" data-phase={phase}>
+        {idle && (
+          <div className="ff-start">
+            <button
+              type="button"
+              className="ff-play"
+              onClick={run}
+              aria-label="Run the classifier over the example returns"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle className="ff-playring" cx="12" cy="12" r="10.5" />
+                <path className="ff-playtri" d="M9.5 7.5L17 12L9.5 16.5Z" />
+              </svg>
+            </button>
+            <p className="ff-startline">Press play to run the classifier</p>
+            <p className="ff-startsub">
+              {FUNNEL.returns} returns go in. Watch the blank ones drop out and the rest
+              sort by sentiment.
+            </p>
+          </div>
+        )}
+
         {/* Lane headings, once there are lanes. */}
         {SENTIMENTS.map((s, k) => {
           const n = RETURNS.filter((r) => r.s === s.id).length
@@ -169,7 +167,7 @@ export default function FeedbackFlow() {
 
         {cards.map((c) => {
           const pos = sorted && c.s ? c.sorted : c.grid
-          const dropped = at >= 1 && !c.s
+          const dropped = at >= 2 && !c.s
           return (
             <span
               className="ff-card"
@@ -191,7 +189,7 @@ export default function FeedbackFlow() {
       </div>
 
       {/* The summary a module leader actually presents. */}
-      <div className="ff-tally" data-on={at >= 3 ? 'true' : undefined}>
+      <div className="ff-tally" data-on={at >= 4 ? 'true' : undefined}>
         <p className="ff-tallyhead">Themes in the comments that carried one</p>
         <ul className="ff-bars">
           {themeTally.map((t) => (
@@ -200,7 +198,7 @@ export default function FeedbackFlow() {
               <span className="ff-bartrack">
                 <span
                   className="ff-bar"
-                  style={{ width: at >= 3 ? `${(t.n / themeTally[0].n) * 100}%` : '0%' }}
+                  style={{ width: at >= 4 ? `${(t.n / themeTally[0].n) * 100}%` : '0%' }}
                 />
               </span>
               <span className="ff-barn">{t.n}</span>
@@ -231,13 +229,15 @@ export default function FeedbackFlow() {
       )}
 
       <div className="ff-controls">
-        <button type="button" className="btn-game" onClick={run}>
+        <button type="button" className="btn-game" onClick={run} disabled={idle}>
           Run it again
         </button>
         <p className="ff-hint">
-          {sorted
-            ? 'Select a sentiment to read the comments in it.'
-            : 'Sorting the returns…'}
+          {idle
+            ? 'Nothing has run yet.'
+            : sorted
+              ? 'Select a sentiment to read the comments in it.'
+              : 'Sorting the returns…'}
         </p>
       </div>
     </figure>

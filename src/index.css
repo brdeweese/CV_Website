@@ -6811,3 +6811,78 @@ button {
 .ff-second {
   margin: 2.2rem 0 0.2rem;
 }
+
+/* The classifier waits to be started, so the stage opens on a prompt. */
+.ff-start {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+  background: var(--surface);
+}
+.ff-play {
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--ink);
+}
+.ff-play svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.ff-playring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  opacity: 0.5;
+}
+.ff-playtri {
+  fill: currentColor;
+}
+.ff-play:hover .ff-playring,
+.ff-play:focus-visible .ff-playring {
+  opacity: 1;
+}
+/* A slow pulse, so the button reads as the thing to press. */
+.ff-play svg {
+  animation: ff-beat 2.4s ease-in-out infinite;
+  transform-origin: 50% 50%;
+}
+@keyframes ff-beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07);
+  }
+}
+.ff-startline {
+  margin: 0.3rem 0 0;
+  font-size: 0.98rem;
+  color: var(--ink);
+}
+.ff-startsub {
+  margin: 0;
+  max-width: 40ch;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ff-play svg {
+    animation: none;
+  }
+}

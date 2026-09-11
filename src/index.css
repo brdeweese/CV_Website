@@ -35,6 +35,19 @@
      it, not the site-wide discipline meaning. */
   /* The plane. Green against burgundy is not colourblind-safe and cannot be
      made so, which is why nothing in the diagram depends on separating them. */
+  /* Games. The trolley and the trade game each need a small palette of their
+     own; both are checked for contrast against the card surface. */
+  --game-rail: #8b8681;
+  --game-trolley: #b8434a;
+  --game-person: #3f4450;
+  --game-hit: #b8434a;
+  --game-lever: #2f6f8f;
+  --game-ok: #1b7a4b;
+  --game-no: #b03a3a;
+  --paper-a: #d9c9a8;
+  --paper-b: #c8b6cf;
+  --paper-c: #a8c2b4;
+  --paper-d: #d3a98e;
   --era-debut: #6f9c86;
   --era-fearless: #a87f1e;
   --era-speakNow: #7a55a3;
@@ -120,7 +133,29 @@
     --economics: #3987e5;
     --data: #d95926;
     --tourism: #199e70;
-    --era-debut: #7fb69c;
+    --game-rail: #7b766f;
+    --game-trolley: #d9646b;
+    --game-person: #b6bcc8;
+    --game-hit: #d9646b;
+    --game-lever: #56a3c4;
+    --game-ok: #4fbb83;
+    --game-no: #d96b6b;
+    --paper-a: #8a7a58;
+    --paper-b: #7e6d88;
+    --paper-c: #5f7d6f;
+    --paper-d: #8d6550;
+    --game-rail: #7b766f;
+  --game-trolley: #d9646b;
+  --game-person: #b6bcc8;
+  --game-hit: #d9646b;
+  --game-lever: #56a3c4;
+  --game-ok: #4fbb83;
+  --game-no: #d96b6b;
+  --paper-a: #8a7a58;
+  --paper-b: #7e6d88;
+  --paper-c: #5f7d6f;
+  --paper-d: #8d6550;
+  --era-debut: #7fb69c;
     --era-fearless: #d4ad46;
     --era-speakNow: #a184cc;
     --era-red: #cf6262;
@@ -3038,4 +3073,388 @@ button { font: inherit; color: inherit; }
   .eras-plot svg { min-width: 820px; }
   .eras-pairgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .eras-controls { flex-direction: column; align-items: stretch; }
+}
+
+/* --- Playable classroom activities ---------------------------------------- */
+
+.games { padding: clamp(2.5rem, 6vw, 4.5rem) 0 clamp(3rem, 7vw, 5rem); }
+.games-head { max-width: 74ch; margin-bottom: clamp(1.8rem, 4vw, 2.6rem); }
+.games-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 5vw, 3.3rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0.4rem 0 0.7rem;
+}
+.games-lede { font-size: 1rem; line-height: 1.65; color: var(--ink-2); margin: 0; }
+
+.games-list { display: grid; gap: 0.9rem; }
+.games-item {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 1.15rem 1.25rem 1.25rem;
+}
+.games-item[data-open="true"] { border-color: var(--rule-strong); }
+
+.games-toggle {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 0.3rem 1rem;
+  width: 100%;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+.games-kicker {
+  grid-column: 1 / -1;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.games-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.4vw, 1.45rem);
+  color: var(--ink);
+}
+.games-chev { font-family: var(--font-mono); font-size: 1.2rem; color: var(--ink-3); }
+
+.games-blurb {
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--ink-3);
+  margin: 0.5rem 0 0;
+  max-width: 86ch;
+}
+.games-loading { font-size: 0.8rem; color: var(--ink-3); margin: 1rem 0 0; }
+.games-foot {
+  font-size: 0.74rem;
+  color: var(--ink-3);
+  margin: 1.6rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+.teach-play { font-family: var(--font-mono); font-size: 0.72rem; white-space: nowrap; }
+
+.game { margin-top: 1.1rem; }
+
+.btn-game {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--page);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  padding: 0.44rem 0.95rem;
+  cursor: pointer;
+}
+.btn-game:disabled { opacity: 0.4; cursor: default; }
+.btn-game--ghost { color: var(--ink-3); background: none; border-color: var(--rule); }
+.btn-game--ghost:hover { color: var(--ink); border-color: var(--rule-strong); }
+
+.gm-controls { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+.gm-fb { font-size: 0.84rem; color: var(--ink-2); margin: 0.8rem 0 0; }
+.gm-hint { font-size: 0.82rem; color: var(--ink-3); margin: 0 0 0.9rem; }
+.gm-source { font-size: 0.72rem; color: var(--ink-3); margin: 0.7rem 0 0; }
+
+/* Impact sort */
+.gm-table { width: 100%; border-collapse: collapse; }
+.gm-table td { padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+.gm-impact { font-size: 0.88rem; color: var(--ink-2); }
+.gm-pick select,
+.gm-irow select {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--rule-strong);
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+}
+.gm-mark { font-family: var(--font-mono); font-size: 0.72rem; text-align: right; white-space: nowrap; }
+.gm-table tr[data-state="ok"] .gm-mark { color: var(--game-ok); }
+.gm-table tr[data-state="no"] .gm-mark { color: var(--game-no); }
+
+/* Butler's curve */
+.gm-tray { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; min-height: 2rem; }
+.gm-trayempty { font-family: var(--font-mono); font-size: 0.66rem; color: var(--ink-3); }
+.gm-chip {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  padding: 0.34rem 0.7rem;
+  cursor: pointer;
+}
+.gm-chip[data-held="true"] { background: var(--ink); color: var(--page); border-color: var(--ink); }
+
+.gm-board { position: relative; }
+.gm-board svg { display: block; width: 100%; height: auto; }
+.gm-axis { stroke: var(--ink); stroke-width: 3; fill: none; stroke-linecap: round; }
+.gm-capacity { stroke: var(--ink-3); stroke-width: 2; stroke-dasharray: 7 7; fill: none; }
+.gm-caplabel,
+.gm-axislabel { font-family: var(--font-mono); font-size: 12px; fill: var(--ink-3); }
+.gm-curve { stroke: var(--ink); stroke-width: 4; fill: none; stroke-linecap: round; }
+.gm-curve--rejuv { stroke: var(--game-lever); }
+.gm-curve--decline { stroke: var(--game-no); }
+
+.gm-slot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  min-width: 74px;
+  background: var(--surface);
+  border: 1px dashed var(--rule-strong);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  cursor: pointer;
+  text-align: center;
+}
+.gm-slot[data-armed="true"] { border-style: solid; border-color: var(--ink); }
+.gm-slotname {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.05em;
+  color: var(--ink-3);
+}
+.gm-pin {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--ink);
+  margin-top: 0.2rem;
+}
+.gm-pin[data-state="ok"] { color: var(--game-ok); }
+.gm-pin[data-state="no"] { color: var(--game-no); }
+
+.gm-irridex { display: grid; gap: 0.45rem; margin-top: 1rem; }
+.gm-irow { display: flex; align-items: center; gap: 0.6rem; }
+.gm-iname { font-size: 0.82rem; color: var(--ink-2); min-width: 9rem; }
+.gm-imark { font-family: var(--font-mono); font-size: 0.72rem; }
+.gm-imark[data-state="ok"] { color: var(--game-ok); }
+.gm-imark[data-state="no"] { color: var(--game-no); }
+
+/* Crossword */
+.gm-cwlayout { display: grid; grid-template-columns: auto 1fr; gap: 1.4rem; align-items: start; }
+.gm-cwscroll { overflow-x: auto; }
+.gm-grid { display: grid; gap: 2px; }
+.gm-void { width: 30px; height: 30px; }
+.gm-cell {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  background: var(--surface-2);
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+}
+.gm-cell[data-active="true"] { background: var(--surface); border-color: var(--ink); }
+.gm-cell[data-state="ok"] { border-color: var(--game-ok); }
+.gm-cell[data-state="no"] { border-color: var(--game-no); }
+.gm-cell input {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: none;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.gm-cell input:focus { outline: 2px solid var(--ink); outline-offset: -2px; }
+.gm-num {
+  position: absolute;
+  top: 1px;
+  left: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.46rem;
+  color: var(--ink-3);
+  pointer-events: none;
+}
+.gm-clues { display: grid; gap: 1rem; }
+.gm-cluelist h4 {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 0.35rem;
+}
+.gm-clue {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--ink-3);
+  background: none;
+  border: 0;
+  border-left: 2px solid transparent;
+  padding: 0.22rem 0 0.22rem 0.5rem;
+  cursor: pointer;
+}
+.gm-clue b { font-family: var(--font-mono); color: var(--ink); margin-right: 0.4rem; }
+.gm-clue[data-active="true"] { border-left-color: var(--ink); color: var(--ink-2); }
+
+/* Trolley */
+.tr-stage svg { display: block; width: 100%; height: auto; }
+.tr-ground { fill: var(--surface-2); }
+.tr-rail { stroke: var(--game-rail); stroke-width: 4; fill: none; stroke-linecap: round; }
+.tr-sleeper { fill: var(--game-rail); opacity: 0.55; }
+.tr-leverbase { fill: var(--ink-3); }
+.tr-leverarm { stroke: var(--game-lever); stroke-width: 6; stroke-linecap: round; fill: none; }
+.tr-leverknob { fill: var(--game-lever); }
+.tr-head { fill: var(--game-person); }
+.tr-body { stroke: var(--game-person); stroke-width: 3.4; stroke-linecap: round; fill: none; }
+.tr-person[data-hit="true"] .tr-head { fill: var(--game-hit); }
+.tr-person[data-hit="true"] .tr-body { stroke: var(--game-hit); }
+.tr-person[data-hit="true"] { opacity: 0.55; }
+.tr-count {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  fill: var(--ink-2);
+}
+.tr-car rect { fill: var(--game-trolley); }
+.tr-car .tr-window { fill: var(--surface); }
+.tr-car .tr-wheel { fill: var(--ink); }
+
+.tr-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-top: 0.9rem;
+}
+.tr-prompt { font-size: 0.9rem; color: var(--ink-2); margin: 0; }
+.tr-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.tr-result {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+.tr-toll {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.tr-toll b { font-family: var(--font-display); font-size: 2.2rem; color: var(--game-hit); line-height: 1; }
+.tr-verdict { font-size: 0.9rem; color: var(--ink); margin: 0 0 0.35rem; }
+.tr-school { font-size: 0.84rem; line-height: 1.55; color: var(--ink-3); margin: 0; }
+
+.tr-after { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.9rem; margin-top: 1rem; }
+.tr-card { border-left: 3px solid var(--rule-strong); padding-left: 0.7rem; }
+.tr-cardtitle {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 0.3rem;
+}
+.tr-cardbody { font-size: 0.8rem; line-height: 1.55; color: var(--ink-3); margin: 0; }
+
+/* Trade game */
+.tg-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+}
+.tg-switch { display: flex; align-items: center; gap: 0.7rem; }
+.tg-state { font-family: var(--font-mono); font-size: 0.66rem; color: var(--ink-3); margin: 0; }
+.tg-total { display: flex; align-items: baseline; gap: 0.4rem; margin: 0; }
+.tg-total b { font-family: var(--font-display); font-size: 1.9rem; color: var(--ink); line-height: 1; }
+.tg-total span {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.tg-sky { height: 84px; margin: 0.4rem 0 -0.4rem; }
+.tg-sky svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.tg-flight { transition: opacity 0.25s linear; }
+.tg-shape { fill: var(--paper-a); }
+.tg-shape:nth-child(4n + 2) { fill: var(--paper-b); }
+.tg-shape:nth-child(4n + 3) { fill: var(--paper-c); }
+.tg-shape:nth-child(4n) { fill: var(--paper-d); }
+
+.tg-teams { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.8rem; }
+.tg-team {
+  background: var(--surface-2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 0.8rem;
+}
+.tg-team[data-bloc="north"] { border-color: var(--rule-strong); }
+.tg-name {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink);
+  margin: 0 0 0.45rem;
+}
+.tg-bloc {
+  display: block;
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 0.15rem;
+}
+.tg-has { list-style: none; padding: 0; margin: 0 0 0.6rem; display: flex; flex-wrap: wrap; gap: 0.25rem; }
+.tg-has li {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.16rem 0.4rem;
+  opacity: 0.45;
+}
+.tg-has li[data-held="true"] { opacity: 1; color: var(--ink); border-color: var(--ink); }
+.tg-made { display: flex; align-items: baseline; gap: 0.3rem; margin: 0 0 0.4rem; }
+.tg-made b { font-family: var(--font-display); font-size: 1.5rem; color: var(--ink-3); line-height: 1; }
+.tg-team[data-made="true"] .tg-made b { color: var(--ink); }
+.tg-made span { font-family: var(--font-mono); font-size: 0.58rem; color: var(--ink-3); }
+.tg-note { font-size: 0.74rem; line-height: 1.45; color: var(--ink-3); margin: 0; }
+.tg-read {
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 1rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+
+@media (max-width: 760px) {
+  .gm-cwlayout { grid-template-columns: 1fr; }
+  .tr-after { grid-template-columns: 1fr; }
+  .tg-teams { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gm-board { overflow-x: auto; }
 }

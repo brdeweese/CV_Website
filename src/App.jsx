@@ -5,6 +5,7 @@ import Footer from './components/Footer.jsx'
 import Home from './pages/Home.jsx'
 import ProjectDetail from './pages/ProjectDetail.jsx'
 import NotFound from './pages/NotFound.jsx'
+import Games from './pages/Games.jsx'
 
 /** Jump to the top on route change, unless the URL carries a hash target. */
 function ScrollToTop() {
@@ -27,6 +28,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/projects/:slug" element={<ProjectDetail />} />
+        <Route path="/games" element={<Games />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

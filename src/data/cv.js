@@ -720,6 +720,7 @@ export const projects = [
     links: [
       { label: 'Download the Teach with Tech deck', href: `${FILES}teach-with-tech.pdf` },
       { label: 'Teach with Tech resources', href: 'https://brinadeweese.wixsite.com/teachtech' },
+      { label: 'Play five of the activities', href: 'games', internal: true },
       { label: 'See all the activities', href: '#teaching', internal: true },
     ],
   },

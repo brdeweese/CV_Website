@@ -251,7 +251,10 @@ export default function Home() {
             <SectionHead id="teaching" />
             <p className="lede" style={{ marginBottom: 'clamp(2rem, 4vw, 3rem)' }}>
               Lecture activities built to make abstract material stick, using gamification,
-              real academic sourcing, and data tools students can carry into work.
+              real academic sourcing, and data tools students can carry into work.{' '}
+              <Link className="teach-play" to="/games">
+                Play five of them &rarr;
+              </Link>
             </p>
             <div className="teach-grid">
               {teaching.map((t) => (

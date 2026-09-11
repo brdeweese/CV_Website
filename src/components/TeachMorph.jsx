@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 /**
  * The deck's cover slide, with the joke on it actually happening.
@@ -10,9 +10,14 @@ import { useCallback, useEffect, useRef, useState } from 'react'
  * The letters are laid out in a flex row rather than positioned, so closing the
  * gap needs no measuring: the A's box animates to zero width and the C and H
  * slide left on their own, at any size the panel happens to be.
+ *
+ * It cycles on its own, and only while it is on screen, so it is not running
+ * against a panel nobody is looking at.
  */
 
-const HOLD_MS = 1500
+/* How long each word sits before it turns into the other one. The transition
+   itself is 0.85s, so these are the holds plus the move. */
+const HOLD = { teach: 2000, tech: 2600 }
 
 function Laptop() {
   return (
@@ -26,50 +31,59 @@ function Laptop() {
 
 export default function TeachMorph() {
   const [state, setState] = useState('teach')
+  const [live, setLive] = useState(false)
   const hostRef = useRef(null)
   const timer = useRef(null)
 
-  /* Reduced motion still gets the reveal, because the joke is the point of the
-     slide. The transitions are switched off in CSS for that preference, so the
-     word cuts from one to the other instead of sliding. */
-  const play = useCallback(() => {
-    clearTimeout(timer.current)
-    setState('teach')
-    timer.current = setTimeout(() => setState('tech'), HOLD_MS)
-  }, [])
-
-  /* Runs when it comes into view, so the joke is not already over by the time
-     anyone looks at it. */
+  /* Only cycles while it is on screen, so it starts where someone can see it
+     and stops once they have scrolled past. */
   useEffect(() => {
     const el = hostRef.current
     if (!el) return
     if (typeof IntersectionObserver === 'undefined') {
-      play()
+      setLive(true)
       return
     }
     const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          play()
-          io.disconnect()
-        }
-      },
-      { threshold: 0.4 },
+      (entries) => setLive(entries.some((e) => e.isIntersecting)),
+      { threshold: 0.35 },
     )
     io.observe(el)
     return () => io.disconnect()
-  }, [play])
+  }, [])
+
+  useEffect(() => {
+    clearTimeout(timer.current)
+    if (!live) return
+
+    /* A slide that never stops moving is the case this preference exists for,
+       so reduced motion gets the reveal once and then holds on TECH. The
+       transitions are switched off in CSS for it, so that one change is a cut
+       rather than a slide. */
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) {
+      if (state === 'teach') {
+        timer.current = setTimeout(() => setState('tech'), HOLD.teach)
+      }
+      return
+    }
+
+    timer.current = setTimeout(
+      () => setState((s) => (s === 'teach' ? 'tech' : 'teach')),
+      HOLD[state],
+    )
+    return () => clearTimeout(timer.current)
+  }, [live, state])
 
   useEffect(() => () => clearTimeout(timer.current), [])
 
   return (
-    <button
-      type="button"
+    <div
       className="morph"
       ref={hostRef}
       data-state={state}
-      onClick={play}
-      aria-label="Title slide: you can’t spell teach without tech. Select to replay."
+      role="img"
+      aria-label="Title slide: you can’t spell teach without tech"
     >
       <span className="morph-kicker" aria-hidden="true">
         You can’t spell teach without..
@@ -83,6 +97,6 @@ export default function TeachMorph() {
         <span className="morph-letter">C</span>
         <span className="morph-letter">H</span>
       </span>
-    </button>
+    </div>
   )
 }

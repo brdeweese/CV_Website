@@ -5575,13 +5575,8 @@ button {
   border: 1px solid var(--rule);
   border-radius: 3px;
   background: var(--tt-paper);
-  cursor: pointer;
   text-align: left;
   overflow: hidden;
-}
-.morph:focus-visible {
-  outline: 2px solid var(--tt-violet);
-  outline-offset: 2px;
 }
 
 .morph-kicker {

@@ -688,6 +688,7 @@ export const projects = [
   {
     slug: 'technology-in-the-classroom',
     hero: 'teachtech',
+    mid: 'deck',
     title: 'Technology in the Classroom',
     subtitle:
       'Teaching staff to use AI and digital tools, and the classroom games that put them into practice',
@@ -696,12 +697,10 @@ export const projects = [
     kind: 'Curriculum design',
     summary:
       'Teach with Tech, a training session for fellow lecturers on bringing AI, Canva, Wix, and Trello into teaching and assessment, alongside the gamified activities I run with students.',
-    body: [
+    intro: [
       'Today’s travellers are tech-savvy and expect a seamless, personalised, and convenient travel experience, which makes a strong understanding of technology vital for anyone building a career in tourism. Digital tools are essential in the tourism and business industries, digital skills strengthen students’ CVs and employability, and the job market is more competitive than ever. As educators we have to keep up with the technologies our students will meet at work, AI included, or we cannot prepare them to enter that workforce.',
-      'The session opens with two shows of hands. First: who has used Canva, Wix, Trello, AI tools, Tableau or Power BI, Mailchimp, or Excel in their career or their personal time. Then the same list again, but in your classroom or your assessments. The gap between the two answers is the argument. We are teachers now, but we have always been excellent learners, so the point is to learn and adapt so that our students can achieve.',
-      'AI is here to stay and is rapidly transforming many industries, including education. Rather than fearing it, teachers can embrace it as a tool to enhance teaching and assessment. The session works through three examples: role play, where an AI tool acts as a prospective client questioning a student’s ecotourism company on its sustainability and CSR policies; a business plan build, where students invent a tourism business themselves before using AI for branding, financial projections, and customer scenarios; and data science basics in Google Colab, where students plot seasonality, run a correlation and a linear regression on tourism data, and compare predicted revenue against actual.',
-      'Canva, Wix, and Trello each come with a worked assessment. Students build a branding and marketing package in Canva, a multi-page destination website in Wix covering history, tourism impacts, and responsible tourism, and a Trello board marked on how they organised and tracked the project as well as on what they delivered.',
-      'Not every activity is technical. The escape room sequence turns the Tourism Area Life Cycle and stakeholder impact analysis into timed team puzzles students solve to earn their break. Gap in the Market requires them to justify an idea with evidence and research. The crossword worksheets carry a full Harvard reference list, so students practise academic sourcing while they revise definitions.',
+    ],
+    body: [
       'The aim is to equip students with the digital tools and technologies they will encounter professionally, building the confidence to adapt, thrive, and lead in a technology-driven world.',
     ],
     methods: [
@@ -719,11 +718,6 @@ export const projects = [
       'Trello',
     ],
     links: [
-      { label: 'Download the Teach with Tech deck', href: `${FILES}teach-with-tech.pdf` },
-      {
-        label: 'Teach with Tech resources',
-        href: 'https://brinadeweese.wixsite.com/teachtech',
-      },
       { label: 'Play six of the activities', href: 'games', internal: true },
       { label: 'See all the activities', href: '#teaching', internal: true },
     ],

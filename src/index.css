@@ -1358,14 +1358,18 @@ button {
   }
 }
 
-.detail-body p {
+/* Direct children only. These are the prose paragraphs; a paragraph inside an
+   embedded component (a chart note, the deck panel) has its own styling and
+   should not be dragged into body-copy sizing, which a descendant selector at
+   this specificity would do. */
+.detail-body > p {
   font-size: 1.02rem;
   line-height: 1.72;
   color: var(--ink-2);
   margin-bottom: 1.2rem;
   max-width: 66ch;
 }
-.detail-body p:first-child {
+.detail-body > p:first-child {
   color: var(--ink);
   font-size: 1.1rem;
 }
@@ -2776,6 +2780,12 @@ button {
   font-size: 1.02rem;
   line-height: 1.7;
   color: var(--ink-2);
+}
+/* The opening paragraph leads, as it did when it was picking this up from the
+   body rule by accident. Stated here so it survives that rule being scoped. */
+.detail-intro p:first-child {
+  color: var(--ink);
+  font-size: 1.1rem;
 }
 .detail-intro p:last-child {
   color: var(--ink);
@@ -5421,5 +5431,122 @@ button {
   }
   .py-cellhead {
     flex-wrap: wrap;
+  }
+}
+
+/* ---- The session deck ------------------------------------------------------
+   The presentation stands in for the prose that used to describe it, so the
+   panel has to carry its own weight: real slides, the file facts, and the
+   download. */
+
+.deck {
+  margin: 1.8rem 0;
+  padding: clamp(1.1rem, 2.4vw, 1.6rem);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: color-mix(in oklab, var(--tt-blush) 9%, var(--surface));
+}
+
+.deck-head {
+  margin-bottom: 1rem;
+}
+.deck-eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.deck-title {
+  margin: 0 0 0.45rem;
+  font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.deck-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-3);
+}
+.deck-meta span + span::before {
+  content: '·';
+  margin-right: 0.75rem;
+  color: var(--rule-strong);
+}
+
+/* The cover takes the full width of the column, because a slide shrunk to a
+   third of it is too small to read anything on. The other two sit beneath as a
+   peek at the rest. */
+.deck-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 0 0 1.1rem;
+  padding: 0;
+  list-style: none;
+}
+.deck-strip li[data-lead='true'] {
+  grid-column: 1 / -1;
+}
+.deck-strip img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--surface);
+}
+
+.deck-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1.2rem;
+}
+.deck-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--page);
+  text-decoration: none;
+  font-size: 0.86rem;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+}
+.deck-download:hover,
+.deck-download:focus-visible {
+  background: transparent;
+  color: var(--ink);
+}
+.deck-side {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  color: var(--tt-violet);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.deck-side:hover,
+.deck-side:focus-visible {
+  border-bottom-color: currentColor;
+}
+
+@media (max-width: 560px) {
+  .deck-strip {
+    grid-template-columns: 1fr;
+  }
+  /* One slide is enough on a phone; the rest is in the download. */
+  .deck-strip li:not([data-lead='true']) {
+    display: none;
   }
 }

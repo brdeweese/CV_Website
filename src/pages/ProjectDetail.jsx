@@ -17,6 +17,7 @@ const ResilienceFork = lazy(() => import('../components/ResilienceFork.jsx'))
 const CakeLayers = lazy(() => import('../components/CakeLayers.jsx'))
 const ErasBars = lazy(() => import('../components/ErasBars.jsx'))
 const TeachTech = lazy(() => import('../components/TeachTech.jsx'))
+const TeachDeck = lazy(() => import('../components/TeachDeck.jsx'))
 
 const HEROES = {
   migration: MigrationExplorer,
@@ -26,6 +27,7 @@ const HEROES = {
   cake: CakeLayers,
   eras: ErasBars,
   teachtech: TeachTech,
+  deck: TeachDeck,
 }
 
 function Takeaways({ items }) {
@@ -116,6 +118,9 @@ export default function ProjectDetail() {
   const isVisual = project.layout === 'visual'
   // A project can name a bespoke lead visual; it renders above the takeaways.
   const HeroVisual = project.hero ? HEROES[project.hero] : null
+  // And a second one that sits between the sourcing and the body, for a project
+  // where something in the middle of the argument is a thing rather than prose.
+  const MidVisual = project.mid ? HEROES[project.mid] : null
 
   // Sourcing and the headline finding. Sits under the lead visual, so the
   // graph lands first and the explanation follows it.
@@ -180,6 +185,11 @@ export default function ProjectDetail() {
           <div className="detail-grid">
             <div className="detail-body">
               {intro}
+              {MidVisual && (
+                <Suspense fallback={<div className="viz-loading">Loading…</div>}>
+                  <MidVisual />
+                </Suspense>
+              )}
               {project.body.map((p, i) => (
                 <p key={i}>{p}</p>
               ))}

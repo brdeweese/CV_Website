@@ -113,3 +113,67 @@ export const FUNNEL = (() => {
 
 export const NOTE =
   'Example data. Real module evaluations are confidential to the institution, so every comment and figure here is invented. Only the shape of the output is real.'
+
+/* ---- Outcomes against KPI, also invented ---------------------------------
+ *
+ * The recap meeting opens with how the module did before it gets to what
+ * students wrote. Same rule as above: none of this is real. Campuses are
+ * lettered rather than named so no figure can be read as any real site's
+ * performance. The numbers are a healthy cohort: three of the four headline
+ * figures meet target and one falls just short, with a single group clearly
+ * behind. Attendance nudges the outcomes without determining them (r = 0.50
+ * against submission, 0.68 against pass), which is the shape a real cohort has.
+ */
+
+export const KPI_TARGETS = { sub: 90, pass: 85, mark: 60, att: 85 }
+
+export const KPI_COLUMNS = [
+  { id: 'sub', label: 'First submission', short: 'Submission', unit: '%' },
+  { id: 'pass', label: 'First-attempt pass', short: 'Pass', unit: '%' },
+  { id: 'mark', label: 'Average mark', short: 'Avg mark', unit: '' },
+  { id: 'att', label: 'Attendance', short: 'Attendance', unit: '%' },
+]
+
+export const GROUPS = [
+  { campus: 'Campus A', group: 'A1', students: 28, sub: 88, pass: 86, mark: 59, att: 97 },
+  { campus: 'Campus A', group: 'A2', students: 57, sub: 80, pass: 79, mark: 61, att: 78 },
+  { campus: 'Campus A', group: 'C1', students: 36, sub: 91, pass: 90, mark: 62, att: 90 },
+  { campus: 'Campus B', group: 'B1', students: 33, sub: 99, pass: 89, mark: 61, att: 88 },
+  { campus: 'Campus B', group: 'B2', students: 43, sub: 99, pass: 91, mark: 66, att: 97 },
+  { campus: 'Campus C', group: 'C1', students: 32, sub: 86, pass: 78, mark: 65, att: 88 },
+  { campus: 'Campus C', group: 'E1', students: 54, sub: 97, pass: 87, mark: 57, att: 83 },
+  { campus: 'Campus C', group: 'K1', students: 22, sub: 98, pass: 81, mark: 63, att: 86 },
+  { campus: 'Campus D', group: 'B1', students: 46, sub: 78, pass: 64, mark: 58, att: 65 },
+  { campus: 'Campus D', group: 'E1', students: 56, sub: 83, pass: 76, mark: 58, att: 87 },
+  { campus: 'Campus E', group: 'E1', students: 51, sub: 88, pass: 87, mark: 63, att: 83 },
+  { campus: 'Campus E', group: 'K1', students: 40, sub: 97, pass: 90, mark: 62, att: 80 },
+]
+
+/**
+ * How far a figure is from its target, as one of four bands.
+ *
+ * Ordinal, not categorical: the bands are a distance, so they are shaded along
+ * one ramp rather than given four hues. Meeting the target is the one step that
+ * is different in kind, so it carries a tick as well as a colour and never
+ * depends on the colour alone.
+ */
+export function kpiBand(value, target) {
+  if (value >= target) return 'met'
+  if (value >= target - 8) return 'near'
+  if (value >= target - 18) return 'ok'
+  return 'low'
+}
+
+export const KPI_BANDS = [
+  { id: 'met', label: 'Met the target' },
+  { id: 'near', label: 'Within 8' },
+  { id: 'ok', label: 'Within 18' },
+  { id: 'low', label: 'Further below' },
+]
+
+/** The module-average row the recap opens on. */
+export const KPI_AVERAGES = KPI_COLUMNS.map((c) => ({
+  ...c,
+  value: Math.round(GROUPS.reduce((s, g) => s + g[c.id], 0) / GROUPS.length),
+  target: KPI_TARGETS[c.id],
+}))

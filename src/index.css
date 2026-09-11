@@ -6538,3 +6538,255 @@ button {
     font-size: 0.76rem;
   }
 }
+
+/* ---- KPI board -----------------------------------------------------------
+   Distance to target is ordered, so the cells are shaded along one ramp rather
+   than given four hues. Meeting the target is the step that differs in kind, so
+   it gets a tick too, and every cell carries its number: the colour is never
+   the only thing saying what a cell means. */
+
+:root {
+  --kpi-met: #1b7a4b;
+  --kpi-shade: #b03a3a;
+  --kpi-t1: 22%;
+  --kpi-t2: 42%;
+  --kpi-t3: 60%;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme='light'])) {
+    --kpi-met: #4fbb83;
+    --kpi-shade: #d96b6b;
+    --kpi-t1: 18%;
+    --kpi-t2: 38%;
+    --kpi-t3: 56%;
+  }
+}
+:root[data-theme='dark'] {
+  --kpi-met: #4fbb83;
+  --kpi-shade: #d96b6b;
+  --kpi-t1: 18%;
+  --kpi-t2: 38%;
+  --kpi-t3: 56%;
+}
+
+.kpi {
+  margin: 2.2rem 0 0;
+}
+.kpi-head {
+  margin-bottom: 1rem;
+}
+.kpi-eyebrow {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.kpi-title {
+  margin: 0;
+  font-size: clamp(1.1rem, 2.3vw, 1.4rem);
+  line-height: 1.2;
+}
+
+.kpi-averages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem 1.6rem;
+  margin: 1.1rem 0 1.2rem;
+  padding: 0;
+  list-style: none;
+}
+.kpi-averages li {
+  display: grid;
+  gap: 0.28rem;
+}
+.kpi-avlabel {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.kpi-avvalue {
+  font-size: 1.5rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.kpi-track {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.kpi-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.kpi-fill[data-band='met'] {
+  background: var(--kpi-met);
+}
+.kpi-fill[data-band='near'] {
+  background: color-mix(in oklab, var(--kpi-shade) 45%, var(--ink-3));
+}
+.kpi-fill[data-band='ok'] {
+  background: color-mix(in oklab, var(--kpi-shade) 70%, var(--ink-3));
+}
+.kpi-fill[data-band='low'] {
+  background: var(--kpi-shade);
+}
+.kpi-target {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  background: var(--ink);
+}
+.kpi-avtarget {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  color: var(--ink-3);
+}
+
+.kpi-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.9rem;
+  margin-bottom: 0.7rem;
+}
+.kpi-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+}
+.kpi-key i {
+  font-style: normal;
+  color: var(--kpi-met);
+}
+.kpi-key[data-band='near'] {
+  background: color-mix(in oklab, var(--kpi-shade) 9%, var(--surface));
+}
+.kpi-key[data-band='ok'] {
+  background: color-mix(in oklab, var(--kpi-shade) 18%, var(--surface));
+}
+.kpi-key[data-band='low'] {
+  background: color-mix(in oklab, var(--kpi-shade) 30%, var(--surface));
+}
+.kpi-sorthint {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  color: var(--ink-3);
+  margin-left: auto;
+}
+
+.kpi-scroll {
+  overflow-x: auto;
+}
+.kpi-table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+.kpi-table th,
+.kpi-table td {
+  padding: 0.42rem 0.6rem;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  white-space: nowrap;
+}
+.kpi-table thead th {
+  border-bottom: 1px solid var(--rule-strong);
+  vertical-align: bottom;
+  font-weight: 400;
+}
+.kpi-table thead button {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: inherit;
+  font: inherit;
+  color: var(--ink-2);
+}
+.kpi-table thead button:hover,
+.kpi-table thead button[data-active='true'] {
+  color: var(--ink);
+}
+.kpi-table thead button[data-active='true'] {
+  text-decoration: underline;
+}
+.kpi-th-target {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+.kpi-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.kpi-table thead th.kpi-num button {
+  justify-items: end;
+}
+.kpi-group {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--ink-2);
+}
+.kpi-plain {
+  color: var(--ink-3);
+}
+
+.kpi-cell {
+  position: relative;
+  color: var(--ink);
+  background: transparent;
+  transition: background 0.5s ease;
+}
+.kpi[data-on='true'] .kpi-cell[data-band='near'] {
+  background: color-mix(in oklab, var(--kpi-shade) var(--kpi-t1), var(--surface));
+}
+.kpi[data-on='true'] .kpi-cell[data-band='ok'] {
+  background: color-mix(in oklab, var(--kpi-shade) var(--kpi-t2), var(--surface));
+}
+.kpi[data-on='true'] .kpi-cell[data-band='low'] {
+  background: color-mix(in oklab, var(--kpi-shade) var(--kpi-t3), var(--surface));
+}
+.kpi-tick {
+  margin-right: 0.25rem;
+  color: var(--kpi-met);
+}
+
+.kpi-read {
+  margin: 0.9rem 0 0;
+  max-width: 72ch;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kpi-fill,
+  .kpi-cell {
+    transition: none;
+  }
+}
+
+.ff-second {
+  margin: 2.2rem 0 0.2rem;
+}

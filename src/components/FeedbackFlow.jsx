@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FUNNEL, NOTE, RETURNS, SENTIMENTS, THEMES } from '../data/meqDemo.js'
+import KpiBoard from './KpiBoard.jsx'
 
 /**
  * What the classifier does to a module's evaluation returns, played through.
@@ -120,6 +121,10 @@ export default function FeedbackFlow() {
         <h2 className="ff-title">What the recap meeting sees</h2>
         <p className="ff-note">{NOTE}</p>
       </figcaption>
+
+      <KpiBoard />
+
+      <p className="ff-eyebrow ff-second">Then, what students wrote</p>
 
       <div className="ff-counts">
         <span className="ff-count" data-on={at >= 0 ? 'true' : undefined}>

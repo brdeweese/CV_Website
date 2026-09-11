@@ -30,17 +30,57 @@ export const IMPACTS = [
 
 /* ---- Pin the tail on Butler's curve --------------------------------------- */
 
-/** Percentages along the curve, so the board scales with the container. */
+/**
+ * The seven stages, as percentages of the board.
+ *
+ * `x` and `y` are the point on the curve itself. `lx` and `ly` are where the
+ * label sits, pushed off the curve and alternating side to side so no two
+ * labels share a horizontal band. A leader line joins the two. Everything is a
+ * percentage, so labels scale with the drawing instead of staying a fixed pixel
+ * size and colliding as the board narrows.
+ *
+ * `next` names the stages either side on the curve, which is what makes an
+ * adjacent placement arguable rather than wrong.
+ */
 export const BUTLER_STAGES = [
-  { name: 'Exploration', x: 16, y: 80 },
-  { name: 'Involvement', x: 32, y: 64 },
-  { name: 'Development', x: 47, y: 47 },
-  { name: 'Consolidation', x: 62, y: 33 },
-  { name: 'Stagnation', x: 76, y: 21 },
-  { name: 'Rejuvenation', x: 91, y: 9 },
-  { name: 'Decline', x: 91, y: 45 },
+  { name: 'Exploration', x: 16.6, y: 85.3, lx: 18.3, ly: 69.8, next: ['Involvement'] },
+  {
+    name: 'Involvement',
+    x: 32.9,
+    y: 64.1,
+    lx: 28.0,
+    ly: 50.2,
+    next: ['Exploration', 'Development'],
+  },
+  {
+    name: 'Development',
+    x: 46.6,
+    y: 41.2,
+    lx: 47.1,
+    ly: 58.1,
+    next: ['Involvement', 'Consolidation'],
+  },
+  {
+    name: 'Consolidation',
+    x: 62.3,
+    y: 30.7,
+    lx: 59.1,
+    ly: 18.1,
+    next: ['Development', 'Stagnation'],
+  },
+  {
+    name: 'Stagnation',
+    x: 76.3,
+    y: 27.6,
+    lx: 77.9,
+    ly: 55.8,
+    next: ['Consolidation', 'Rejuvenation', 'Decline'],
+  },
+  { name: 'Rejuvenation', x: 91.0, y: 16.4, lx: 85.1, ly: 7.9, next: ['Stagnation'] },
+  { name: 'Decline', x: 91.0, y: 43.3, lx: 87.4, ly: 72.1, next: ['Stagnation'] },
 ]
 
+/** Ordered, so neighbouring levels are the ones that can be argued either way. */
 export const IRRIDEX = ['Euphoria', 'Apathy', 'Annoyance', 'Antagonism']
 
 export const DESTINATIONS = [

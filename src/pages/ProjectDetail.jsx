@@ -16,8 +16,17 @@ const BtcForecast = lazy(() => import('../components/BtcForecast.jsx'))
 const ResilienceFork = lazy(() => import('../components/ResilienceFork.jsx'))
 const CakeLayers = lazy(() => import('../components/CakeLayers.jsx'))
 const ErasBars = lazy(() => import('../components/ErasBars.jsx'))
+const TeachTech = lazy(() => import('../components/TeachTech.jsx'))
 
-const HEROES = { migration: MigrationExplorer, marketing: MarketingVisuals, btc: BtcForecast, resilience: ResilienceFork, cake: CakeLayers, eras: ErasBars }
+const HEROES = {
+  migration: MigrationExplorer,
+  marketing: MarketingVisuals,
+  btc: BtcForecast,
+  resilience: ResilienceFork,
+  cake: CakeLayers,
+  eras: ErasBars,
+  teachtech: TeachTech,
+}
 
 function Takeaways({ items }) {
   if (!items?.length) return null
@@ -141,6 +150,12 @@ export default function ProjectDetail() {
         {project.subtitle && <p className="detail-sub">{project.subtitle}</p>}
 
         <div className="detail-rule" />
+
+        {!isVisual && HeroVisual && (
+          <Suspense fallback={<div className="viz-loading">Loading…</div>}>
+            <HeroVisual />
+          </Suspense>
+        )}
 
         {isVisual ? (
           <>

@@ -1,5 +1,5 @@
-import { lazy, Suspense, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 
 const ImpactSort = lazy(() => import('../components/games/ImpactSort.jsx'))
 const ButlerCurve = lazy(() => import('../components/games/ButlerCurve.jsx'))
@@ -55,8 +55,28 @@ const GAMES = [
   },
 ]
 
+/** /games#butler opens that activity, so the cards on the project page can
+    link straight to one rather than dropping you at the top of the list. */
+function idFromHash(hash) {
+  const id = (hash || '').replace('#', '')
+  return GAMES.some((g) => g.id === id) ? id : null
+}
+
 export default function Games() {
-  const [openId, setOpenId] = useState(GAMES[0].id)
+  const { hash } = useLocation()
+  const [openId, setOpenId] = useState(() => idFromHash(hash) || GAMES[0].id)
+  const refs = useRef({})
+
+  useEffect(() => {
+    const id = idFromHash(hash)
+    if (!id) return
+    setOpenId(id)
+    /* The accordion body mounts on the same tick, so scroll after paint. */
+    const t = setTimeout(() => {
+      refs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 60)
+    return () => clearTimeout(t)
+  }, [hash])
 
   return (
     <main id="main" className="games">
@@ -81,6 +101,10 @@ export default function Games() {
               <section
                 className="games-item"
                 key={g.id}
+                id={g.id}
+                ref={(el) => {
+                  refs.current[g.id] = el
+                }}
                 data-open={open ? 'true' : undefined}
               >
                 <button

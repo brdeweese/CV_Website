@@ -687,6 +687,7 @@ export const projects = [
   },
   {
     slug: 'technology-in-the-classroom',
+    hero: 'teachtech',
     title: 'Technology in the Classroom',
     subtitle:
       'Teaching staff to use AI and digital tools, and the classroom games that put them into practice',

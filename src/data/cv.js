@@ -119,13 +119,14 @@ export const experience = [
     location: 'London, England',
     discipline: 'tourism',
     summary:
-      'Leading end-to-end delivery of a foundation year capstone module across five campuses, for a teaching team of 12 to 15 and more than 800 students each cycle.',
+      'Module Lead across the Accounting and Financial Management and Business and Tourism Management programmes, leading delivery of a foundation year capstone across five campuses for a teaching team of 12 to 15 and more than 800 students each cycle.',
     points: [
-      'Lead and coordinate a team of 12 to 15 lecturers across five campuses in the end-to-end delivery of a foundation year capstone module to 800+ students, ensuring consistent quality, standards, and delivery timelines throughout each cycle.',
+      'Lead and coordinate a team of 12 to 15 lecturers across five campuses in the end-to-end delivery of a foundation year capstone module to 800+ students, holding responsibility for delivery, assessment design, marking moderation, student progression, and cohort performance.',
+      'Designed the Digital and Data Management module from specification stage, and a consultancy-style capstone built around a large Fáilte Ireland tourism dataset that takes students from data extraction through to stakeholder presentation.',
       'Run standardisation meetings and produce marking guidance, grading comparison materials, and assessment checklists to maintain consistent delivery standards across teaching teams and campuses.',
-      'Coordinate delivery readiness and manage multiple concurrent priorities, including assessment design, reporting cycles, and cross-campus logistics, working closely with academic and operational stakeholders.',
-      'Support delivery across in-person teaching and online, Moodle-based components, tracking completion and engagement data to maintain quality across formats.',
+      'Coordinate delivery readiness across in-person teaching and online, Moodle-based components, managing assessment design, reporting cycles, and cross-campus logistics alongside academic and operational stakeholders.',
       'Built a Power BI dashboard and an automated Excel reporting template adopted by all module lead staff across five campuses, giving leadership back approximately two hours per week previously spent on manual reporting.',
+      'Developed practical guidance on ethical AI use for students, and redesigned assessments to be AI-resilient, shifting weight towards process, applied judgement, and defence of method rather than output alone.',
       'Designed and delivered training for fellow lecturers on using gamification and AI tools appropriately in the classroom, raising staff confidence with new technology across teaching teams.',
     ],
   },
@@ -149,7 +150,9 @@ export const experience = [
   {
     id: 'irc',
     start: 2021,
+    startMonth: 10, // October 2021
     end: 2023,
+    endMonth: 10, // October 2023
     role: 'Researcher',
     org: 'Irish Research Council',
     location: 'Dublin, Ireland',
@@ -165,7 +168,9 @@ export const experience = [
   {
     id: 'imvizar',
     start: 2022,
+    startMonth: 7, // July 2022
     end: 2023,
+    endMonth: 3, // March 2023
     role: 'Growth & Development Executive',
     org: 'Imvizar',
     orgNote: 'AR start-up',

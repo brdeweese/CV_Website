@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { disciplines, experience } from '../data/cv.js'
-import { formatPeriod, periodPoints } from '../utils/period.js'
+import { formatPeriod, formatYears, periodPoints } from '../utils/period.js'
 
 /**
  * Career timeline — a span chart of roles over real calendar years.
@@ -49,7 +49,10 @@ export default function CareerTimeline() {
         x: x1,
         // Floor the width so a role lasting a single month stays visible.
         width: Math.max(x2 - x1, 6),
-        rangeLabel: formatPeriod(e),
+        /* Years on the chart, the full dates in the hover title and in the
+           prose list below. */
+        rangeLabel: formatYears(e),
+        exact: formatPeriod(e),
       }
     })
 
@@ -126,13 +129,7 @@ export default function CareerTimeline() {
           {rows.map((r) => (
             <g className="tl-row" key={r.id} data-discipline={r.discipline}>
               {/* Full-width transparent hit target, larger than the bar itself */}
-              <rect
-                x="0"
-                y={r.rowTop}
-                width={VB_W}
-                height={ROW_H}
-                fill="transparent"
-              />
+              <rect x="0" y={r.rowTop} width={VB_W} height={ROW_H} fill="transparent" />
 
               <text className="tl-label" x="0" y={r.rowTop + 26}>
                 {r.role}
@@ -155,7 +152,7 @@ export default function CareerTimeline() {
                 rx="4"
                 fill="var(--accent)"
               >
-                <title>{`${r.role}, ${r.org} — ${r.rangeLabel}`}</title>
+                <title>{`${r.role}, ${r.org} — ${r.exact}`}</title>
               </rect>
             </g>
           ))}

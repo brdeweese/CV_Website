@@ -1,7 +1,30 @@
-const MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const MONTHS_SHORT = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+]
 const MONTHS_LONG = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ]
 
 /**
@@ -15,8 +38,21 @@ const MONTHS_LONG = [
  */
 export function periodPoints(item, nowYear) {
   const start = item.start + (item.startMonth ? (item.startMonth - 1) / 12 : 0)
-  const end = item.end === null ? nowYear : item.end + (item.endMonth ? item.endMonth / 12 : 1)
+  const end =
+    item.end === null ? nowYear : item.end + (item.endMonth ? item.endMonth / 12 : 1)
   return { start, end }
+}
+
+/**
+ * Years only, for the chart.
+ *
+ * The bar itself is drawn from the months, so a nine-month role is a nine-month
+ * bar. The label above it just says which years that falls in: months on every
+ * bar crowded the chart, and the exact dates are in the prose list below it.
+ */
+export function formatYears(item) {
+  if (item.end === null) return `${item.start} — Present`
+  return item.start === item.end ? `${item.start}` : `${item.start} — ${item.end}`
 }
 
 /** Human-readable range. `long` spells the month out for the prose list. */

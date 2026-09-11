@@ -6,6 +6,7 @@ const ButlerCurve = lazy(() => import('../components/games/ButlerCurve.jsx'))
 const Crossword = lazy(() => import('../components/games/Crossword.jsx'))
 const Trolley = lazy(() => import('../components/games/Trolley.jsx'))
 const TradeGame = lazy(() => import('../components/games/TradeGame.jsx'))
+const PythonLab = lazy(() => import('../components/games/PythonLab.jsx'))
 
 /**
  * The classroom activities, playable.
@@ -32,10 +33,19 @@ const GAMES = [
     Component: ButlerCurve,
   },
   {
+    id: 'python',
+    name: 'Coding practice with AI',
+    kicker: 'Introduction to data science',
+    blurb:
+      'The Colab worksheet, runnable here. Press play on a cell and the chart draws itself from tourism data.',
+    Component: PythonLab,
+  },
+  {
     id: 'crossword',
     name: 'Key word crossword',
-    kicker: 'Week three starter',
-    blurb: 'Key definitions from the module reading, set as a crossword.',
+    kicker: 'Week starters',
+    blurb:
+      'Key definitions from the module reading, set as a crossword. One for business and tourism, one for accounting and finance.',
     Component: Crossword,
   },
   {
@@ -135,8 +145,9 @@ export default function Games() {
         </div>
 
         <p className="games-foot">
-          All five were designed and delivered in my own modules. The escape room puzzles
-          and the crossword are shortened here.
+          All of these were designed and delivered in my own modules, across tourism,
+          business, and accounting and finance. The escape room puzzles and the crosswords
+          are shortened here.
         </p>
       </div>
     </main>

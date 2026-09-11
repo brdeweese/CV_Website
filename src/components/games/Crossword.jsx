@@ -1,22 +1,22 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { CROSSWORD } from '../../data/games.js'
+import { CROSSWORDS } from '../../data/games.js'
 
 /**
- * The cut-down week three starter crossword.
+ * The key word crosswords, one from each side of Brina's teaching.
  *
  * The grid is derived from the word list rather than written out: every square
  * a word passes through becomes a cell, and the clue numbers fall out of where
  * words begin. That way a changed clue cannot leave the grid out of step with
- * it.
+ * it, and a second puzzle needs nothing but its own word list.
  */
 
 const key = (r, c) => `${r},${c}`
 
-function buildGrid() {
+function buildGrid(puzzle) {
   const cells = new Map() // "r,c" -> { r, c, answer, words: [] }
   const starts = new Map() // "r,c" -> clue number
 
-  for (const w of CROSSWORD.words) {
+  for (const w of puzzle.words) {
     starts.set(key(w.r, w.c), w.n)
     for (let i = 0; i < w.a.length; i++) {
       const r = w.dir === 'down' ? w.r + i : w.r
@@ -30,14 +30,24 @@ function buildGrid() {
 }
 
 export default function Crossword() {
-  const { cells, starts } = useMemo(buildGrid, [])
+  const [puzzleId, setPuzzleId] = useState(CROSSWORDS[0].id)
+  const puzzle = CROSSWORDS.find((p) => p.id === puzzleId) || CROSSWORDS[0]
+  const { cells, starts } = useMemo(() => buildGrid(puzzle), [puzzle])
   const [entries, setEntries] = useState({})
   const [checked, setChecked] = useState(false)
   const [active, setActive] = useState(null) // { n, dir }
   const refs = useRef({})
 
-  const across = CROSSWORD.words.filter((w) => w.dir === 'across')
-  const down = CROSSWORD.words.filter((w) => w.dir === 'down')
+  const across = puzzle.words.filter((w) => w.dir === 'across')
+  const down = puzzle.words.filter((w) => w.dir === 'down')
+
+  const switchTo = useCallback((id) => {
+    setPuzzleId(id)
+    setEntries({})
+    setChecked(false)
+    setActive(null)
+    refs.current = {}
+  }, [])
 
   const cellsOf = useCallback(
     (w) =>
@@ -86,14 +96,30 @@ export default function Crossword() {
 
   return (
     <div className="game gm-cw">
+      <div className="gm-cwtabs" role="tablist" aria-label="Choose a crossword">
+        {CROSSWORDS.map((p) => (
+          <button
+            type="button"
+            role="tab"
+            key={p.id}
+            className="gm-cwtab"
+            aria-selected={p.id === puzzleId}
+            onClick={() => switchTo(p.id)}
+          >
+            <span className="gm-cwtabname">{p.name}</span>
+            <span className="gm-cwtabsub">{p.subject}</span>
+          </button>
+        ))}
+      </div>
+
       <div className="gm-cwlayout">
         <div className="gm-cwscroll">
           <div
             className="gm-grid"
-            style={{ gridTemplateColumns: `repeat(${CROSSWORD.cols}, 30px)` }}
+            style={{ gridTemplateColumns: `repeat(${puzzle.cols}, 30px)` }}
           >
-            {Array.from({ length: CROSSWORD.rows }, (_, r) =>
-              Array.from({ length: CROSSWORD.cols }, (_, c) => {
+            {Array.from({ length: puzzle.rows }, (_, r) =>
+              Array.from({ length: puzzle.cols }, (_, c) => {
                 const cell = cells.get(key(r, c))
                 if (!cell) return <span className="gm-void" key={key(r, c)} />
                 const v = entries[key(r, c)] || ''
@@ -122,10 +148,10 @@ export default function Crossword() {
                       }}
                       onChange={(e) => {
                         const w =
-                          CROSSWORD.words.find(
+                          puzzle.words.find(
                             (x) => active && x.n === active.n && x.dir === active.dir,
                           ) ||
-                          CROSSWORD.words.find(
+                          puzzle.words.find(
                             (x) => x.n === cell.words[0].n && x.dir === cell.words[0].dir,
                           )
                         type(r, c, e.target.value, w)
@@ -189,7 +215,7 @@ export default function Crossword() {
           {right} of {cells.size} letters right.
         </p>
       )}
-      <p className="gm-source">{CROSSWORD.source}</p>
+      <p className="gm-source">{puzzle.source}</p>
     </div>
   )
 }

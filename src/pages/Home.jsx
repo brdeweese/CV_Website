@@ -33,8 +33,21 @@ function SectionHead({ id }) {
 
 function Arrow() {
   return (
-    <svg className="arw" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <svg
+      className="arw"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M5 12h13M13 6l6 6-6 6"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   )
 }
@@ -81,8 +94,7 @@ export default function Home() {
               {/* Zero-height, baseline-aligned: its top IS the baseline. */}
               <span className="baseline-probe" ref={baselineRef} aria-hidden="true" />
             </span>
-            e
-            <span className="sr-only">, MSc</span>
+            e<span className="sr-only">, MSc</span>
           </h1>
 
           <span className="hero-msc" ref={badgeRef} aria-hidden="true">
@@ -90,9 +102,8 @@ export default function Home() {
           </span>
 
           <p className="hero-tagline">
-            I am a lecturer and module leader, combining industry experience with
-            academic research in <b>economics</b>, <b>data science</b>, and{' '}
-            <b>tourism</b>.
+            I am a lecturer and module leader, combining industry experience with academic
+            research in <b>economics</b>, <b>data science</b>, and <b>tourism</b>.
           </p>
 
           <div className="hero-actions">
@@ -218,8 +229,8 @@ export default function Home() {
           <div className="wrap">
             <SectionHead id="projects" />
             <p className="lede" style={{ marginBottom: 'clamp(2rem, 4vw, 3rem)' }}>
-              Applied work across econometrics, analytics, and pedagogy. Each one opens
-              into a fuller write-up, or pick one from the Projects menu above.
+              Applied work across econometrics, analytics, and pedagogy. Each one opens into
+              a fuller write-up, or pick one from the Projects menu above.
             </p>
             <div className="proj-grid">
               {visibleProjects.map((p) => (
@@ -250,15 +261,20 @@ export default function Home() {
           <div className="wrap">
             <SectionHead id="teaching" />
             <p className="lede" style={{ marginBottom: 'clamp(2rem, 4vw, 3rem)' }}>
-              Lecture activities built to make abstract material stick, using gamification,
-              real academic sourcing, and data tools students can carry into work.{' '}
+              Lecture activities across tourism, business, and accounting and finance, using
+              gamification, real academic sourcing, and data tools students can carry into
+              work.{' '}
               <Link className="teach-play" to="/games">
-                Play five of them &rarr;
+                Play six of them &rarr;
               </Link>
             </p>
             <div className="teach-grid">
               {teaching.map((t) => (
-                <article className="teach-card reveal" key={t.title} data-discipline={t.discipline}>
+                <article
+                  className="teach-card reveal"
+                  key={t.title}
+                  data-discipline={t.discipline}
+                >
                   <DisciplineTag id={t.discipline} />
                   <h3 className="teach-title">{t.title}</h3>
                   <p>{t.description}</p>
@@ -322,12 +338,22 @@ export default function Home() {
                 </a>
               )}
               {profile.linkedin && (
-                <a className="btn btn-ghost" href={profile.linkedin} target="_blank" rel="noreferrer">
+                <a
+                  className="btn btn-ghost"
+                  href={profile.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   LinkedIn
                 </a>
               )}
               {profile.github && (
-                <a className="btn btn-ghost" href={profile.github} target="_blank" rel="noreferrer">
+                <a
+                  className="btn btn-ghost"
+                  href={profile.github}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   GitHub
                 </a>
               )}

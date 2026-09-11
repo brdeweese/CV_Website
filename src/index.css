@@ -53,6 +53,11 @@
   --tt-violet: #6c3b85;
   --tt-violet-pale: #b98bd4;
   --tt-line: #2e2c2b;
+  --py-temp: #4682b4;
+  --py-visits: #ff69b4;
+  --py-spend: #800080;
+  --py-ma: #5a5453;
+  --py-cell: #f6f6f4;
   --era-debut: #6f9c86;
   --era-fearless: #a87f1e;
   --era-speakNow: #7a55a3;
@@ -153,6 +158,11 @@
     --tt-violet: #c8a6da;
     --tt-violet-pale: #7d5794;
     --tt-line: #efe9e6;
+    --py-temp: #2286ce;
+    --py-visits: #cb3586;
+    --py-spend: #ff99fb;
+    --py-ma: #9b968f;
+    --py-cell: #141413;
     --game-rail: #7b766f;
     --game-trolley: #d9646b;
     --game-person: #b6bcc8;
@@ -274,6 +284,11 @@
   --tt-violet: #c8a6da;
   --tt-violet-pale: #7d5794;
   --tt-line: #efe9e6;
+  --py-temp: #2286ce;
+  --py-visits: #cb3586;
+  --py-spend: #ff99fb;
+  --py-ma: #9b968f;
+  --py-cell: #141413;
   --orb-label-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.6);
 }
 
@@ -4918,10 +4933,22 @@ button {
   text-transform: uppercase;
   color: var(--ink-3);
 }
+/* Six tiles, so three across reads as two even rows rather than five and an
+   orphan. */
 .tt-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.7rem;
+}
+@media (max-width: 760px) {
+  .tt-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 420px) {
+  .tt-grid {
+    grid-template-columns: 1fr;
+  }
 }
 .tt-tile {
   display: flex;
@@ -5061,5 +5088,338 @@ button {
   }
   .tt-copy {
     max-width: none;
+  }
+}
+
+/* ---- Coding practice with AI: the notebook -------------------------------- */
+
+.py-topbar {
+  margin: 0 0 1rem;
+}
+.py-notebook {
+  display: grid;
+  gap: 1rem;
+}
+
+.py-cell {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+.py-cell[data-run='true'] {
+  border-color: var(--rule-strong);
+}
+
+.py-cellhead {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--rule);
+  background: var(--py-cell);
+}
+.py-part {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.py-celltitle {
+  font-size: 0.86rem;
+  color: var(--ink-2);
+}
+
+.py-play {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--ink);
+}
+.py-play svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.py-playring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  opacity: 0.55;
+}
+.py-playtri {
+  fill: currentColor;
+}
+.py-play:hover .py-playring,
+.py-play:focus-visible .py-playring {
+  opacity: 1;
+}
+.py-play[data-running='true'] .py-playring {
+  stroke-dasharray: 20 46;
+  animation: py-spin 0.9s linear infinite;
+  transform-origin: 50% 50%;
+  opacity: 1;
+}
+@keyframes py-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.py-code {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  background: var(--py-cell);
+  border-bottom: 1px solid var(--rule);
+  tab-size: 4;
+}
+.py-code code {
+  white-space: pre;
+}
+
+.py-out {
+  padding: 0.85rem 1rem;
+}
+.py-out[data-empty='true'] {
+  padding: 0.7rem 1rem;
+}
+.py-idle,
+.py-running {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-3);
+}
+
+/* The figure. Every line is labelled at its end, so colour never carries the
+   meaning on its own. */
+/* Below this width the axis and end labels would scale down past readable, so
+   the figure keeps its size and the cell scrolls instead. */
+.py-figwrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.py-fig {
+  display: block;
+  width: 100%;
+  min-width: 620px;
+  height: auto;
+}
+.py-figtitle {
+  font-size: 13px;
+  fill: var(--ink-2);
+}
+.py-grid {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+.py-tick {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--ink-3);
+}
+.py-line {
+  fill: none;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.py-line--temperature {
+  stroke: var(--py-temp);
+}
+.py-line--visits {
+  stroke: var(--py-visits);
+}
+.py-line--spending {
+  stroke: var(--py-spend);
+}
+.py-line--ma {
+  stroke: var(--py-ma);
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+}
+.py-dot--visits {
+  fill: var(--py-visits);
+}
+.py-endlabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--ink-2);
+}
+.py-endlabel--temperature {
+  fill: var(--py-temp);
+}
+.py-endlabel--visits {
+  fill: var(--py-visits);
+}
+.py-endlabel--spending {
+  fill: var(--py-spend);
+}
+.py-endlabel--ma {
+  fill: var(--py-ma);
+}
+.py-endlabel--lin {
+  fill: var(--py-temp);
+}
+.py-endlabel--actual {
+  fill: var(--ink);
+}
+.py-jan {
+  transition: opacity 0.45s ease;
+}
+.py-janrule {
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+.py-connect {
+  stroke-width: 1.4;
+  stroke-dasharray: 2 4;
+  fill: none;
+}
+.py-connect--actual {
+  stroke: var(--ink-3);
+}
+.py-connect--lin {
+  stroke: var(--py-temp);
+}
+.py-connect--ma {
+  stroke: var(--py-ma);
+}
+.py-mark--actual {
+  fill: var(--ink);
+}
+.py-mark--lin {
+  stroke: var(--py-temp);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+.py-mark--ma {
+  stroke: var(--py-ma);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+/* The dataframe and the correlation matrix, as the notebook prints them. */
+.py-framewrap {
+  overflow-x: auto;
+}
+.py-frame {
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+.py-frame th,
+.py-frame td {
+  padding: 0.22rem 0.7rem 0.22rem 0;
+  text-align: left;
+}
+.py-frame thead th {
+  color: var(--ink-3);
+  font-weight: 400;
+}
+.py-frame tbody th {
+  color: var(--ink-3);
+  font-weight: 400;
+}
+.py-idx {
+  color: var(--ink-3);
+}
+.py-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.py-num[data-strong='true'] {
+  color: var(--ink);
+  font-weight: 600;
+}
+.py-matrix td {
+  color: var(--ink-2);
+}
+.py-shape {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--ink-3);
+}
+
+.py-prompts {
+  margin-top: 1.2rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+.py-promptshead {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.py-prompts ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.3rem;
+}
+.py-prompts li {
+  font-size: 0.84rem;
+  color: var(--ink-2);
+}
+
+/* ---- Crossword: the two puzzles ------------------------------------------- */
+
+.gm-cwtabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.gm-cwtab {
+  display: grid;
+  gap: 0.15rem;
+  text-align: left;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+  color: inherit;
+}
+.gm-cwtab[aria-selected='true'] {
+  border-color: var(--ink);
+  background: var(--surface-2);
+}
+.gm-cwtabname {
+  font-size: 0.82rem;
+}
+.gm-cwtabsub {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+}
+
+.tt-mPlay {
+  fill: var(--tt-line);
+}
+
+@media (max-width: 760px) {
+  .py-code {
+    font-size: 0.66rem;
+  }
+  .py-cellhead {
+    flex-wrap: wrap;
   }
 }

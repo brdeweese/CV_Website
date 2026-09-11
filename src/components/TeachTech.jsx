@@ -17,7 +17,7 @@ const TOOLS = [
   'Canva',
   'Wix',
   'Trello',
-  'ChatGPT',
+  'AI tools',
   'Google Colab',
   'Power BI',
   'Tableau',
@@ -136,7 +136,20 @@ function MiniTrade() {
   )
 }
 
+function MiniPython() {
+  return (
+    <svg viewBox="0 0 120 64" aria-hidden="true">
+      <path className="tt-mAxis" d="M40 10V54H112" />
+      <path className="tt-mCurve" d="M46 46C58 44 66 30 78 26C90 22 100 20 108 18" />
+      <path className="tt-mLead" d="M46 36C58 34 70 40 82 34C94 28 100 34 108 30" />
+      <circle className="tt-mDot" cx="22" cy="32" r="11" />
+      <path className="tt-mPlay" d="M18.5 27L27 32L18.5 37Z" />
+    </svg>
+  )
+}
+
 const TILES = [
+  { id: 'python', name: 'Coding practice with AI', Art: MiniPython },
   { id: 'butler', name: "Pin the tail on Butler's curve", Art: MiniButler },
   { id: 'impacts', name: 'Sort the impact', Art: MiniImpacts },
   { id: 'crossword', name: 'Key word crossword', Art: MiniCrossword },

@@ -82,8 +82,7 @@ export const metrics = [
     value: 800,
     suffix: '+',
     label: 'Students per delivery cycle',
-    detail:
-      'The foundation year capstone module I lead, across all five campuses.',
+    detail: 'The foundation year capstone module I lead, across all five campuses.',
     discipline: 'tourism',
   },
   {
@@ -647,7 +646,8 @@ export const projects = [
       {
         kind: 'line',
         title: 'Female registrations exceed male in all 53 quarters',
-        source: 'US nationals registering for a UK National Insurance number. UK Home Office / DWP Stat-Xplore',
+        source:
+          'US nationals registering for a UK National Insurance number. UK Home Office / DWP Stat-Xplore',
         xKey: 'q',
         xInterval: 3,
         xFormat: 'year',
@@ -698,8 +698,8 @@ export const projects = [
       'Teach with Tech, a training session for fellow lecturers on bringing AI, Canva, Wix, and Trello into teaching and assessment, alongside the gamified activities I run with students.',
     body: [
       'Today’s travellers are tech-savvy and expect a seamless, personalised, and convenient travel experience, which makes a strong understanding of technology vital for anyone building a career in tourism. Digital tools are essential in the tourism and business industries, digital skills strengthen students’ CVs and employability, and the job market is more competitive than ever. As educators we have to keep up with the technologies our students will meet at work, AI included, or we cannot prepare them to enter that workforce.',
-      'The session opens with two shows of hands. First: who has used Canva, Wix, Trello, ChatGPT, Tableau or Power BI, Mailchimp, or Excel in their career or their personal time. Then the same list again, but in your classroom or your assessments. The gap between the two answers is the argument. We are teachers now, but we have always been excellent learners, so the point is to learn and adapt so that our students can achieve.',
-      'AI is here to stay and is rapidly transforming many industries, including education. Rather than fearing it, teachers can embrace it as a tool to enhance teaching and assessment. The session works through three examples: role play, where ChatGPT acts as a prospective client questioning a student’s ecotourism company on its sustainability and CSR policies; a business plan build, where students invent a tourism business themselves before using AI for branding, financial projections, and customer scenarios; and data science basics in Google Colab, where students plot seasonality, run a correlation and a linear regression on tourism data, and compare predicted revenue against actual.',
+      'The session opens with two shows of hands. First: who has used Canva, Wix, Trello, AI tools, Tableau or Power BI, Mailchimp, or Excel in their career or their personal time. Then the same list again, but in your classroom or your assessments. The gap between the two answers is the argument. We are teachers now, but we have always been excellent learners, so the point is to learn and adapt so that our students can achieve.',
+      'AI is here to stay and is rapidly transforming many industries, including education. Rather than fearing it, teachers can embrace it as a tool to enhance teaching and assessment. The session works through three examples: role play, where an AI tool acts as a prospective client questioning a student’s ecotourism company on its sustainability and CSR policies; a business plan build, where students invent a tourism business themselves before using AI for branding, financial projections, and customer scenarios; and data science basics in Google Colab, where students plot seasonality, run a correlation and a linear regression on tourism data, and compare predicted revenue against actual.',
       'Canva, Wix, and Trello each come with a worked assessment. Students build a branding and marketing package in Canva, a multi-page destination website in Wix covering history, tourism impacts, and responsible tourism, and a Trello board marked on how they organised and tracked the project as well as on what they delivered.',
       'Not every activity is technical. The escape room sequence turns the Tourism Area Life Cycle and stakeholder impact analysis into timed team puzzles students solve to earn their break. Gap in the Market requires them to justify an idea with evidence and research. The crossword worksheets carry a full Harvard reference list, so students practise academic sourcing while they revise definitions.',
       'The aim is to equip students with the digital tools and technologies they will encounter professionally, building the confidence to adapt, thrive, and lead in a technology-driven world.',
@@ -720,15 +720,19 @@ export const projects = [
     ],
     links: [
       { label: 'Download the Teach with Tech deck', href: `${FILES}teach-with-tech.pdf` },
-      { label: 'Teach with Tech resources', href: 'https://brinadeweese.wixsite.com/teachtech' },
-      { label: 'Play five of the activities', href: 'games', internal: true },
+      {
+        label: 'Teach with Tech resources',
+        href: 'https://brinadeweese.wixsite.com/teachtech',
+      },
+      { label: 'Play six of the activities', href: 'games', internal: true },
       { label: 'See all the activities', href: '#teaching', internal: true },
     ],
   },
   {
     slug: 'module-feedback-sentiment-classifier',
     title: 'Module Feedback Sentiment Classifier',
-    subtitle: 'Turning open-text student feedback into something a teaching team can act on',
+    subtitle:
+      'Turning open-text student feedback into something a teaching team can act on',
     discipline: 'data',
     year: '2025',
     kind: 'Applied NLP',
@@ -738,7 +742,13 @@ export const projects = [
       'Modules collect star ratings and open-text responses. The ratings give a score. The open text gives the reasons behind the score, and it arrives in volume at the end of the cycle.',
       'This classifier, built in Python in Google Colab, reads the free-text responses for sentiment and for recurring themes. It returns a shortlist of the themes students raised and how strongly they raised them. I use that shortlist to brief lecturers on where to focus module improvements.',
     ],
-    methods: ['Python', 'Google Colab', 'Natural language processing', 'Sentiment analysis', 'Thematic analysis'],
+    methods: [
+      'Python',
+      'Google Colab',
+      'Natural language processing',
+      'Sentiment analysis',
+      'Thematic analysis',
+    ],
     links: [],
   },
 ]
@@ -803,7 +813,7 @@ export const teaching = [
     title: 'Crossword Puzzles',
     discipline: 'economics',
     description:
-      'Worksheets that make key definitions more engaging and memorable. Each puzzle draws on real academic sources with a full Harvard reference list, reinforcing subject knowledge and proper academic practice together.',
+      'Worksheets that make key definitions more engaging and memorable, set for tourism, business, and accounting and finance modules. Each puzzle draws on real academic sources with a full Harvard reference list, reinforcing subject knowledge and proper academic practice together.',
   },
   {
     title: 'Teach With Tech Training',

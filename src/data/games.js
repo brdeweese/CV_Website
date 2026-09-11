@@ -91,72 +91,174 @@ export const DESTINATIONS = [
   { id: 'barcelona', name: 'Barcelona', butler: 'Stagnation', doxey: 'Antagonism' },
 ]
 
-/* ---- Data crossword ------------------------------------------------------- */
+/* ---- Key word crosswords --------------------------------------------------
+ *
+ * Two of the crosswords Brina sets, one from each side of her teaching. The
+ * grids are given as word lists with a start cell and a direction; the squares
+ * and the clue numbers are derived from those, so a grid cannot fall out of
+ * step with its clues.
+ */
 
-export const CROSSWORD = {
-  cols: 12,
-  rows: 12,
-  source:
-    'Clues are written from the module reading, Saunders, Lewis and Thornhill (2023).',
-  words: [
-    {
-      n: 1,
-      dir: 'across',
-      r: 0,
-      c: 0,
-      a: 'QUANTITATIVE',
-      q: 'Data that can be recorded as numbers and analysed numerically.',
-    },
-    {
-      n: 3,
-      dir: 'across',
-      r: 3,
-      c: 3,
-      a: 'INTERVAL',
-      q: 'Numerical data where the difference between two values can be stated, but the relative difference cannot.',
-    },
-    {
-      n: 4,
-      dir: 'across',
-      r: 7,
-      c: 0,
-      a: 'NUMERICAL',
-      q: 'Data whose values can be measured as quantities.',
-    },
-    {
-      n: 6,
-      dir: 'across',
-      r: 10,
-      c: 1,
-      a: 'NOMINAL',
-      q: 'Data whose values cannot be measured numerically but can be classified into sets or categories.',
-    },
-    {
-      n: 1,
-      dir: 'down',
-      r: 0,
-      c: 0,
-      a: 'QUESTION',
-      q: 'Research ___: the key thing the research process will answer, and the precursor to research objectives.',
-    },
-    {
-      n: 2,
-      dir: 'down',
-      r: 2,
-      c: 7,
-      a: 'ORDINAL',
-      q: 'Data whose values cannot be measured numerically but can be placed in a definite order or rank.',
-    },
-    {
-      n: 5,
-      dir: 'down',
-      r: 7,
-      c: 4,
-      a: 'RATIO',
-      q: 'Numerical data where both the difference and the relative difference between two values can be stated.',
-    },
-  ],
-}
+export const CROSSWORDS = [
+  {
+    id: 'research',
+    name: 'Research methods',
+    subject: 'Business and tourism',
+    cols: 12,
+    rows: 12,
+    source:
+      'Clues are written from the module reading, Saunders, Lewis and Thornhill (2023).',
+    words: [
+      {
+        n: 1,
+        dir: 'across',
+        r: 0,
+        c: 0,
+        a: 'QUANTITATIVE',
+        q: 'Data that can be recorded as numbers and analysed numerically.',
+      },
+      {
+        n: 3,
+        dir: 'across',
+        r: 3,
+        c: 3,
+        a: 'INTERVAL',
+        q: 'Numerical data where the difference between two values can be stated, but the relative difference cannot.',
+      },
+      {
+        n: 4,
+        dir: 'across',
+        r: 7,
+        c: 0,
+        a: 'NUMERICAL',
+        q: 'Data whose values can be measured as quantities.',
+      },
+      {
+        n: 6,
+        dir: 'across',
+        r: 10,
+        c: 1,
+        a: 'NOMINAL',
+        q: 'Data whose values cannot be measured numerically but can be classified into sets or categories.',
+      },
+      {
+        n: 1,
+        dir: 'down',
+        r: 0,
+        c: 0,
+        a: 'QUESTION',
+        q: 'Research ___: the key thing the research process will answer, and the precursor to research objectives.',
+      },
+      {
+        n: 2,
+        dir: 'down',
+        r: 2,
+        c: 7,
+        a: 'ORDINAL',
+        q: 'Data whose values cannot be measured numerically but can be placed in a definite order or rank.',
+      },
+      {
+        n: 5,
+        dir: 'down',
+        r: 7,
+        c: 4,
+        a: 'RATIO',
+        q: 'Numerical data where both the difference and the relative difference between two values can be stated.',
+      },
+    ],
+  },
+  {
+    id: 'afm',
+    name: 'AFM key words, week 2',
+    subject: 'Accounting and finance',
+    cols: 20,
+    rows: 11,
+    source:
+      'Clues are written from the module reading, with a full Harvard reference list: BBC (2023); Bryman (2016); Deloitte United Kingdom (2019); Lindemulder, Kosinski and Jonker (2024); Saunders, Lewis and Thornhill (2019); Sloman, Garratt and Guest (2022); Statista Encyclopedia (2020).',
+    words: [
+      {
+        n: 3,
+        dir: 'across',
+        r: 3,
+        c: 0,
+        a: 'CYBERSECURITY',
+        q: '(Blank) is the practice of protecting people, systems and data from cyberattacks using a mix of technologies, processes and policies (Lindemulder, Kosinski and Jonker, 2024).',
+      },
+      {
+        n: 8,
+        dir: 'across',
+        r: 5,
+        c: 1,
+        a: 'INFLATION',
+        q: '(Blank) is an overall increase in the price level across the entire economy (Sloman et al., 2022).',
+      },
+      {
+        n: 9,
+        dir: 'across',
+        r: 5,
+        c: 17,
+        a: 'AIM',
+        q: 'A research (blank) is the main overall purpose of your study; it explains what you want to find out and is broad, giving general direction (Bryman, 2016; Saunders, Lewis & Thornhill, 2019).',
+      },
+      {
+        n: 10,
+        dir: 'across',
+        r: 6,
+        c: 11,
+        a: 'NOMINAL',
+        q: 'The (blank) value of a good is its current price in today’s money; its face value, without taking inflation into account. £20 in 1990 and £20 today have the same (blank) value (Sloman et al., 2022).',
+      },
+      {
+        n: 1,
+        dir: 'down',
+        r: 0,
+        c: 2,
+        a: 'NEOBANK',
+        q: 'A (blank) operates solely online and through mobile apps; customers can carry out traditional banking processes such as money transfers, loans and reviewing savings accounts without the need for a physical branch, and it will not necessarily have its own banking licence but may instead partner with a traditional bank (Deloitte United Kingdom, 2019).',
+      },
+      {
+        n: 2,
+        dir: 'down',
+        r: 0,
+        c: 6,
+        a: 'OBJECTIVES',
+        q: 'Research (blank) are the smaller steps you take to achieve your aim; they are more specific and explain exactly what you will do, measure, compare, or analyse (Bryman, 2016; Saunders, Lewis & Thornhill, 2019).',
+      },
+      {
+        n: 4,
+        dir: 'down',
+        r: 3,
+        c: 11,
+        a: 'TREND',
+        q: 'A (blank) is a pattern found in time series datasets; it is used to describe if the data is showing an upward or downward movement for part or all of the time series (Statista Encyclopedia, 2020).',
+      },
+      {
+        n: 5,
+        dir: 'down',
+        r: 3,
+        c: 17,
+        a: 'REAL',
+        q: 'The (blank) value is the nominal value after adjusting for inflation, measured against a base year so that values from different times can be compared accurately (Sloman et al., 2022).',
+      },
+      {
+        n: 6,
+        dir: 'down',
+        r: 4,
+        c: 15,
+        a: 'FINTECH',
+        q: '(Blank), short for Financial Technology, is the emerging industry that aims to modernise, improve and automate the delivery of financial services, using modern software and infrastructure to compete with traditional methods of delivering financial solutions (Deloitte United Kingdom, 2019).',
+      },
+      {
+        n: 7,
+        dir: 'down',
+        r: 4,
+        c: 19,
+        a: 'SMART',
+        q: '(Blank) objectives are Specific, Measurable, Agreed, Realistic and Time-bound (BBC, 2023).',
+      },
+    ],
+  },
+]
 
 /* ---- Ethical dilemma: the trolley problem --------------------------------- */
 

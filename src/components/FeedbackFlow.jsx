@@ -255,13 +255,7 @@ export default function FeedbackFlow() {
         <button type="button" className="btn-game" onClick={run} disabled={idle}>
           Run it again
         </button>
-        <p className="ff-hint">
-          {idle
-            ? ''
-            : sorted
-              ? 'Select a sentiment to read the comments in it.'
-              : 'Sorting the returns…'}
-        </p>
+        <p className="ff-hint">{!idle && !sorted ? 'Sorting the returns…' : ''}</p>
       </div>
     </figure>
   )

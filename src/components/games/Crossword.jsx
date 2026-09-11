@@ -36,6 +36,7 @@ export default function Crossword() {
   const [entries, setEntries] = useState({})
   const [checked, setChecked] = useState(false)
   const [active, setActive] = useState(null) // { n, dir }
+  const [at, setAt] = useState(null) // "r,c" of the square in focus
   const refs = useRef({})
 
   const across = puzzle.words.filter((w) => w.dir === 'across')
@@ -46,6 +47,7 @@ export default function Crossword() {
     setEntries({})
     setChecked(false)
     setActive(null)
+    setAt(null)
     refs.current = {}
   }, [])
 
@@ -90,6 +92,16 @@ export default function Crossword() {
     (cell) => entries[key(cell.r, cell.c)] === cell.answer,
   ).length
 
+  /* At most two: one across, one down. That is what a square can belong to,
+     and it is all the clue bar ever needs to show. */
+  const hereClues = (() => {
+    const cell = at ? cells.get(at) : null
+    if (!cell) return []
+    return cell.words
+      .map((w) => puzzle.words.find((x) => x.n === w.n && x.dir === w.dir))
+      .filter(Boolean)
+  })()
+
   const inActive = (r, c) =>
     active &&
     cells.get(key(r, c))?.words.some((w) => w.n === active.n && w.dir === active.dir)
@@ -116,7 +128,7 @@ export default function Crossword() {
         <div className="gm-cwscroll">
           <div
             className="gm-grid"
-            style={{ gridTemplateColumns: `repeat(${puzzle.cols}, 30px)` }}
+            style={{ gridTemplateColumns: `repeat(${puzzle.cols}, 22px)` }}
           >
             {Array.from({ length: puzzle.rows }, (_, r) =>
               Array.from({ length: puzzle.cols }, (_, c) => {
@@ -143,7 +155,13 @@ export default function Crossword() {
                       inputMode="text"
                       aria-label={`Row ${r + 1} column ${c + 1}`}
                       onFocus={() => {
-                        const w = cell.words[0]
+                        setAt(key(r, c))
+                        /* Keep typing along the current word if this square is
+                           on it; otherwise start on the square's first. */
+                        const stay = cell.words.find(
+                          (w) => active && w.n === active.n && w.dir === active.dir,
+                        )
+                        const w = stay || cell.words[0]
                         setActive({ n: w.n, dir: w.dir })
                       }}
                       onChange={(e) => {
@@ -164,31 +182,28 @@ export default function Crossword() {
           </div>
         </div>
 
-        <div className="gm-clues">
-          {[
-            ['Across', across],
-            ['Down', down],
-          ].map(([title, list]) => (
-            <div className="gm-cluelist" key={title}>
-              <h4>{title}</h4>
-              {list.map((w) => (
-                <button
-                  type="button"
-                  key={`${w.dir}${w.n}`}
-                  className="gm-clue"
-                  data-active={
-                    active && active.n === w.n && active.dir === w.dir ? 'true' : undefined
-                  }
-                  onClick={() => {
-                    setActive({ n: w.n, dir: w.dir })
-                    refs.current[key(w.r, w.c)]?.focus()
-                  }}
-                >
-                  <b>{w.n}</b>
-                  {w.q}
-                </button>
-              ))}
-            </div>
+        <div className="gm-cluebar" aria-live="polite">
+          {hereClues.length === 0 && (
+            <p className="gm-cluenone">Pick a square to see its clues.</p>
+          )}
+          {hereClues.map((w) => (
+            <button
+              type="button"
+              key={`${w.dir}${w.n}`}
+              className="gm-clueline"
+              data-active={
+                active && active.n === w.n && active.dir === w.dir ? 'true' : undefined
+              }
+              onClick={() => {
+                setActive({ n: w.n, dir: w.dir })
+                refs.current[key(w.r, w.c)]?.focus()
+              }}
+            >
+              <b>
+                {w.n} {w.dir === 'across' ? 'Across' : 'Down'}
+              </b>
+              <span>{w.q}</span>
+            </button>
           ))}
         </div>
       </div>

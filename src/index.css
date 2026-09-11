@@ -4412,13 +4412,13 @@ button {
   gap: 2px;
 }
 .gm-void {
-  width: 30px;
-  height: 30px;
+  width: 22px;
+  height: 22px;
 }
 .gm-cell {
   position: relative;
-  width: 30px;
-  height: 30px;
+  width: 22px;
+  height: 22px;
   background: var(--surface-2);
   border: 1px solid var(--rule-strong);
   border-radius: 2px;
@@ -6033,5 +6033,140 @@ button {
 }
 
 .tr-sub {
+  color: var(--ink-3);
+}
+
+/* The worksheet's own reasoning, shown once the answers are checked. */
+.gm-why {
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.7rem;
+}
+.gm-why li {
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--surface-2);
+}
+.gm-whyhead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0 0 0.35rem;
+  font-size: 0.88rem;
+  color: var(--ink);
+}
+.gm-whyhead span {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+.gm-whybody {
+  margin: 0 0 0.35rem;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.gm-whybody:last-child {
+  margin-bottom: 0;
+}
+
+/* ---- Crossword: clues for the square you are on --------------------------
+   The full lists took a column as tall as the grid. A square belongs to at
+   most two words, so only those two are shown, and the grid gets the room. */
+
+.gm-cwlayout {
+  display: block;
+}
+.gm-cwscroll {
+  overflow-x: auto;
+  padding-bottom: 0.3rem;
+}
+
+.gm-cluebar {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+  min-height: 3.4rem;
+}
+.gm-cluenone {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-3);
+}
+.gm-clueline {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.7rem;
+  align-items: baseline;
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--rule);
+  border-left-width: 3px;
+  border-radius: 6px;
+  background: var(--surface);
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+}
+.gm-clueline[data-active='true'] {
+  border-left-color: var(--ink);
+  background: var(--surface-2);
+}
+.gm-clueline b {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink-3);
+}
+.gm-clueline[data-active='true'] b {
+  color: var(--ink);
+}
+.gm-clueline span {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+/* The number in the corner has to shrink with the square. */
+.gm-num {
+  font-size: 0.44rem;
+}
+.gm-cell input {
+  font-size: 0.72rem;
+}
+
+/* A team's shapes, drawn rather than counted. */
+.tg-pile {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0.25rem 0 0.45rem;
+}
+.tg-piece {
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+.tg-piece--0 {
+  fill: var(--paper-a);
+}
+.tg-piece--1 {
+  fill: var(--paper-b);
+}
+.tg-piece--2 {
+  fill: var(--paper-c);
+}
+.tg-none {
+  margin: 0.25rem 0 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
   color: var(--ink-3);
 }

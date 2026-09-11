@@ -38,58 +38,83 @@ export const IMPACTS = [
  * labels share a horizontal band. A leader line joins the two. Everything is a
  * percentage, so labels scale with the drawing instead of staying a fixed pixel
  * size and colliding as the board narrows.
- *
- * `next` names the stages either side on the curve, which is what makes an
- * adjacent placement arguable rather than wrong.
  */
 export const BUTLER_STAGES = [
-  { name: 'Exploration', x: 16.6, y: 85.3, lx: 18.3, ly: 69.8, next: ['Involvement'] },
-  {
-    name: 'Involvement',
-    x: 32.9,
-    y: 64.1,
-    lx: 28.0,
-    ly: 50.2,
-    next: ['Exploration', 'Development'],
-  },
-  {
-    name: 'Development',
-    x: 46.6,
-    y: 41.2,
-    lx: 47.1,
-    ly: 58.1,
-    next: ['Involvement', 'Consolidation'],
-  },
-  {
-    name: 'Consolidation',
-    x: 62.3,
-    y: 30.7,
-    lx: 59.1,
-    ly: 18.1,
-    next: ['Development', 'Stagnation'],
-  },
-  {
-    name: 'Stagnation',
-    x: 76.3,
-    y: 27.6,
-    lx: 77.9,
-    ly: 55.8,
-    next: ['Consolidation', 'Rejuvenation', 'Decline'],
-  },
-  { name: 'Rejuvenation', x: 91.0, y: 16.4, lx: 85.1, ly: 7.9, next: ['Stagnation'] },
-  { name: 'Decline', x: 91.0, y: 43.3, lx: 87.4, ly: 72.1, next: ['Stagnation'] },
+  { name: 'Exploration', x: 16.6, y: 85.3, lx: 18.3, ly: 69.8 },
+  { name: 'Involvement', x: 32.9, y: 64.1, lx: 28.0, ly: 50.2 },
+  { name: 'Development', x: 46.6, y: 41.2, lx: 47.1, ly: 58.1 },
+  { name: 'Consolidation', x: 62.3, y: 30.7, lx: 59.1, ly: 18.1 },
+  { name: 'Stagnation', x: 76.3, y: 27.6, lx: 77.9, ly: 55.8 },
+  { name: 'Rejuvenation', x: 91.0, y: 16.4, lx: 85.1, ly: 7.9 },
+  { name: 'Decline', x: 91.0, y: 43.3, lx: 87.4, ly: 72.1 },
 ]
 
 /** Ordered, so neighbouring levels are the ones that can be argued either way. */
 export const IRRIDEX = ['Euphoria', 'Apathy', 'Annoyance', 'Antagonism']
 
+/**
+ * The five destinations from the worksheet, with her marked stages, the
+ * alternatives she names herself, and her reason for each.
+ *
+ * The worksheet's own note: "These answers could be argued by students, though
+ * they would need to provide researched proof of their placements." Where it
+ * names a second stage that can be argued, it is listed here; where it does
+ * not, there is only one.
+ */
 export const DESTINATIONS = [
-  { id: 'bhutan', name: 'Bhutan', butler: 'Exploration', doxey: 'Euphoria' },
-  { id: 'vietnam', name: 'Vietnam', butler: 'Development', doxey: 'Apathy' },
-  { id: 'nyc', name: 'New York City', butler: 'Consolidation', doxey: 'Annoyance' },
-  { id: 'venice', name: 'Venice', butler: 'Stagnation', doxey: 'Antagonism' },
-  { id: 'barcelona', name: 'Barcelona', butler: 'Stagnation', doxey: 'Antagonism' },
+  {
+    id: 'nyc',
+    name: 'New York City',
+    butler: 'Consolidation',
+    doxey: 'Annoyance',
+    why: 'NYC has a fully developed tourism infrastructure, receives tens of millions of tourists annually, and is a stable, iconic global destination. Visitor numbers remain strong, and tourism is deeply embedded in the city’s economy.',
+    whyDoxey:
+      'While many locals benefit from tourism economically, there is visible frustration, especially in over-touristed spots like Times Square and SoHo. Complaints about congestion and rising prices are common, suggesting a shift from apathy to annoyance.',
+  },
+  {
+    id: 'venice',
+    name: 'Venice',
+    butler: 'Stagnation',
+    doxey: 'Antagonism',
+    why: 'Venice is struggling under the pressure of over-tourism. Environmental degradation, population decline, and resentment from locals show that the city’s growth has peaked, and visitor experience quality is in decline.',
+    whyDoxey:
+      'Many residents actively protest against mass tourism and cruise ships. Tourism is seen as threatening their lifestyle and the city’s survival. This aligns with the antagonism stage, where locals are hostile and vocal.',
+  },
+  {
+    id: 'bhutan',
+    name: 'Bhutan',
+    butler: 'Exploration',
+    butlerAlso: ['Involvement'],
+    doxey: 'Euphoria',
+    doxeyAlso: ['Apathy'],
+    why: 'Bhutan follows a high value, low volume tourism model, welcoming only a controlled number of tourists via expensive permits. Infrastructure is minimal and natural and cultural preservation is prioritised, placing it in early exploration.',
+    whyDoxey:
+      'Tourism is still seen as a positive force that brings income and global recognition without overwhelming communities. Locals are generally welcoming and enthusiastic about sharing their culture.',
+  },
+  {
+    id: 'vietnam',
+    name: 'Vietnam',
+    butler: 'Development',
+    doxey: 'Apathy',
+    why: 'Vietnam has been growing rapidly as a tourist destination. Cities like Hanoi, Hoi An, and Ho Chi Minh City are experiencing increased foreign investment, new resorts, and expanding infrastructure, typical of the development stage.',
+    whyDoxey:
+      'Tourism has become normalised in many areas. Locals see tourists regularly and often treat them in a commercial, routine manner. The initial excitement is fading but without strong negative sentiment, which is a sign of apathy.',
+  },
+  {
+    id: 'barcelona',
+    name: 'Barcelona',
+    butler: 'Stagnation',
+    doxey: 'Antagonism',
+    doxeyAlso: ['Annoyance'],
+    why: 'Barcelona is a mature destination with strong branding, infrastructure, and global demand. However, signs of overtourism, regulation such as Airbnb restrictions, and local protests suggest it is in stagnation.',
+    whyDoxey:
+      'Public protests, graffiti saying "Tourists go home," and housing crises linked to tourism indicate residents are beyond apathy, firmly into antagonism, particularly in central areas.',
+  },
 ]
+
+/** The worksheet's own framing of its answer key. */
+export const BUTLER_NOTE =
+  'These answers could be argued, though they would need researched proof of their placements.'
 
 /* ---- Key word crosswords --------------------------------------------------
  *

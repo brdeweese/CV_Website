@@ -15,8 +15,16 @@ import { TRADE_RESOURCES, TRADE_TEAMS } from '../../data/games.js'
  * opens, and the totals climb as they land.
  */
 
-const SHAPES = ['circle', 'square', 'triangle', 'hex']
+const SHAPES = ['star', 'circle', 'hex']
 const FLY_MS = 1500
+
+/* A five-point star: ten points alternating between two radii, starting at the
+   top. Written out rather than drawn by hand so the points stay even. */
+const STAR = Array.from({ length: 10 }, (_, i) => {
+  const r = i % 2 === 0 ? 10 : 4.3
+  const a = (Math.PI / 5) * i - Math.PI / 2
+  return `${(Math.cos(a) * r).toFixed(2)} ${(Math.sin(a) * r).toFixed(2)}`
+}).join('L')
 
 const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v)
 const ease = (t) => 1 - (1 - t) ** 3
@@ -26,10 +34,43 @@ const rand = (i, salt) => {
 }
 
 function ShapeGlyph({ kind }) {
-  if (kind === 'circle') return <circle cx="0" cy="0" r="9" />
-  if (kind === 'square') return <rect x="-8" y="-8" width="16" height="16" rx="2" />
-  if (kind === 'triangle') return <path d="M0 -10 L9 8 L-9 8 Z" />
+  if (kind === 'star') return <path d={`M${STAR}Z`} />
+  if (kind === 'circle') return <circle cx="0" cy="0" r="9.5" />
   return <path d="M0 -10 L8.7 -5 L8.7 5 L0 10 L-8.7 5 L-8.7 -5 Z" />
+}
+
+/**
+ * The shapes a team has made, drawn in a row.
+ *
+ * With the borders closed only Team D has any, because only Team D was given
+ * all three of paper, stencil and scissors. Open trade and every team has a
+ * pile. That is the whole point of the activity, and a row of shapes appearing
+ * shows it better than a number changing.
+ */
+function Pile({ count }) {
+  if (!count) return <p className="tg-none">Nothing made</p>
+  return (
+    <svg
+      className="tg-pile"
+      viewBox={`0 0 ${count * 22} 24`}
+      /* Capped at its natural size, so a team with nine does not draw them
+         smaller than a team with four. It still shrinks if the card is
+         narrower than the row. */
+      style={{ maxWidth: `${count * 22}px` }}
+      role="img"
+      aria-label={`${count} perfect ${count === 1 ? 'shape' : 'shapes'}`}
+    >
+      {Array.from({ length: count }, (_, i) => (
+        <g
+          key={i}
+          className={`tg-piece tg-piece--${i % SHAPES.length}`}
+          transform={`translate(${11 + i * 22} 12)`}
+        >
+          <ShapeGlyph kind={SHAPES[i % SHAPES.length]} />
+        </g>
+      ))}
+    </svg>
+  )
 }
 
 export default function TradeGame() {
@@ -178,6 +219,7 @@ export default function TradeGame() {
                 <b>{made}</b>
                 <span>{made === 1 ? 'shape' : 'shapes'}</span>
               </p>
+              <Pile count={made} />
               <p className="tg-note">{t.note}</p>
             </div>
           )

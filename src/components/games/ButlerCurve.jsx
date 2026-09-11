@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { BUTLER_STAGES, DESTINATIONS, IRRIDEX } from '../../data/games.js'
+import { BUTLER_NOTE, BUTLER_STAGES, DESTINATIONS, IRRIDEX } from '../../data/games.js'
 
 /**
  * Pin the tail on Butler's curve, with Doxey's Irridex alongside.
@@ -22,9 +22,10 @@ import { BUTLER_STAGES, DESTINATIONS, IRRIDEX } from '../../data/games.js'
  * an alternating side, joined to its point by a leader line, so no two labels
  * share a horizontal band.
  *
- * Marking accepts the stage either side on the curve as well as the exact one.
- * These are placements to argue for, and a destination that sits between two
- * stages is a defensible answer at either.
+ * Marking follows the worksheet's answer key, including the alternatives it
+ * names itself: Bhutan may be argued at involvement rather than exploration,
+ * and Barcelona at annoyance rather than antagonism. Nothing else is accepted,
+ * because nothing else is in the key.
  */
 
 const VB = { w: 700, h: 430 }
@@ -36,19 +37,16 @@ const CHAR_W = 7.4
 const px = (v) => (v / 100) * VB.w
 const py = (v) => (v / 100) * VB.h
 
-/** Adjacent on the ordered index, so one step either way is arguable. */
-function doxeyState(picked, correct) {
+/** 'near' is an alternative the worksheet names, not any nearby answer. */
+function doxeyState(picked, d) {
   if (!picked) return null
-  if (picked === correct) return 'ok'
-  const a = IRRIDEX.indexOf(picked)
-  const b = IRRIDEX.indexOf(correct)
-  return a >= 0 && b >= 0 && Math.abs(a - b) === 1 ? 'near' : 'no'
+  if (picked === d.doxey) return 'ok'
+  return d.doxeyAlso?.includes(picked) ? 'near' : 'no'
 }
 
-function butlerState(stageName, correctName) {
-  if (stageName === correctName) return 'ok'
-  const correct = BUTLER_STAGES.find((s) => s.name === correctName)
-  return correct?.next.includes(stageName) ? 'near' : 'no'
+function butlerState(stageName, d) {
+  if (stageName === d.butler) return 'ok'
+  return d.butlerAlso?.includes(stageName) ? 'near' : 'no'
 }
 
 export default function ButlerCurve() {
@@ -158,17 +156,15 @@ export default function ButlerCurve() {
   const done = DESTINATIONS.filter((d) => placed[d.id] && doxey[d.id]).length
   const anyNear =
     checked &&
-    (DESTINATIONS.some(
-      (d) => placed[d.id] && butlerState(placed[d.id], d.butler) === 'near',
-    ) ||
-      DESTINATIONS.some((d) => doxeyState(doxey[d.id], d.doxey) === 'near'))
+    (DESTINATIONS.some((d) => placed[d.id] && butlerState(placed[d.id], d) === 'near') ||
+      DESTINATIONS.some((d) => doxeyState(doxey[d.id], d) === 'near'))
 
   return (
     <div className="game gm-butler">
       <p className="gm-hint">
         Drag a destination onto a stage on the curve, or tap it and then tap the stage. Then
-        choose where it sits on Doxey&rsquo;s Irritation Index. These are placements to
-        argue for, so the stage either side counts as well.
+        choose where it sits on Doxey&rsquo;s Irritation Index. Two of them have a second
+        answer the worksheet allows.
       </p>
 
       <div className="gm-tray">
@@ -284,7 +280,7 @@ export default function ButlerCurve() {
                   {s.name}
                 </text>
                 {sitting.map((d, i) => {
-                  const state = checked ? butlerState(s.name, d.butler) : null
+                  const state = checked ? butlerState(s.name, d) : null
                   return (
                     <text
                       key={d.id}
@@ -317,7 +313,7 @@ export default function ButlerCurve() {
 
       <div className="gm-irridex">
         {DESTINATIONS.map((d) => {
-          const state = checked ? doxeyState(doxey[d.id], d.doxey) : null
+          const state = checked ? doxeyState(doxey[d.id], d) : null
           return (
             <div className="gm-irow" key={d.id}>
               <span className="gm-iname">{d.name}</span>
@@ -361,12 +357,29 @@ export default function ButlerCurve() {
       </div>
 
       {checked && (
-        <p className="gm-fb">
-          Marked against the placements I use, and against the stage either side, which is
-          just as arguable.
-          {anyNear && ' Ticks marked arguable are the neighbouring answer.'} Venice and
-          Barcelona both sit at stagnation with antagonism.
-        </p>
+        <>
+          <p className="gm-fb">
+            {BUTLER_NOTE}
+            {anyNear && ' A tick marked arguable is the second answer the key allows.'}
+          </p>
+          <ul className="gm-why">
+            {DESTINATIONS.map((d) => (
+              <li key={d.id}>
+                <p className="gm-whyhead">
+                  {d.name}
+                  <span>
+                    {d.butler}
+                    {d.butlerAlso?.length ? ` or ${d.butlerAlso.join(' or ')}` : ''}{' '}
+                    &middot; {d.doxey}
+                    {d.doxeyAlso?.length ? ` or ${d.doxeyAlso.join(' or ')}` : ''}
+                  </span>
+                </p>
+                <p className="gm-whybody">{d.why}</p>
+                <p className="gm-whybody">{d.whyDoxey}</p>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   )

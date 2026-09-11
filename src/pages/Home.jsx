@@ -4,6 +4,7 @@ import PlayCta from '../components/PlayCta.jsx'
 import {
   awards,
   certifications,
+  curriculum,
   disciplines,
   education,
   experience,
@@ -261,6 +262,21 @@ export default function Home() {
         <section className="section" id="teaching">
           <div className="wrap">
             <SectionHead id="teaching" />
+
+            <div className="curric">
+              {curriculum.map((group) => (
+                <div className="curric-group reveal" key={group.title}>
+                  <h3 className="curric-title">{group.title}</h3>
+                  <ul className="curric-list">
+                    {group.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <h3 className="sub-head curric-break">In the classroom</h3>
             <p className="lede" style={{ marginBottom: 'clamp(2rem, 4vw, 3rem)' }}>
               Lecture activities across tourism, business, and accounting and finance, using
               gamification, real academic sourcing, and data tools students can carry into

@@ -50,6 +50,7 @@
   --paper-d: #d3a98e;
   --tt-blush: #e0a19c;
   --tt-blush-pale: #f7d6d0;
+  --tt-paper: #fdf2e8;
   --tt-violet: #6c3b85;
   --tt-violet-pale: #b98bd4;
   --tt-line: #2e2c2b;
@@ -155,6 +156,7 @@
     --paper-d: #8d6550;
     --tt-blush: #b8817c;
     --tt-blush-pale: #6d4b48;
+    --tt-paper: #2a2321;
     --tt-violet: #c8a6da;
     --tt-violet-pale: #7d5794;
     --tt-line: #efe9e6;
@@ -281,6 +283,7 @@
   --gloss-3: rgba(255, 255, 255, 0.04);
   --tt-blush: #b8817c;
   --tt-blush-pale: #6d4b48;
+  --tt-paper: #2a2321;
   --tt-violet: #c8a6da;
   --tt-violet-pale: #7d5794;
   --tt-line: #efe9e6;
@@ -5491,6 +5494,10 @@ button {
   list-style: none;
 }
 .deck-strip li[data-lead='true'] {
+  /* The query container for the cover. It has to be the ancestor rather than
+     the slide itself: cqw inside an element's own rule does not see that
+     element's container-type and falls back to the viewport. */
+  container-type: inline-size;
   grid-column: 1 / -1;
 }
 .deck-strip img {
@@ -5548,5 +5555,91 @@ button {
   /* One slide is enough on a phone; the rest is in the download. */
   .deck-strip li:not([data-lead='true']) {
     display: none;
+  }
+}
+
+/* ---- The cover slide, animated ---------------------------------------------
+   The deck's joke is that TECH is inside TEACH, so the laptop standing in for
+   the A shrinks away and the letters close up. The word is a flex row, so the
+   gap closes on its own at whatever size the panel is: nothing is measured and
+   nothing is positioned. */
+
+.morph {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2cqw;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  padding: 0 5cqw;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--tt-paper);
+  cursor: pointer;
+  text-align: left;
+  overflow: hidden;
+}
+.morph:focus-visible {
+  outline: 2px solid var(--tt-violet);
+  outline-offset: 2px;
+}
+
+.morph-kicker {
+  font-family: var(--font-sans);
+  font-size: 4.4cqw;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--tt-line);
+}
+
+.morph-word {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 23.5cqw;
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+  color: var(--tt-line);
+}
+
+/* The A's box. Closing it to zero is what pulls C and H across. */
+.morph-a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 0.94em;
+  overflow: hidden;
+  transition:
+    width 0.85s cubic-bezier(0.7, 0, 0.25, 1),
+    opacity 0.5s ease 0.15s;
+}
+/* Sized to the cap height of the letters and dropped onto their baseline, both
+   measured rather than guessed, so it reads as the A rather than as an object
+   parked between two letters. */
+.morph-laptop {
+  display: block;
+  position: relative;
+  top: 0.063em;
+  width: 0.94em;
+  height: auto;
+  flex: none;
+  transform-origin: 50% 72%;
+  transition: transform 0.85s cubic-bezier(0.7, 0, 0.25, 1);
+}
+.morph[data-state='tech'] .morph-a {
+  width: 0;
+  opacity: 0;
+}
+.morph[data-state='tech'] .morph-laptop {
+  transform: scale(0.28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .morph-a,
+  .morph-laptop {
+    transition: none;
   }
 }

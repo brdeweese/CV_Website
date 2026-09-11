@@ -1,22 +1,19 @@
+import TeachMorph from './TeachMorph.jsx'
+
 const FILES = `${import.meta.env.BASE_URL}files/`
 
 /**
  * The Teach with Tech session itself, offered as the deck rather than retold
  * in prose.
  *
- * The three thumbnails are rendered from the PDF at publish time, so they are
- * the actual slides and cannot go stale against a redeck. Dimensions are set
- * on each image so the panel does not reflow as they load.
+ * The cover is rebuilt rather than screenshotted, so the joke printed on it
+ * actually happens: TEACH becomes TECH. The two slides beneath it are rendered
+ * from the PDF at publish time, so they are the actual slides and cannot go
+ * stale against a redeck. Dimensions are set on each image so the panel does
+ * not reflow as they load.
  */
 
 const SLIDES = [
-  {
-    src: `${FILES}deck/cover.png`,
-    alt: 'Title slide: You can’t spell teach without tech',
-    w: 1224,
-    h: 688,
-    lead: true,
-  },
   {
     src: `${FILES}deck/ai.png`,
     alt: 'Slide: AI as a tool, covering role play, business plans and data science basics',
@@ -45,8 +42,12 @@ export default function TeachDeck() {
       </div>
 
       <ul className="deck-strip">
+        {/* The cover is played rather than shown, so the joke on it lands. */}
+        <li data-lead="true">
+          <TeachMorph />
+        </li>
         {SLIDES.map((s) => (
-          <li key={s.src} data-lead={s.lead ? 'true' : undefined}>
+          <li key={s.src}>
             <img
               src={s.src}
               alt={s.alt}

@@ -6988,3 +6988,33 @@ button {
     grid-template-columns: minmax(0, 7rem) 1.3rem minmax(0, 1fr) minmax(0, 1fr) 1.3rem;
   }
 }
+
+/* Two columns at the head: the example on the left, what it is for on the
+   right. */
+.ff-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(1.2rem, 3vw, 2.6rem);
+  align-items: start;
+}
+.ff-role {
+  padding-left: clamp(1rem, 2.4vw, 1.8rem);
+  border-left: 1px solid var(--rule);
+}
+.ff-role p:last-child {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+@media (max-width: 760px) {
+  .ff-head {
+    grid-template-columns: 1fr;
+  }
+  .ff-role {
+    padding-left: 0;
+    padding-top: 1rem;
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+}

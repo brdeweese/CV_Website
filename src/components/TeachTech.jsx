@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import { GAME_ART } from './gameArt.jsx'
-import PlayCta from './PlayCta.jsx'
 
 /**
  * The lead panel for the Technology in the Classroom project.
@@ -67,8 +66,7 @@ export default function TeachTech() {
       </div>
 
       <div className="tt-tries">
-        <PlayCta eyebrow="All six, in the browser" />
-        <p className="tt-triesHead">Or go straight to one</p>
+        <p className="tt-triesHead">The activities, playable</p>
         <div className="tt-grid">
           {GAME_ART.map(({ id, name, Art }) => (
             <Link className="tt-tile" key={id} to={`/games#${id}`}>

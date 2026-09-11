@@ -5803,3 +5803,235 @@ button {
 .tt-tries .playcta {
   margin-bottom: 1.4rem;
 }
+
+/* Dragging a destination onto the curve. */
+.gm-chip {
+  touch-action: none;
+}
+.gm-chip[data-dragging='true'] {
+  opacity: 0.35;
+}
+.gm-ghost {
+  position: fixed;
+  z-index: 60;
+  transform: translate(-50%, -140%);
+  pointer-events: none;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 8px 20px -10px var(--shadow);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+.gm-stage[data-over='true'] .gm-slotbox {
+  stroke: var(--ink);
+  stroke-dasharray: none;
+  stroke-width: 2.4;
+  fill: var(--surface-2);
+}
+.gm-stage[data-over='true'] .gm-dot {
+  fill: var(--ink);
+}
+
+/* ---- The trolley's lever, and the points it throws ------------------------ */
+
+.tr-stage {
+  position: relative;
+}
+.tr-live {
+  position: absolute;
+  left: 50%;
+  bottom: 0.4rem;
+  transform: translateX(-50%);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  color: var(--ink-2);
+}
+
+/* The blade that shows which way the points are set. */
+.tr-points {
+  fill: none;
+  stroke: var(--game-lever);
+  stroke-width: 5;
+  stroke-linecap: round;
+  transition: d 0.25s ease;
+}
+
+.tr-lever {
+  cursor: default;
+}
+.tr-lever[data-live='true'] {
+  cursor: pointer;
+}
+.tr-leverhit {
+  fill: transparent;
+}
+.tr-lever[data-live='true']:hover .tr-leverknob,
+.tr-lever:focus-visible .tr-leverknob {
+  fill: var(--game-lever);
+}
+.tr-lever:focus-visible .tr-leverhit {
+  fill: none;
+  stroke: var(--game-lever);
+  stroke-width: 2;
+  stroke-dasharray: 4 4;
+}
+.tr-leverarm,
+.tr-leverknob,
+.tr-leverbase {
+  transition: all 0.25s ease;
+}
+/* Nudges the knob while the trolley is still coming, so it reads as the thing
+   to press rather than part of the scenery. */
+.tr-lever[data-live='true'] .tr-leverknob {
+  animation: tr-nudge 1.6s ease-in-out infinite;
+}
+@keyframes tr-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tr-lever[data-live='true'] .tr-leverknob {
+    animation: none;
+  }
+  .tr-points {
+    transition: none;
+  }
+}
+
+/* ---- Matching game: ethical theories -------------------------------------- */
+
+.eth {
+  margin-top: 1.6rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+}
+.eth-eyebrow {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.eth-how {
+  margin: 0 0 0.9rem;
+  font-size: 0.88rem;
+  color: var(--ink-2);
+}
+
+.eth-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+.eth-key li {
+  padding: 0.26rem 0.65rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.74rem;
+}
+.eth-key b {
+  font-weight: 600;
+}
+.eth-key span {
+  color: var(--ink-3);
+}
+
+.eth-card {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: clamp(0.9rem, 2.2vw, 1.3rem);
+}
+.eth-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.7rem;
+}
+.eth-arrow {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  line-height: 1;
+}
+.eth-arrow:hover {
+  border-color: var(--ink);
+}
+.eth-count {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--ink-3);
+}
+.eth-text {
+  margin: 0 0 1rem;
+  font-size: 0.96rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.eth-responses {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.7rem;
+}
+.eth-responses li {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--rule);
+  border-left-width: 3px;
+  border-radius: 6px;
+  background: var(--surface-2);
+}
+.eth-responses li[data-state='ok'] {
+  border-left-color: var(--game-ok);
+}
+.eth-responses li[data-state='no'] {
+  border-left-color: var(--game-no);
+}
+.eth-quote {
+  margin: 0 0 0.55rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.eth-pick {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.eth-mark {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+.eth-mark[data-state='ok'] {
+  color: var(--game-ok);
+}
+.eth-mark[data-state='no'] {
+  color: var(--game-no);
+}
+
+.tr-sub {
+  color: var(--ink-3);
+}

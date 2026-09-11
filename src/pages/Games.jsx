@@ -17,20 +17,20 @@ const PythonLab = lazy(() => import('../components/games/PythonLab.jsx'))
  */
 const GAMES = [
   {
-    id: 'impacts',
-    name: 'Sort the impact',
-    kicker: 'Escape room, puzzle two',
-    blurb:
-      'Six of the fifteen impacts from the escape room. Match each one to economic, environmental or socio-cultural.',
-    Component: ImpactSort,
-  },
-  {
     id: 'butler',
     name: "Pin the tail on Butler's curve",
     kicker: 'Escape room, puzzle one',
     blurb:
       "Place destinations on the Tourism Area Life Cycle, then on Doxey's Irritation Index.",
     Component: ButlerCurve,
+  },
+  {
+    id: 'impacts',
+    name: 'Sort the impact',
+    kicker: 'Escape room, puzzle two',
+    blurb:
+      'Six of the fifteen impacts from the escape room. Match each one to economic, environmental or socio-cultural.',
+    Component: ImpactSort,
   },
   {
     id: 'python',

@@ -1,12 +1,19 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { BUTLER_STAGES, DESTINATIONS, IRRIDEX } from '../../data/games.js'
 
 /**
  * Pin the tail on Butler's curve, with Doxey's Irridex alongside.
  *
- * Tap a destination, then tap a stage. Tap-then-tap rather than drag, because
- * drag is the one interaction that reliably fails on a phone, and every
- * student who plays this in the room is on a phone.
+ * Drag a destination onto a stage, or tap it and then tap a stage. Both work,
+ * because drag is what the name of the game promises and what a mouse expects,
+ * while tap-then-tap is the one that never fails on a phone, and every student
+ * who plays this in the room is on a phone.
+ *
+ * The drag runs on pointer events with the pointer captured, so a mouse, a
+ * finger and a stylus all take the same path, and the chip does not get lost if
+ * the pointer leaves the board mid-drag. The drop target is worked out from the
+ * stage boxes' own screen positions rather than from coordinates, so it stays
+ * right at any size the board is drawn.
  *
  * The stage labels are drawn inside the SVG rather than positioned over it in
  * HTML. Percentage positions with fixed-pixel boxes collide as the board
@@ -49,6 +56,83 @@ export default function ButlerCurve() {
   const [doxey, setDoxey] = useState({}) // destId -> irridex level
   const [held, setHeld] = useState(null)
   const [checked, setChecked] = useState(false)
+  const [drag, setDrag] = useState(null) // { id, name, x, y } while dragging
+  const [over, setOver] = useState(null) // stage name the pointer is on
+  const stageRefs = useRef({})
+  const dragRef = useRef(null)
+  /* A pointer sequence ends with a click too. This says the pointer path has
+     already decided what to do, so the click handler leaves it alone and only
+     serves the keyboard. */
+  const handledRef = useRef(false)
+
+  /* Which stage box the pointer is inside, by asking the boxes where they are. */
+  const stageAt = useCallback((x, y) => {
+    for (const [name, el] of Object.entries(stageRefs.current)) {
+      if (!el) continue
+      const r = el.getBoundingClientRect()
+      /* A little forgiveness around each box, since the chip is bigger than a
+         cursor and a finger is bigger still. */
+      if (x >= r.left - 14 && x <= r.right + 14 && y >= r.top - 14 && y <= r.bottom + 14)
+        return name
+    }
+    return null
+  }, [])
+
+  const startDrag = useCallback(
+    (e, d) => {
+      if (e.button != null && e.button !== 0) return
+      e.currentTarget.setPointerCapture?.(e.pointerId)
+      /* Remember whether it was already armed, so a second tap puts it down. */
+      dragRef.current = { id: d.id, name: d.name, moved: false, wasHeld: held === d.id }
+      setDrag({ id: d.id, name: d.name, x: e.clientX, y: e.clientY })
+      setHeld(d.id)
+    },
+    [held],
+  )
+
+  const moveDrag = useCallback(
+    (e) => {
+      if (!dragRef.current) return
+      dragRef.current.moved = true
+      setDrag((v) => (v ? { ...v, x: e.clientX, y: e.clientY } : v))
+      setOver(stageAt(e.clientX, e.clientY))
+    },
+    [stageAt],
+  )
+
+  const endDrag = useCallback(
+    (e) => {
+      const d = dragRef.current
+      dragRef.current = null
+      setDrag(null)
+      setOver(null)
+      if (!d) return
+      handledRef.current = true
+      const stage = stageAt(e.clientX, e.clientY)
+      if (stage) {
+        setChecked(false)
+        setPlaced((prev) => ({ ...prev, [d.id]: stage }))
+        setHeld(null)
+      } else if (d.moved) {
+        /* Dragged somewhere that is not a stage: put the chip back rather than
+           leaving it armed, which would place it on the next stray tap. */
+        setHeld(null)
+      } else if (d.wasHeld) {
+        /* Tapped an already-armed chip, so put it down. A tap on an unarmed one
+           leaves it armed, which is the first half of tap-then-tap. */
+        setHeld(null)
+      }
+    },
+    [stageAt],
+  )
+
+  useEffect(() => {
+    if (!drag) return
+    const stop = (e) => e.preventDefault()
+    /* Stops the page scrolling under a finger that is dragging a chip. */
+    document.addEventListener('touchmove', stop, { passive: false })
+    return () => document.removeEventListener('touchmove', stop)
+  }, [drag])
 
   const drop = useCallback(
     (stage) => {
@@ -65,6 +149,9 @@ export default function ButlerCurve() {
     setDoxey({})
     setHeld(null)
     setChecked(false)
+    setDrag(null)
+    setOver(null)
+    dragRef.current = null
   }, [])
 
   const unplaced = DESTINATIONS.filter((d) => !placed[d.id])
@@ -79,9 +166,9 @@ export default function ButlerCurve() {
   return (
     <div className="game gm-butler">
       <p className="gm-hint">
-        Tap a destination, then tap a stage on the curve. Then choose where it sits on
-        Doxey&rsquo;s Irritation Index. These are placements to argue for, so the stage
-        either side counts as well.
+        Drag a destination onto a stage on the curve, or tap it and then tap the stage. Then
+        choose where it sits on Doxey&rsquo;s Irritation Index. These are placements to
+        argue for, so the stage either side counts as well.
       </p>
 
       <div className="gm-tray">
@@ -92,7 +179,19 @@ export default function ButlerCurve() {
             type="button"
             className="gm-chip"
             data-held={held === d.id ? 'true' : undefined}
-            onClick={() => setHeld(held === d.id ? null : d.id)}
+            data-dragging={drag?.id === d.id ? 'true' : undefined}
+            onPointerDown={(e) => startDrag(e, d)}
+            onPointerMove={moveDrag}
+            onPointerUp={endDrag}
+            onPointerCancel={endDrag}
+            onClick={() => {
+              /* Keyboard only. A pointer has already been dealt with above. */
+              if (handledRef.current) {
+                handledRef.current = false
+                return
+              }
+              setHeld((h) => (h === d.id ? null : d.id))
+            }}
           >
             {d.name}
           </button>
@@ -149,7 +248,11 @@ export default function ButlerCurve() {
               <g
                 key={s.name}
                 className="gm-stage"
-                data-armed={held ? 'true' : undefined}
+                ref={(el) => {
+                  stageRefs.current[s.name] = el
+                }}
+                data-armed={held || drag ? 'true' : undefined}
+                data-over={over === s.name ? 'true' : undefined}
                 role="button"
                 tabIndex={0}
                 aria-label={`Place at ${s.name}`}
@@ -201,6 +304,16 @@ export default function ButlerCurve() {
           })}
         </svg>
       </div>
+
+      {drag && (
+        <span
+          className="gm-ghost"
+          style={{ left: `${drag.x}px`, top: `${drag.y}px` }}
+          aria-hidden="true"
+        >
+          {drag.name}
+        </span>
+      )}
 
       <div className="gm-irridex">
         {DESTINATIONS.map((d) => {

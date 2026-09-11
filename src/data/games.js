@@ -168,6 +168,113 @@ export const CROSSWORDS = [
     ],
   },
   {
+    id: 'tourism',
+    name: 'Introduction to the tourism industry',
+    subject: 'Tourism',
+    cols: 20,
+    rows: 15,
+    source:
+      'Clues are written from the module reading: Cook, Hsu and Taylor (2018) and Du Cros and McKercher (2020).',
+    words: [
+      {
+        n: 4,
+        dir: 'across',
+        r: 1,
+        c: 3,
+        a: 'TOURISM',
+        q: 'The temporary movement of people to destinations outside their normal places of work and residence, the activities undertaken during their stay in those destinations, and the facilities created to cater to their needs (Cook, Hsu and Taylor, 2018).',
+      },
+      {
+        n: 6,
+        dir: 'across',
+        r: 4,
+        c: 10,
+        a: 'PACKAGE',
+        q: 'Tour (blank): two or more travel services put together by a tour operator, such as air transportation, accommodations, meals, ground transportation, and attractions (Cook, Hsu and Taylor, 2018).',
+      },
+      {
+        n: 8,
+        dir: 'across',
+        r: 6,
+        c: 16,
+        a: 'MASS',
+        q: '(Blank) tourism: twentieth-century phenomenon whereby the working and middle classes began travelling in large numbers for leisure purposes (Cook, Hsu and Taylor, 2018).',
+      },
+      {
+        n: 9,
+        dir: 'across',
+        r: 8,
+        c: 0,
+        a: 'ACCOMMODATION',
+        q: 'Establishments engaged primarily in providing lodging space to the general public (Cook, Hsu and Taylor, 2018).',
+      },
+      {
+        n: 11,
+        dir: 'across',
+        r: 10,
+        c: 9,
+        a: 'SUSTAINABLE',
+        q: '(Blank) tourism: tourism activities and development that do not endanger the economic, social, cultural, or environmental assets of a destination (Cook, Hsu and Taylor, 2018).',
+      },
+      {
+        n: 1,
+        dir: 'down',
+        r: 0,
+        c: 3,
+        a: 'ATTRACTIONS',
+        q: 'Natural locations, objects, or constructed facilities that have a special appeal to both tourists and local visitors (Cook, Hsu and Taylor, 2018).',
+      },
+      {
+        n: 2,
+        dir: 'down',
+        r: 0,
+        c: 14,
+        a: 'GLOBALISATION',
+        q: 'The movement of people, goods, capital and ideas due to increased economic integration, which in turn is propelled by increased trade and investment. It is like moving towards living in a borderless world, and can also include the process whereby aspects of one particular culture are adopted worldwide (Du Cros and McKercher, 2020).',
+      },
+      {
+        n: 3,
+        dir: 'down',
+        r: 0,
+        c: 19,
+        a: 'BUSINESS',
+        q: '(Blank) travel: travel-related activities associated with commerce and industry (Cook, Hsu and Taylor, 2018).',
+      },
+      {
+        n: 5,
+        dir: 'down',
+        r: 1,
+        c: 16,
+        a: 'INTERMEDIARY',
+        q: 'Firms that help tourism suppliers locate customers and make sales to them, including tour operators and travel agencies (Cook, Hsu and Taylor, 2018).',
+      },
+      {
+        n: 7,
+        dir: 'down',
+        r: 6,
+        c: 10,
+        a: 'LEISURE',
+        q: '(Blank) travel: travel for personal interest and enjoyment (Cook, Hsu and Taylor, 2018).',
+      },
+      {
+        n: 10,
+        dir: 'down',
+        r: 8,
+        c: 18,
+        a: 'CULTURE',
+        q: 'The practices of a society; its customary beliefs, social roles, and material objects (Cook, Hsu and Taylor, 2018).',
+      },
+      {
+        n: 12,
+        dir: 'down',
+        r: 10,
+        c: 12,
+        a: 'TOUR',
+        q: '(Blank) operator: a business entity engaged in the planning, preparing, marketing, making of reservations, and, at times, operating vacation tours (Cook, Hsu and Taylor, 2018).',
+      },
+    ],
+  },
+  {
     id: 'afm',
     name: 'AFM key words, week 2',
     subject: 'Accounting and finance',
@@ -298,6 +405,148 @@ export const TROLLEY = {
     },
   ],
 }
+
+/* ---- Ethical theories, the matching game ----------------------------------
+ *
+ * From Brina's Ethics Matching Game worksheet, verbatim. Each dilemma carries
+ * three responses, one per theory, and the exercise is to say which is which.
+ * The trolley above it is the warm-up; this is the part with marked answers.
+ */
+
+export const ETHICAL_THEORIES = [
+  {
+    id: 'deontology',
+    name: 'Deontology',
+    gloss: 'duty-based',
+  },
+  {
+    id: 'virtue',
+    name: 'Virtue ethics',
+    gloss: 'character-focused',
+  },
+  {
+    id: 'consequentialism',
+    name: 'Consequentialism',
+    gloss: 'outcome-focused',
+  },
+]
+
+export const DILEMMAS = [
+  {
+    id: 'park',
+    n: 1,
+    text: 'A beautiful national park has reached its daily visitor limit, but a tourist begs you (the park ranger) to let them in because they have come all the way from another country and may never return.',
+    responses: [
+      {
+        text: 'I can’t let them in because the rules exist to protect the environment, and rules must be followed no matter what.',
+        answer: 'deontology',
+      },
+      {
+        text: 'I’d decide whether letting them in would cause any real harm or overcrowding today.',
+        answer: 'consequentialism',
+      },
+      {
+        text: 'I’d think about what a responsible and caring person who respects nature would do.',
+        answer: 'virtue',
+      },
+    ],
+  },
+  {
+    id: 'coral',
+    n: 2,
+    text: 'A tourist is offered a rare coral souvenir to buy from a local beach vendor, even though harvesting coral is illegal and harms marine life.',
+    responses: [
+      {
+        text: 'I shouldn’t buy it because it’s illegal, and breaking laws is always wrong.',
+        answer: 'deontology',
+      },
+      {
+        text: 'I’d avoid buying it because supporting this trade damages reefs and harms the ecosystem in the long run.',
+        answer: 'consequentialism',
+      },
+      {
+        text: 'I wouldn’t buy it because a good traveller respects and protects nature.',
+        answer: 'virtue',
+      },
+    ],
+  },
+  {
+    id: 'tiger',
+    n: 3,
+    text: 'During a jungle tour, a guide offers you the chance to take a selfie with a sedated tiger for social media likes.',
+    responses: [
+      {
+        text: 'I won’t do it because exploiting animals for entertainment is wrong, regardless of how cute the photo might look.',
+        answer: 'deontology',
+      },
+      {
+        text: 'I’d think about whether taking the selfie would encourage more people to support harmful wildlife tourism.',
+        answer: 'consequentialism',
+      },
+      {
+        text: 'I’d refuse because a compassionate and respectful person wouldn’t use animals for personal gain.',
+        answer: 'virtue',
+      },
+    ],
+  },
+  {
+    id: 'reviews',
+    n: 4,
+    text: 'You work at a travel agency. Your manager asks you to post fake positive reviews online to boost business.',
+    responses: [
+      {
+        text: 'I refuse because lying and deceiving customers is always wrong.',
+        answer: 'deontology',
+      },
+      {
+        text: 'I’d consider it only if fake reviews help save the business and protect everyone’s jobs.',
+        answer: 'consequentialism',
+      },
+      {
+        text: 'I won’t do it because an honest and trustworthy person wouldn’t lie to customers.',
+        answer: 'virtue',
+      },
+    ],
+  },
+  {
+    id: 'overbooked',
+    n: 5,
+    text: 'You work at a popular resort that has accidentally overbooked rooms. A regular guest arrives, but there is no room left unless you cancel a booking for first-time guests who have also just arrived.',
+    responses: [
+      {
+        text: 'I’ll follow hotel policy and deal fairly with whoever booked first, because fairness is my duty.',
+        answer: 'deontology',
+      },
+      {
+        text: 'I’d choose whichever solution protects the resort’s reputation and leads to the best guest satisfaction overall.',
+        answer: 'consequentialism',
+      },
+      {
+        text: 'I’d make a decision guided by fairness and kindness because that’s what a good hospitality professional would do.',
+        answer: 'virtue',
+      },
+    ],
+  },
+  {
+    id: 'paper',
+    n: 6,
+    text: 'You’ve created an amazing ethics matching game for your students. But to print it, you used over 100 sheets of paper. You suddenly realise this might contribute to killing trees and harming the environment, ironically, while teaching about ethics. Your colleagues are teasing you for being the “Ethics Hypocrite”.',
+    responses: [
+      {
+        text: 'I should have avoided printing because protecting the environment is a moral duty, even for teaching.',
+        answer: 'deontology',
+      },
+      {
+        text: 'I’d argue it’s worth the paper because the learning benefits for students outweigh the environmental cost.',
+        answer: 'consequentialism',
+      },
+      {
+        text: 'I’ll admit my mistake because an ethical teacher should be honest, humble, and willing to improve.',
+        answer: 'virtue',
+      },
+    ],
+  },
+]
 
 /* ---- International trade game: globalisation ------------------------------ */
 

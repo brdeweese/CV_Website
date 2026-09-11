@@ -119,9 +119,9 @@ function MiniPython() {
 }
 
 export const GAME_ART = [
-  { id: 'python', name: 'Coding practice with AI', Art: MiniPython },
   { id: 'butler', name: "Pin the tail on Butler's curve", Art: MiniButler },
   { id: 'impacts', name: 'Sort the impact', Art: MiniImpacts },
+  { id: 'python', name: 'Coding practice with AI', Art: MiniPython },
   { id: 'crossword', name: 'Key word crossword', Art: MiniCrossword },
   { id: 'trolley', name: 'The ethical dilemma', Art: MiniTrolley },
   { id: 'trade', name: 'The international trade game', Art: MiniTrade },

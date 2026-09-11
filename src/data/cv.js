@@ -133,6 +133,7 @@ export const experience = [
   {
     id: 'stenn',
     start: 2024,
+    startMonth: 9, // September 2024
     end: 2025,
     endMonth: 1, // Ended January 2025, immediately before the lecturing role began
     role: 'Marketing Data Analyst',

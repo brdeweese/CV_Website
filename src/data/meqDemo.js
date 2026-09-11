@@ -152,23 +152,25 @@ export const GROUPS = [
 /**
  * How far a figure is from its target, as one of four bands.
  *
- * Ordinal, not categorical: the bands are a distance, so they are shaded along
- * one ramp rather than given four hues. Meeting the target is the one step that
- * is different in kind, so it carries a tick as well as a colour and never
- * depends on the colour alone.
+ * Met, then within five, then more than five below, then more than ten. The
+ * three below-target bands run pale yellow to dark red, which is a ramp, and
+ * meeting the target is green with a tick beside it so it never depends on the
+ * colour alone. The four fills were chosen for the widest separation under
+ * colour-vision deficiency that still holds text above 7:1 (worst pair 10.3 in
+ * light, 7.0 in dark).
  */
 export function kpiBand(value, target) {
   if (value >= target) return 'met'
-  if (value >= target - 8) return 'near'
-  if (value >= target - 18) return 'ok'
-  return 'low'
+  if (value >= target - 5) return 'close'
+  if (value >= target - 10) return 'below'
+  return 'far'
 }
 
 export const KPI_BANDS = [
   { id: 'met', label: 'Met the target' },
-  { id: 'near', label: 'Within 8' },
-  { id: 'ok', label: 'Within 18' },
-  { id: 'low', label: 'Further below' },
+  { id: 'close', label: 'Within 5' },
+  { id: 'below', label: 'More than 5 below' },
+  { id: 'far', label: 'More than 10 below' },
 ]
 
 /** The module-average row the recap opens on. */

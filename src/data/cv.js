@@ -730,6 +730,7 @@ export const projects = [
   },
   {
     slug: 'module-feedback-sentiment-classifier',
+    hero: 'feedback',
     title: 'Module Feedback Sentiment Classifier',
     subtitle:
       'Turning open-text student feedback into something a teaching team can act on',

@@ -18,6 +18,7 @@ const CakeLayers = lazy(() => import('../components/CakeLayers.jsx'))
 const ErasBars = lazy(() => import('../components/ErasBars.jsx'))
 const TeachTech = lazy(() => import('../components/TeachTech.jsx'))
 const TeachDeck = lazy(() => import('../components/TeachDeck.jsx'))
+const FeedbackFlow = lazy(() => import('../components/FeedbackFlow.jsx'))
 
 const HEROES = {
   migration: MigrationExplorer,
@@ -28,6 +29,7 @@ const HEROES = {
   eras: ErasBars,
   teachtech: TeachTech,
   deck: TeachDeck,
+  feedback: FeedbackFlow,
 }
 
 function Takeaways({ items }) {

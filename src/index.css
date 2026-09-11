@@ -4097,6 +4097,10 @@ button {
   gap: 0.9rem;
 }
 .games-item {
+  /* A grid item defaults to min-width:auto, so a wide child inside it (the
+     Butler board's 560px minimum) forces the whole column wider than the
+     screen instead of scrolling inside its own container. */
+  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--rule);
   border-radius: 10px;
@@ -7011,4 +7015,45 @@ button {
   font-size: 1.02rem;
   line-height: 1.6;
   color: var(--ink);
+}
+
+/* ---- Touch sizing --------------------------------------------------------
+   The games are played on a phone, and several of their controls sat around
+   30px tall: the destination chips, the game buttons and the dropdowns. Guarded
+   on a coarse pointer so the desktop keeps its tighter scale. */
+
+@media (pointer: coarse) {
+  .gm-chip,
+  .btn-game,
+  .gm-cwtab,
+  .gm-clueline,
+  .eth-arrow,
+  .kpi-table thead button {
+    min-height: 44px;
+  }
+  .gm-sort select,
+  .gm-irow select,
+  .eth-pick select {
+    min-height: 44px;
+    padding-block: 0.3rem;
+  }
+  .eth-arrow {
+    min-width: 44px;
+  }
+  .theme-toggle {
+    min-width: 42px;
+    min-height: 42px;
+  }
+  .ff-close,
+  .back-link,
+  .detail-back a {
+    padding-block: 0.55rem;
+  }
+}
+
+/* A card label under a drawing, rather than a micro-label beside one. */
+@media (max-width: 760px) {
+  .playcta-name {
+    font-size: 0.68rem;
+  }
 }

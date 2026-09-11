@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import PlayCta from '../components/PlayCta.jsx'
 import {
   awards,
   certifications,
@@ -263,10 +264,7 @@ export default function Home() {
             <p className="lede" style={{ marginBottom: 'clamp(2rem, 4vw, 3rem)' }}>
               Lecture activities across tourism, business, and accounting and finance, using
               gamification, real academic sourcing, and data tools students can carry into
-              work.{' '}
-              <Link className="teach-play" to="/games">
-                Play six of them &rarr;
-              </Link>
+              work.
             </p>
             <div className="teach-grid">
               {teaching.map((t) => (
@@ -280,6 +278,10 @@ export default function Home() {
                   <p>{t.description}</p>
                 </article>
               ))}
+            </div>
+
+            <div className="teach-cta reveal">
+              <PlayCta />
             </div>
           </div>
         </section>

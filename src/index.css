@@ -5638,3 +5638,168 @@ button {
     transition: none;
   }
 }
+
+/* ---- Play the activities: the invitation ----------------------------------
+   A row of text is easy to skip past, so the six drawings fan out like a hand
+   of cards being dealt and one lifts to the front at a time. */
+
+.playcta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.2rem);
+  padding: clamp(1.2rem, 2.6vw, 1.9rem);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: linear-gradient(
+    115deg,
+    color-mix(in oklab, var(--tt-violet) 10%, var(--surface)),
+    color-mix(in oklab, var(--tt-blush) 13%, var(--surface))
+  );
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.playcta:hover,
+.playcta:focus-visible {
+  border-color: var(--tt-violet);
+  box-shadow: 0 6px 22px -14px var(--shadow);
+}
+
+.playcta-copy {
+  display: grid;
+  gap: 0.4rem;
+  justify-items: start;
+}
+.playcta-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.playcta-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 3vw, 1.9rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.playcta-line {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 34ch;
+}
+.playcta-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.5rem;
+  padding: 0.55rem 1.05rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--page);
+  font-size: 0.86rem;
+  transition: gap 0.2s ease;
+}
+.playcta:hover .playcta-go,
+.playcta:focus-visible .playcta-go {
+  gap: 0.8rem;
+}
+
+/* The fan. Cards are stacked on one spot and pushed apart by --fan-x. */
+.playcta-fan {
+  container-type: inline-size;
+  position: relative;
+  display: block;
+  height: 150px;
+}
+/* Card width and the gap between cards are both capped against the fan's own
+   width, so six of them always fit however narrow the column is: a card takes
+   46% of the space and the five gaps share the rest. The fan is the query
+   container because an element's own container-type does not apply to cqw in
+   its own rule, only in its descendants'. */
+.playcta-card {
+  /* Border-box, so the capped width is the whole card. Otherwise the padding
+     and border sit outside it and the six cards spill past the fan. */
+  box-sizing: border-box;
+  /* The outer cards are rotated, so each one's visual box is wider than its
+     layout box. The caps leave that bleed room: the layout span comes to 89% of
+     the fan, and the rotation takes up the rest. */
+  --fan-step: min(50px, 9.4cqw);
+  --fan-x: calc(var(--i) * var(--fan-step));
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(140px, 42cqw);
+  padding: 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--surface);
+  transform: translate(-50%, -50%) translateX(var(--fan-x)) rotate(var(--fan-r));
+  transition:
+    transform 0.55s cubic-bezier(0.3, 0, 0.2, 1),
+    box-shadow 0.4s ease;
+}
+.playcta-card[data-front='true'] {
+  transform: translate(-50%, -50%) translateX(var(--fan-x)) rotate(0deg) translateY(-10px)
+    scale(1.07);
+  box-shadow: 0 10px 26px -16px var(--shadow);
+  border-color: var(--tt-violet);
+}
+/* Hover spreads the hand, so it reads as a stack you can go through. */
+.playcta:hover .playcta-card {
+  transform: translate(-50%, -50%) translateX(calc(var(--fan-x) * 1.3))
+    rotate(calc(var(--fan-r) * 0.5));
+}
+.playcta:hover .playcta-card[data-front='true'] {
+  transform: translate(-50%, -50%) translateX(calc(var(--fan-x) * 1.3)) rotate(0deg)
+    translateY(-12px) scale(1.07);
+}
+
+.playcta-art {
+  display: block;
+  border-radius: 3px;
+  background: color-mix(in oklab, var(--tt-blush) 14%, var(--surface));
+  padding: 0.3rem;
+}
+.playcta-art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.playcta-name {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playcta-card {
+    transition: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .playcta {
+    grid-template-columns: 1fr;
+  }
+  .playcta-fan {
+    height: 138px;
+  }
+}
+
+.teach-cta {
+  margin-top: clamp(1.6rem, 3.5vw, 2.6rem);
+}
+.tt-tries .playcta {
+  margin-bottom: 1.4rem;
+}

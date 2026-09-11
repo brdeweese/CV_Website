@@ -6886,3 +6886,61 @@ button {
     animation: none;
   }
 }
+
+/* The board waits to be pressed too, so both halves of the example start the
+   same way. The figures are there from the start; play is what scores them. */
+.kpi-start {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  margin: 0 0 1.2rem;
+  padding: 1rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-align: center;
+}
+.kpi-playbtn {
+  width: 46px;
+  height: 46px;
+}
+.kpi-startline {
+  margin: 0.2rem 0 0;
+  font-size: 0.94rem;
+  color: var(--ink);
+}
+.kpi-startsub {
+  margin: 0;
+  max-width: 52ch;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+/* Once it has run the panel steps back: no pulse, and it reads as a control
+   rather than an invitation. */
+.kpi-start[data-done='true'] {
+  background: none;
+  border-style: dashed;
+  padding: 0.7rem 1rem;
+}
+.kpi-start[data-done='true'] .kpi-playbtn {
+  width: 34px;
+  height: 34px;
+}
+.kpi-start[data-done='true'] .ff-play svg {
+  animation: none;
+}
+.kpi-start[data-done='true'] .kpi-startline {
+  font-size: 0.84rem;
+  color: var(--ink-2);
+}
+
+/* Untinted until scored, so the fills are something that happens rather than
+   something that was always there. */
+.kpi:not([data-on='true']) .kpi-legend {
+  opacity: 0.3;
+}
+.kpi-legend {
+  transition: opacity 0.5s ease;
+}

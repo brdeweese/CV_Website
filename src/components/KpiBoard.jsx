@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import {
   GROUPS,
   KPI_AVERAGES,
@@ -32,27 +32,6 @@ function gapText(value, target) {
 export default function KpiBoard() {
   const [shown, setShown] = useState(false)
   const [sort, setSort] = useState('campus')
-  const hostRef = useRef(null)
-
-  useEffect(() => {
-    const el = hostRef.current
-    if (!el) return
-    if (typeof IntersectionObserver === 'undefined') {
-      setShown(true)
-      return
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setShown(true)
-          io.disconnect()
-        }
-      },
-      { threshold: 0.2 },
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
 
   const rows = useMemo(() => {
     const copy = [...GROUPS]
@@ -69,12 +48,42 @@ export default function KpiBoard() {
     setSort((s) => (s === id ? 'campus' : id))
   }, [])
 
+  const play = useCallback(() => {
+    setSort('campus')
+    /* Off, then on a tick later, so replaying re-runs the transitions instead
+       of landing on the state they already hold. */
+    setShown(false)
+    setTimeout(() => setShown(true), 60)
+  }, [])
+
   return (
-    <figure className="kpi" ref={hostRef} data-on={shown ? 'true' : undefined}>
+    <figure className="kpi" data-on={shown ? 'true' : undefined}>
       <figcaption className="kpi-head">
         <p className="kpi-eyebrow">The same example, before the comments</p>
         <h3 className="kpi-title">How the module did against target</h3>
       </figcaption>
+
+      <div className="kpi-start" data-done={shown ? 'true' : undefined}>
+        <button
+          type="button"
+          className="ff-play kpi-playbtn"
+          onClick={play}
+          aria-label="Score the groups against their targets"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle className="ff-playring" cx="12" cy="12" r="10.5" />
+            <path className="ff-playtri" d="M9.5 7.5L17 12L9.5 16.5Z" />
+          </svg>
+        </button>
+        <p className="kpi-startline">
+          {shown ? 'Scored against target.' : 'Press play to score against target'}
+        </p>
+        <p className="kpi-startsub">
+          {shown
+            ? 'Select a column to sort by it, lowest first.'
+            : 'The figures are already in. Play fills the bars and colours each cell by how far it is from its KPI.'}
+        </p>
+      </div>
 
       <ul className="kpi-averages">
         {KPI_AVERAGES.map((k) => {
@@ -114,7 +123,6 @@ export default function KpiBoard() {
             {b.label}
           </span>
         ))}
-        <span className="kpi-sorthint">Select a column to sort by it, lowest first.</span>
       </div>
 
       <div className="kpi-scroll">

@@ -23,6 +23,13 @@ const STEP_MS = { idle: 0, land: 1500, sift: 1900, sort: 2100, tally: 0 }
 
 const GRID_COLS = 6
 
+/* Deterministic pseudo-random, so the pile looks dropped rather than arranged
+   and still lands in the same place on every render. */
+const jitter = (i, salt) => {
+  const x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453
+  return x - Math.floor(x)
+}
+
 export default function FeedbackFlow() {
   const [phase, setPhase] = useState('idle')
   const [open, setOpen] = useState(null) // sentiment id being read
@@ -48,6 +55,12 @@ export default function FeedbackFlow() {
       return {
         ...r,
         i,
+        /* Where they start: dropped on the desk, overlapping and askew. */
+        pile: {
+          x: 2 + jitter(i, 1) * 82,
+          y: 3 + jitter(i, 2) * 80,
+          rot: (jitter(i, 3) - 0.5) * 26,
+        },
         grid: { x: 6 + col * 15.5, y: 8 + row * 15 },
         lane,
         /* Four lanes across, stacked downwards from the lane label. */
@@ -67,17 +80,17 @@ export default function FeedbackFlow() {
     timers.current.forEach(clearTimeout)
     timers.current = []
     setOpen(null)
-    setPhase('land')
+    /* Back to the pile first, so a replay shows the sorting rather than
+       starting from a stack that is already square. */
+    setPhase('idle')
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setPhase('tally')
       return
     }
-    /* PHASES[0] is idle, which the press has already left. */
-    const rest = PHASES.slice(1)
-    let t = 0
-    rest.slice(1).forEach((p, k) => {
-      t += STEP_MS[rest[k]]
+    let t = 450
+    PHASES.slice(1).forEach((p) => {
       timers.current.push(setTimeout(() => setPhase(p), t))
+      t += STEP_MS[p]
     })
   }, [])
 
@@ -156,7 +169,8 @@ export default function FeedbackFlow() {
         })}
 
         {cards.map((c) => {
-          const pos = sorted && c.s ? c.sorted : c.grid
+          /* Piled, then squared up, then sorted into a lane. */
+          const pos = idle ? c.pile : sorted && c.s ? c.sorted : c.grid
           const dropped = at >= 2 && !c.s
           return (
             <span
@@ -168,6 +182,8 @@ export default function FeedbackFlow() {
               style={{
                 left: `${pos.x}%`,
                 top: `${pos.y}%`,
+                '--rot': idle ? `${c.pile.rot.toFixed(1)}deg` : '0deg',
+                zIndex: idle ? Math.round(jitter(c.i, 4) * 30) : undefined,
                 transitionDelay: `${(c.i % 9) * 40}ms`,
               }}
               title={c.t}

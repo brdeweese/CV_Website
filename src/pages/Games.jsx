@@ -20,7 +20,7 @@ const GAMES = [
     name: 'Sort the impact',
     kicker: 'Escape room, puzzle two',
     blurb:
-      'Six of the fifteen impacts from the escape room. Students match each to economic, environmental or socio-cultural, under time, to earn their break.',
+      'Six of the fifteen impacts from the escape room. Match each one to economic, environmental or socio-cultural.',
     Component: ImpactSort,
   },
   {
@@ -28,23 +28,21 @@ const GAMES = [
     name: "Pin the tail on Butler's curve",
     kicker: 'Escape room, puzzle one',
     blurb:
-      "Place real destinations on the Tourism Area Life Cycle, then place them again on Doxey's Irritation Index. Two models, one destination, and an argument about whether they agree.",
+      "Place destinations on the Tourism Area Life Cycle, then on Doxey's Irritation Index.",
     Component: ButlerCurve,
   },
   {
     id: 'crossword',
     name: 'Key word crossword',
     kicker: 'Week three starter',
-    blurb:
-      'Definitions from the module reading, set as a crossword. Every clue carries a full Harvard reference in the worksheet, so revision and academic sourcing get practised together.',
+    blurb: 'Key definitions from the module reading, set as a crossword.',
     Component: Crossword,
   },
   {
     id: 'trolley',
     name: 'The ethical dilemma',
     kicker: 'Seminar prompt',
-    blurb:
-      'The trolley problem, with the lever in the student’s hand. There is no marked answer. The point is that almost everyone pulls it, and then has to say why the arithmetic stopped being enough.',
+    blurb: 'The trolley problem. Pull the lever or leave it, then read the two positions.',
     Component: Trolley,
   },
   {
@@ -52,7 +50,7 @@ const GAMES = [
     name: 'The international trade game',
     kicker: 'Globalisation',
     blurb:
-      'Teams are given paper, scissors, stencils or some mixture, and told to produce perfect shapes. Most cannot start. What happens when trade opens is the lesson, and nobody has to be told it.',
+      'Teams are given paper, scissors, stencils or a mixture, and asked to produce perfect shapes. Then trade opens.',
     Component: TradeGame,
   },
 ]
@@ -71,9 +69,8 @@ export default function Games() {
           <p className="eyebrow">Teaching</p>
           <h1 className="games-title">Play the activities</h1>
           <p className="games-lede">
-            Five of the activities I run, cut down to fit a browser. They are built to be
-            argued with: where an activity has an answer I mark to, it says so, and where it
-            does not, it says that instead.
+            The following are just a few of the games I bring in to the classroom to keep
+            learning fun and interactive.
           </p>
         </header>
 
@@ -115,7 +112,7 @@ export default function Games() {
 
         <p className="games-foot">
           All five were designed and delivered in my own modules. The escape room puzzles
-          and the crossword are shortened here; the classroom versions are longer and timed.
+          and the crossword are shortened here.
         </p>
       </div>
     </main>

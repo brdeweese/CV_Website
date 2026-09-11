@@ -128,32 +128,31 @@ export const TROLLEY = {
       label: 'Leave the lever',
       toll: 4,
       verdict:
-        'You did nothing. Four people were on the track the trolley was already taking.',
-      school:
-        'Doing nothing feels like staying out of it, but the outcome was still a choice.',
+        'You left the lever. The trolley carried on into the four people already on that track.',
+      school: 'Doing nothing was still a choice.',
     },
     divert: {
       id: 'divert',
       label: 'Pull the lever',
       toll: 1,
-      verdict: 'You diverted the trolley. One person was on the line you sent it down.',
+      verdict: 'You pulled the lever. The trolley took the branch with one person on it.',
       school:
-        'Fewer died, and you caused that death rather than merely failing to prevent four. Whether that difference matters is the whole argument.',
+        'One died instead of four, and you caused that death rather than failing to prevent four.',
     },
   },
   /** Neither is the marked answer, which is the point of running it. */
   after: [
     {
       title: 'The consequentialist reading',
-      body: 'Judge the act by its outcome. One death is less bad than four, so pull the lever, and hesitating costs three lives.',
+      body: 'Judge the act by its outcome. One death is less bad than four, so pull the lever.',
     },
     {
       title: 'The deontological reading',
-      body: 'Judge the act by the act. Pulling the lever makes you the cause of a death that would not otherwise have happened, and using a person as the means to an end is not permitted by the count going down.',
+      body: 'Judge the act by the act. Pulling the lever makes you the cause of a death that would not otherwise have happened.',
     },
     {
-      title: 'What students argue about',
-      body: 'Almost everyone pulls the lever. Far fewer will push a person onto the track to stop it, though the arithmetic is identical. What changed is not the number: it is how directly your hand is in it.',
+      title: 'The footbridge variant',
+      body: 'In the footbridge version you stop the trolley by pushing a person onto the track. The arithmetic is identical, and far fewer people say they would do it.',
     },
   ],
 }
@@ -174,7 +173,7 @@ export const TRADE_TEAMS = [
     has: ['paper'],
     alone: 0,
     traded: 5,
-    note: 'Plenty of raw material and no way to cut it.',
+    note: 'Paper, and no way to cut it.',
   },
   {
     id: 'b',
@@ -183,7 +182,7 @@ export const TRADE_TEAMS = [
     has: ['scissors'],
     alone: 0,
     traded: 4,
-    note: 'The tools, and nothing to use them on.',
+    note: 'Scissors, and nothing to cut.',
   },
   {
     id: 'c',
@@ -192,7 +191,7 @@ export const TRADE_TEAMS = [
     has: ['stencil'],
     alone: 0,
     traded: 4,
-    note: 'The design, and neither the material nor the tools.',
+    note: 'A stencil, and neither paper nor scissors.',
   },
   {
     id: 'd',
@@ -201,7 +200,7 @@ export const TRADE_TEAMS = [
     has: ['paper', 'scissors', 'stencil'],
     alone: 6,
     traded: 9,
-    note: 'Everything needed to start, and no reason to wait for anyone.',
+    note: 'All three, and no need to trade.',
   },
 ]
 

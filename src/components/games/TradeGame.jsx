@@ -186,8 +186,8 @@ export default function TradeGame() {
 
       <p className="tg-read">
         {open
-          ? 'Between them the three teams that were given one thing each had everything all along. Team D was always going to produce, and produces more once it can buy what it is short of, but the gap between it and the rest closes rather than widens.'
-          : 'Only Team D can make anything, because only Team D was handed all three. The other three are not less capable; they were dealt one piece of a three-piece problem.'}
+          ? 'The three teams that were each given one resource have everything between them. Team D produces more too, and the gap closes.'
+          : 'Only Team D can produce. It was given all three resources; the others were each given one.'}
       </p>
     </div>
   )

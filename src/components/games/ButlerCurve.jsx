@@ -159,9 +159,8 @@ export default function ButlerCurve() {
 
       {checked && (
         <p className="gm-fb">
-          Shown against the placements I mark to. Venice and Barcelona both sit at
-          stagnation with antagonism, and a good answer for either can still be argued
-          somewhere else.
+          Marked against the placements I use. Venice and Barcelona both sit at stagnation
+          with antagonism.
         </p>
       )}
     </div>

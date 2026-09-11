@@ -103,13 +103,15 @@ export default function FeedbackFlow() {
   return (
     <figure className="ff">
       <figcaption className="ff-head">
-        <p className="ff-eyebrow">Module Leadership: Data Science</p>
-        <h2 className="ff-title">What the recap meeting sees</h2>
-        <p className="ff-lede">
-          I gather, analyse, and present module data to inform new iterations of the module,
-          and to manage, encourage, and compare outcomes across the different campuses and
-          lecturers.
-        </p>
+        <div className="ff-headmain">
+          <p className="ff-eyebrow">Module Leadership: Data Science</p>
+          <h2 className="ff-title">What the recap meeting sees</h2>
+          <p className="ff-lede">
+            I gather, analyse, and present module data to inform new iterations of the
+            module, and to manage, encourage, and compare outcomes across the different
+            campuses and lecturers.
+          </p>
+        </div>
         <p className="ff-note">{NOTE}</p>
       </figcaption>
 

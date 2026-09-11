@@ -6234,6 +6234,10 @@ button {
   margin: 0 0 2rem;
 }
 .ff-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: stretch;
+  gap: clamp(1.2rem, 3vw, 2.6rem);
   margin-bottom: 1.1rem;
 }
 .ff-eyebrow {
@@ -6250,14 +6254,25 @@ button {
   line-height: 1.15;
 }
 .ff-note {
+  display: flex;
+  align-items: center;
+  height: 100%;
   margin: 0;
-  max-width: 62ch;
-  padding: 0.5rem 0.7rem;
+  padding: 0.7rem 0.9rem;
   border-left: 3px solid var(--game-no);
   background: var(--surface-2);
   font-size: 0.82rem;
   line-height: 1.5;
   color: var(--ink-2);
+}
+
+@media (max-width: 760px) {
+  .ff-head {
+    grid-template-columns: 1fr;
+  }
+  .ff-note {
+    height: auto;
+  }
 }
 
 .ff-counts {
@@ -6991,8 +7006,8 @@ button {
 
 /* The statement leads, then the example it introduces. */
 .ff-lede {
-  margin: 0 0 0.9rem;
-  max-width: 64ch;
+  margin: 0;
+  max-width: none;
   font-size: 1.02rem;
   line-height: 1.6;
   color: var(--ink);

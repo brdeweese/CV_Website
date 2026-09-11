@@ -52,14 +52,18 @@ export const RETURNS = [
     s: 'positive',
     th: 'clarity',
   },
-  { t: 'D/A' },
+  {
+    t: 'The marking criteria did not match what we were taught.',
+    s: 'negative',
+    th: 'clarity',
+  },
   {
     t: 'I was never sure what the assignment actually wanted.',
     s: 'negative',
     th: 'clarity',
   },
   { t: 'na' },
-  { t: 'Good balance of theory and practical work.', s: 'positive', th: 'content' },
+  { t: 'Clear slides and helpful worked examples.', s: 'positive', th: 'content' },
   { t: 'D/A' },
   { t: 'It was fine.', s: 'neutral', th: 'content' },
   { t: 'D/A' },
@@ -70,20 +74,32 @@ export const RETURNS = [
     s: 'negative',
     th: 'systems',
   },
-  { t: 'D/A' },
+  {
+    t: 'Submitting online was straightforward once I had done it once.',
+    s: 'positive',
+    th: 'systems',
+  },
   { t: 'I feel much more confident presenting now.', s: 'positive', th: 'teaching' },
   { t: 'D/A' },
   {
-    t: 'Interesting content, though the gap to the deadline was too tight.',
+    t: 'Interesting content, though the brief could have been clearer.',
     s: 'mixed',
-    th: 'workload',
+    th: 'clarity',
   },
   { t: 'n/a' },
   { t: 'Really supportive teaching. Thank you.', s: 'positive', th: 'teaching' },
-  { t: 'D/A' },
+  {
+    t: 'One session felt rushed and I did not get a chance to ask anything.',
+    s: 'negative',
+    th: 'teaching',
+  },
   { t: 'No strong feelings either way.', s: 'neutral', th: 'content' },
   { t: 'D/A' },
-  { t: 'Clear slides and helpful worked examples.', s: 'positive', th: 'content' },
+  {
+    t: 'The weekly pace suited me and I never fell behind.',
+    s: 'positive',
+    th: 'workload',
+  },
   { t: '-' },
   {
     t: 'Tutors were approachable and answered questions quickly.',
@@ -96,10 +112,29 @@ export const RETURNS = [
     s: 'negative',
     th: 'workload',
   },
-  { t: 'D/A' },
+  {
+    t: 'Some of the reading was far more advanced than the lectures.',
+    s: 'negative',
+    th: 'content',
+  },
   { t: 'Best module of the year so far.', s: 'positive', th: 'teaching' },
   { t: 'D/A' },
 ]
+
+/**
+ * Each theme's praise and complaints, counted separately.
+ *
+ * A single bar per theme said how often a theme came up but not whether people
+ * were pleased about it, which is the thing a module leader needs: a theme can
+ * be the most mentioned and still be the one going well.
+ */
+export const THEME_SPLIT = THEMES.map((t) => ({
+  ...t,
+  positive: RETURNS.filter((r) => r.th === t.id && r.s === 'positive').length,
+  negative: RETURNS.filter((r) => r.th === t.id && r.s === 'negative').length,
+  other: RETURNS.filter((r) => r.th === t.id && (r.s === 'mixed' || r.s === 'neutral'))
+    .length,
+})).sort((a, b) => b.positive + b.negative - (a.positive + a.negative))
 
 /** The recap slide's headline, worked out from the returns above. */
 export const FUNNEL = (() => {

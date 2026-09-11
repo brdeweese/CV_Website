@@ -6426,34 +6426,10 @@ button {
   display: grid;
   gap: 0.4rem;
 }
-.ff-bars li {
-  display: grid;
-  grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) 2rem;
-  align-items: center;
-  gap: 0.7rem;
-}
+
 .ff-barlabel {
   font-size: 0.82rem;
   color: var(--ink-2);
-}
-.ff-bartrack {
-  height: 10px;
-  background: var(--surface-2);
-  border-radius: 999px;
-}
-.ff-bar {
-  display: block;
-  height: 100%;
-  border-radius: 999px;
-  background: var(--accent, var(--ink-3));
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.ff-barn {
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  text-align: right;
-  color: var(--ink-3);
-  font-variant-numeric: tabular-nums;
 }
 
 .ff-read {
@@ -6817,20 +6793,17 @@ button {
 
 /* The classifier waits to be started, so the stage opens on a prompt. */
 /* A play button and a line, with nothing drawn around them. */
-.ff-start,
-.kpi-start {
+.ff-start {
   display: grid;
   justify-items: center;
   gap: 0.45rem;
   margin: 0 0 1rem;
 }
-.ff-start[data-done='true'] .ff-play,
-.kpi-start[data-done='true'] .ff-play {
+.ff-start[data-done='true'] .ff-play {
   width: 32px;
   height: 32px;
 }
-.ff-start[data-done='true'] .ff-startline,
-.kpi-start[data-done='true'] .kpi-startline {
+.ff-start[data-done='true'] .ff-startline {
   font-size: 0.74rem;
   font-family: var(--font-mono);
   color: var(--ink-3);
@@ -6924,11 +6897,6 @@ button {
 
 /* The board waits to be pressed too, so both halves of the example start the
    same way. The figures are there from the start; play is what scores them. */
-.kpi-startline {
-  margin: 0;
-  font-size: 0.94rem;
-  color: var(--ink);
-}
 
 /* Untinted until scored, so the fills are something that happens rather than
    something that was always there. */
@@ -6937,4 +6905,84 @@ button {
 }
 .kpi-legend {
   transition: opacity 0.5s ease;
+}
+
+/* ---- Themes, two-sided ---------------------------------------------------
+   A single bar said how often a theme came up but not whether people were
+   pleased about it. Complaints run left, praise runs right, on one shared
+   scale so the two sides can be compared. Side and label carry the meaning as
+   well as colour. */
+
+.ff-axis {
+  display: grid;
+  grid-template-columns: minmax(0, 11rem) 1.6rem minmax(0, 1fr) minmax(0, 1fr) 1.6rem;
+  gap: 0.4rem;
+  margin-bottom: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.ff-axisneg {
+  grid-column: 3;
+  text-align: right;
+}
+.ff-axispos {
+  grid-column: 4;
+  text-align: left;
+}
+
+.ff-bars li {
+  display: grid;
+  grid-template-columns: minmax(0, 11rem) 1.6rem minmax(0, 1fr) minmax(0, 1fr) 1.6rem;
+  align-items: center;
+  gap: 0.4rem;
+}
+.ff-half {
+  height: 12px;
+  background: var(--surface-2);
+  display: flex;
+}
+/* The two halves meet at the centre, so the bars grow out from it. */
+.ff-half--neg {
+  justify-content: flex-end;
+  border-radius: 999px 0 0 999px;
+}
+.ff-half--pos {
+  justify-content: flex-start;
+  border-radius: 0 999px 999px 0;
+  border-left: 1px solid var(--rule-strong);
+}
+.ff-bar {
+  display: block;
+  height: 100%;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ff-bar--neg {
+  background: var(--game-no);
+  border-radius: 999px 0 0 999px;
+}
+.ff-bar--pos {
+  background: var(--game-ok);
+  border-radius: 0 999px 999px 0;
+}
+.ff-barn {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.ff-barn--neg {
+  text-align: right;
+}
+.ff-barn--pos {
+  text-align: left;
+}
+
+@media (max-width: 640px) {
+  .ff-axis,
+  .ff-bars li {
+    grid-template-columns: minmax(0, 7rem) 1.3rem minmax(0, 1fr) minmax(0, 1fr) 1.3rem;
+  }
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { FUNNEL, NOTE, RETURNS, SENTIMENTS, THEMES } from '../data/meqDemo.js'
+import { FUNNEL, NOTE, RETURNS, SENTIMENTS, THEMES, THEME_SPLIT } from '../data/meqDemo.js'
 import KpiBoard from './KpiBoard.jsx'
 
 /**
@@ -51,19 +51,15 @@ export default function FeedbackFlow() {
         grid: { x: 6 + col * 15.5, y: 8 + row * 15 },
         lane,
         /* Four lanes across, stacked downwards from the lane label. */
-        sorted: { x: 5.5 + lane * 24.5, y: 22 + seat * 7.6 },
+        sorted: { x: 5.5 + lane * 24.5, y: 20 + seat * 6.6 },
         seat,
       }
     })
   }, [])
 
-  const themeTally = useMemo(
-    () =>
-      THEMES.map((t) => ({
-        ...t,
-        n: RETURNS.filter((r) => r.th === t.id).length,
-        positive: RETURNS.filter((r) => r.th === t.id && r.s === 'positive').length,
-      })).sort((a, b) => b.n - a.n),
+  /* Both sides share one scale, or a two-sided chart says nothing. */
+  const themeMax = useMemo(
+    () => Math.max(...THEME_SPLIT.map((t) => Math.max(t.positive, t.negative)), 1),
     [],
   )
 
@@ -133,11 +129,7 @@ export default function FeedbackFlow() {
             <path className="ff-playtri" d="M9.5 7.5L17 12L9.5 16.5Z" />
           </svg>
         </button>
-        <p className="ff-startline">
-          {idle
-            ? 'Press play to run the classifier'
-            : 'Select a sentiment to read the comments in it.'}
-        </p>
+        <p className="ff-startline">Press play to run the sentiment classifier</p>
       </div>
 
       <div className="ff-stage" data-phase={phase}>
@@ -188,18 +180,35 @@ export default function FeedbackFlow() {
 
       {/* The summary a module leader actually presents. */}
       <div className="ff-tally" data-on={at >= 4 ? 'true' : undefined}>
-        <p className="ff-tallyhead">Themes in the comments that carried one</p>
+        <p className="ff-tallyhead">
+          Themes, and whether they were raised as praise or as a complaint
+        </p>
+        <div className="ff-axis" aria-hidden="true">
+          <span className="ff-axisneg">Negative</span>
+          <span className="ff-axispos">Positive</span>
+        </div>
         <ul className="ff-bars">
-          {themeTally.map((t) => (
+          {THEME_SPLIT.map((t) => (
             <li key={t.id}>
               <span className="ff-barlabel">{t.label}</span>
-              <span className="ff-bartrack">
+              <span className="ff-barn ff-barn--neg">{t.negative || ''}</span>
+              <span className="ff-half ff-half--neg">
                 <span
-                  className="ff-bar"
-                  style={{ width: at >= 4 ? `${(t.n / themeTally[0].n) * 100}%` : '0%' }}
+                  className="ff-bar ff-bar--neg"
+                  style={{
+                    width: at >= 4 ? `${(t.negative / themeMax) * 100}%` : '0%',
+                  }}
                 />
               </span>
-              <span className="ff-barn">{t.n}</span>
+              <span className="ff-half ff-half--pos">
+                <span
+                  className="ff-bar ff-bar--pos"
+                  style={{
+                    width: at >= 4 ? `${(t.positive / themeMax) * 100}%` : '0%',
+                  }}
+                />
+              </span>
+              <span className="ff-barn ff-barn--pos">{t.positive || ''}</span>
             </li>
           ))}
         </ul>
@@ -230,7 +239,13 @@ export default function FeedbackFlow() {
         <button type="button" className="btn-game" onClick={run} disabled={idle}>
           Run it again
         </button>
-        <p className="ff-hint">{sorted || idle ? '' : 'Sorting the returns…'}</p>
+        <p className="ff-hint">
+          {idle
+            ? ''
+            : sorted
+              ? 'Select a sentiment to read the comments in it.'
+              : 'Sorting the returns…'}
+        </p>
       </div>
     </figure>
   )

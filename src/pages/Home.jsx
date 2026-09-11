@@ -137,12 +137,6 @@ export default function Home() {
             <p className="metric-detail">{m.detail}</p>
           </div>
         ))}
-
-        {/* Sits last so it lands beside the degrees figure, and doubles as the
-            key to the discipline colours used across the rest of the page. */}
-        <div className="metric metric-visual reveal">
-          <DisciplineVenn />
-        </div>
       </div>
 
       <main id="main">
@@ -155,6 +149,12 @@ export default function Home() {
                 {profile.intro.map((p, i) => (
                   <p key={i}>{p}</p>
                 ))}
+                {/* Sits at the foot of the column, filling the space the prose
+                    leaves beside the taller card stack, and doubling as the key
+                    to the discipline colours used across the rest of the page. */}
+                <figure className="about-venn">
+                  <DisciplineVenn />
+                </figure>
               </div>
               <div className="disc-cards reveal">
                 {Object.values(disciplines).map((d) => (

@@ -6344,6 +6344,9 @@ button {
   color: var(--ink-2);
   background: var(--surface);
 }
+.ff-stage[data-phase='idle'] .ff-card[data-sent] {
+  border-left: 1px solid var(--rule-strong);
+}
 .ff-card[data-sent='positive'] {
   border-left: 3px solid var(--game-ok);
 }
@@ -6814,21 +6817,35 @@ button {
 
 /* The classifier waits to be started, so the stage opens on a prompt. */
 .ff-start {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0.8rem;
   padding: 1rem;
-  text-align: center;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
   background: var(--surface);
+  text-align: center;
+}
+.ff-start[data-done='true'] {
+  background: none;
+  border-style: dashed;
+  padding: 0.7rem 1rem;
+}
+.ff-start[data-done='true'] .ff-play {
+  width: 34px;
+  height: 34px;
+}
+.ff-start[data-done='true'] .ff-play svg {
+  animation: none;
+}
+.ff-start[data-done='true'] .ff-startline {
+  font-size: 0.84rem;
+  color: var(--ink-2);
 }
 .ff-play {
-  width: 56px;
-  height: 56px;
+  width: 46px;
+  height: 46px;
   padding: 0;
   border: 0;
   background: none;

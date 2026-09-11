@@ -121,28 +121,29 @@ export default function FeedbackFlow() {
         </span>
       </div>
 
-      <div className="ff-stage" data-phase={phase}>
-        {idle && (
-          <div className="ff-start">
-            <button
-              type="button"
-              className="ff-play"
-              onClick={run}
-              aria-label="Run the classifier over the example returns"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <circle className="ff-playring" cx="12" cy="12" r="10.5" />
-                <path className="ff-playtri" d="M9.5 7.5L17 12L9.5 16.5Z" />
-              </svg>
-            </button>
-            <p className="ff-startline">Press play to run the classifier</p>
-            <p className="ff-startsub">
-              {FUNNEL.returns} returns go in. Watch the blank ones drop out and the rest
-              sort by sentiment.
-            </p>
-          </div>
-        )}
+      <div className="ff-start" data-done={idle ? undefined : 'true'}>
+        <button
+          type="button"
+          className="ff-play"
+          onClick={run}
+          aria-label="Run the classifier over the example returns"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle className="ff-playring" cx="12" cy="12" r="10.5" />
+            <path className="ff-playtri" d="M9.5 7.5L17 12L9.5 16.5Z" />
+          </svg>
+        </button>
+        <p className="ff-startline">
+          {idle ? 'Press play to run the classifier' : 'Classified.'}
+        </p>
+        <p className="ff-startsub">
+          {idle
+            ? `All ${FUNNEL.returns} returns are below. Play drops the blank ones out and sorts the rest by sentiment.`
+            : 'Select a sentiment to read the comments in it.'}
+        </p>
+      </div>
 
+      <div className="ff-stage" data-phase={phase}>
         {/* Lane headings, once there are lanes. */}
         {SENTIMENTS.map((s, k) => {
           const n = RETURNS.filter((r) => r.s === s.id).length
@@ -232,13 +233,7 @@ export default function FeedbackFlow() {
         <button type="button" className="btn-game" onClick={run} disabled={idle}>
           Run it again
         </button>
-        <p className="ff-hint">
-          {idle
-            ? 'Nothing has run yet.'
-            : sorted
-              ? 'Select a sentiment to read the comments in it.'
-              : 'Sorting the returns…'}
-        </p>
+        <p className="ff-hint">{sorted || idle ? '' : 'Sorting the returns…'}</p>
       </div>
     </figure>
   )

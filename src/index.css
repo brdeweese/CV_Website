@@ -6816,41 +6816,53 @@ button {
 }
 
 /* The classifier waits to be started, so the stage opens on a prompt. */
-.ff-start {
+/* A play button and a line, with nothing drawn around them. */
+.ff-start,
+.kpi-start {
   display: grid;
   justify-items: center;
-  gap: 0.35rem;
-  margin: 0 0 0.8rem;
-  padding: 1rem;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background: var(--surface);
-  text-align: center;
+  gap: 0.45rem;
+  margin: 0 0 1rem;
 }
-.ff-start[data-done='true'] {
-  background: none;
-  border-style: dashed;
-  padding: 0.7rem 1rem;
+.ff-start[data-done='true'] .ff-play,
+.kpi-start[data-done='true'] .ff-play {
+  width: 32px;
+  height: 32px;
 }
-.ff-start[data-done='true'] .ff-play {
-  width: 34px;
-  height: 34px;
-}
-.ff-start[data-done='true'] .ff-play svg {
-  animation: none;
-}
-.ff-start[data-done='true'] .ff-startline {
-  font-size: 0.84rem;
-  color: var(--ink-2);
+.ff-start[data-done='true'] .ff-startline,
+.kpi-start[data-done='true'] .kpi-startline {
+  font-size: 0.74rem;
+  font-family: var(--font-mono);
+  color: var(--ink-3);
 }
 .ff-play {
-  width: 46px;
-  height: 46px;
+  position: relative;
+  width: 48px;
+  height: 48px;
   padding: 0;
   border: 0;
   background: none;
   cursor: pointer;
   color: var(--ink);
+  transition: transform 0.18s ease;
+}
+.ff-play:hover {
+  transform: scale(1.08);
+}
+/* A ring that leaves the button and fades, so it reads as something asking to
+   be pressed rather than a static icon. */
+.ff-play::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  opacity: 0;
+  animation: ff-ripple 2.4s ease-out infinite;
+  pointer-events: none;
+}
+[data-done='true'] .ff-play::after {
+  animation: none;
 }
 .ff-play svg {
   display: block;
@@ -6881,76 +6893,41 @@ button {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.07);
+    transform: scale(1.08);
+  }
+}
+@keyframes ff-ripple {
+  0% {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
   }
 }
 .ff-startline {
-  margin: 0.3rem 0 0;
-  font-size: 0.98rem;
-  color: var(--ink);
-}
-.ff-startsub {
   margin: 0;
-  max-width: 40ch;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  line-height: 1.5;
-  color: var(--ink-3);
+  font-size: 0.94rem;
+  color: var(--ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ff-play svg {
+  .ff-play svg,
+  .ff-play::after {
     animation: none;
   }
 }
 
 /* The board waits to be pressed too, so both halves of the example start the
    same way. The figures are there from the start; play is what scores them. */
-.kpi-start {
-  display: grid;
-  justify-items: center;
-  gap: 0.35rem;
-  margin: 0 0 1.2rem;
-  padding: 1rem;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background: var(--surface);
-  text-align: center;
-}
-.kpi-playbtn {
-  width: 46px;
-  height: 46px;
-}
 .kpi-startline {
-  margin: 0.2rem 0 0;
+  margin: 0;
   font-size: 0.94rem;
   color: var(--ink);
-}
-.kpi-startsub {
-  margin: 0;
-  max-width: 52ch;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  line-height: 1.5;
-  color: var(--ink-3);
-}
-/* Once it has run the panel steps back: no pulse, and it reads as a control
-   rather than an invitation. */
-.kpi-start[data-done='true'] {
-  background: none;
-  border-style: dashed;
-  padding: 0.7rem 1rem;
-}
-.kpi-start[data-done='true'] .kpi-playbtn {
-  width: 34px;
-  height: 34px;
-}
-.kpi-start[data-done='true'] .ff-play svg {
-  animation: none;
-}
-.kpi-start[data-done='true'] .kpi-startline {
-  font-size: 0.84rem;
-  color: var(--ink-2);
 }
 
 /* Untinted until scored, so the fills are something that happens rather than

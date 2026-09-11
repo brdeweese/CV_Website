@@ -76,12 +76,9 @@ export default function KpiBoard() {
           </svg>
         </button>
         <p className="kpi-startline">
-          {shown ? 'Scored against target.' : 'Press play to score against target'}
-        </p>
-        <p className="kpi-startsub">
           {shown
             ? 'Select a column to sort by it, lowest first.'
-            : 'The figures are already in. Play fills the bars and colours each cell by how far it is from its KPI.'}
+            : 'Press play to score against target'}
         </p>
       </div>
 

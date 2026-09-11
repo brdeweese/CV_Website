@@ -134,11 +134,8 @@ export default function FeedbackFlow() {
           </svg>
         </button>
         <p className="ff-startline">
-          {idle ? 'Press play to run the classifier' : 'Classified.'}
-        </p>
-        <p className="ff-startsub">
           {idle
-            ? `All ${FUNNEL.returns} returns are below. Play drops the blank ones out and sorts the rest by sentiment.`
+            ? 'Press play to run the classifier'
             : 'Select a sentiment to read the comments in it.'}
         </p>
       </div>

@@ -18,11 +18,11 @@ const ReviewLab = lazy(() => import('../components/games/ReviewLab.jsx'))
  */
 const GAMES = [
   {
-    id: 'reviewlab',
-    name: 'Care and Stay Review Lab',
-    kicker: 'Excel and customer feedback',
+    id: 'excel',
+    name: 'Introduction to Excel',
+    kicker: 'Guided activity',
     blurb:
-      'A step by step Excel practice tool built to look like desktop Excel. Students find cells, sort star ratings, use AVERAGE and COUNTIF, and build a bar chart from ten customer reviews that could come from a hotel or a hospital.',
+      'An interactive activity that guides students through Excel in a simplified environment built to look like the real thing. They find cells, sort star ratings, use AVERAGE and COUNTIF, and build a bar chart from ten customer reviews that could come from a hotel or a hospital.',
     Component: ReviewLab,
   },
   {

@@ -269,7 +269,7 @@
     .ghost:hover{border-color:var(--sel)}
     .party{position:fixed;inset:0;z-index:120;display:grid;place-items:center;background:rgba(20,32,52,.55);padding:16px}
     .party canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-    .partycard{position:relative;background:#fff;border-radius:14px;max-width:420px;width:100%;padding:56px 24px 22px;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,.3)}
+    .partycard{box-sizing:border-box;position:relative;background:#fff;border-radius:14px;max-width:420px;width:100%;padding:56px 24px 22px;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,.3)}
     .partycard h2{margin:0 0 8px;font-size:24px;color:#1f2a44}
     .partycard p{margin:0 0 10px;color:#333;font-size:15px}
     .partycard .small{font-size:13.5px;color:var(--muted)}
@@ -288,6 +288,44 @@
     .xlbtn{min-width:76px;padding:5px 12px;border:1px solid #aaa;border-radius:4px;background:#fdfdfd;cursor:pointer;font-size:13px}
     .xlbtn.primary{border:2px solid var(--sel)}
     .tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#7a3db8;background:#f1e8fb;border-radius:3px;padding:1px 6px;margin-bottom:2px}
+      /* ---- bonus challenge ---------------------------------------------
+         Marked off from the taught steps in violet, because it is an extra
+         for whoever gets there first and not something the class has to do. */
+      .bonus{border-color:#c6b1e6}
+      .bonuscta,.bonushead,.bdone{padding:12px 14px;display:flex;flex-direction:column;gap:7px;align-items:flex-start}
+      .bonuscta h2,.bonushead h2,.bdone h2{margin:0;font-size:16px}
+      .bonuscta p,.bonushead p,.bdone p{margin:0;font-size:13.5px;color:var(--ink2)}
+      .bonuscta .next,.bdone .discuss{align-self:stretch}
+      .bonuscta .next{text-align:center}
+      .bstep{border-color:#c6b1e6}
+      .bstep .bsum{display:flex;gap:8px;align-items:center;padding:9px 12px;font-weight:600;font-size:14px}
+      .bstep.current .bsum{background:#f6f1fd;border-radius:7px 7px 0 0}
+      .bstep.done{opacity:.72}
+      .bstep.done .badge{background:var(--good-soft);border-color:#b9ddc3;color:var(--good)}
+      .bstep.locked{display:none}
+      .bfoot{padding:9px 12px;border-style:dashed}
+
+      /* A cell the student has not been to yet shows its own name instead of
+         its value, so the table doubles as the list of what to click. */
+      .bask{font-family:var(--mono);font-size:12px;color:#7a3db8;background:#f1e8fb;border:1px dashed #c6b1e6;border-radius:4px;padding:1px 5px}
+      .bcmp{margin:4px 0 2px}
+      .bcmp th,.bcmp td{border-bottom:1px solid var(--rail-line);padding:5px 6px;text-align:left;vertical-align:middle}
+      .bcmp th.n,.bcmp td.n{text-align:center}
+      .bcmp th{font-size:12px;font-weight:600;color:var(--muted);line-height:1.25}
+      .bcmp th span{display:block;font-weight:400}
+      .bcmp tr.win td{background:var(--good-soft)}
+      .bcmp tr.win td:first-child{font-weight:700}
+
+      .brng{display:flex;flex-direction:column;gap:8px;margin:4px 0}
+      .brngrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13.5px}
+      .brngrow>span{flex:1 0 100%;font-weight:600}
+      .brngrow label{display:flex;align-items:center;gap:5px;color:var(--muted)}
+      .bnum{width:48px;font:inherit;text-align:center;padding:5px 4px;border:1px solid var(--line2);border-radius:5px;background:#fff;color:var(--ink)}
+      .bnum:focus{outline:2px solid var(--sel);outline-offset:1px}      .bfill{display:flex;flex-direction:column;gap:7px;margin-top:4px}
+      .bformula{display:flex;align-items:center;gap:1px;flex-wrap:wrap}
+      .bfn{width:92px;font:inherit;font-family:var(--mono);font-size:13px;text-align:center;padding:3px 4px;border:1px dashed #c6b1e6;border-radius:4px;background:#fff;color:var(--t-fn);font-weight:700}
+      .bfn:focus{outline:2px solid var(--sel);outline-offset:1px}
+      .bfn:disabled{border-style:solid;border-color:#b9ddc3;background:var(--good-soft);color:var(--t-fn);opacity:1}
     </style>
   </head>
   <body>
@@ -349,7 +387,7 @@ function fresh(){
   ["B","C","D"].forEach(c=>cells[SH+"!"+c+"12"]=`=AVERAGE(${c}2:${c}11)`);
   cells[SH+"!G1"]="Overall stars";cells[SH+"!H1"]="Number of reviews with this many overall stars";fmt[SH+"!G1"]={b:true};fmt[SH+"!H1"]={b:true};
   [5,4,3,2,1].forEach((n,i)=>{cells[SH+"!G"+(i+2)]=String(n);fmt[SH+"!G"+(i+2)]={al:"c"};if(n!==TODO_COUNT)cells[SH+"!H"+(i+2)]=`=COUNTIF(E2:E11,${n})`});
-  return {cells,fmt,sheet:SH,anchor:"A1",end:"A1",seen:new Set(),chart:null,chartSel:false,step:0,gate:null,flags:{},hints:new Set(),arrow:null,ans:{},a11val:"",a11wrong:false,you:null,form:null,tab:"Home",miss:0,edit:null,multi:[],r1:0,view:null,broken:false,undo:null};
+  return {cells,fmt,sheet:SH,anchor:"A1",end:"A1",seen:new Set(),chart:null,chartSel:false,step:0,gate:null,flags:{},hints:new Set(),arrow:null,ans:{},a11val:"",a11wrong:false,you:null,form:null,tab:"Home",miss:0,edit:null,multi:[],r1:0,view:null,broken:false,undo:null,bonus:bonusFresh()};
 }
 S=fresh();
 const K=(sh,a)=>sh+"!"+a;
@@ -925,13 +963,194 @@ function compareHtml(){
   return `<p class="ok">Your stars are in row 14 of the sheet.</p><table class="cmp"><tr><th></th><th class="n">You</th><th class="n">Average</th></tr>${CATS.map((c,i)=>`<tr><td>${c}</td><td class="n">${y.v[i]}</td><td class="n">${f1(av[i]??0)}</td></tr>`).join("")}</table>
   <div class="discuss"><p>Talk with your partner</p><ol><li>Where did your stars match the reviews, and where did they differ?</li><li>Was the problem about the place, the people or the speed?</li><li>What one change would have made the biggest difference to you?</li></ol></div>`;
 }
+// ---------- bonus challenge ----------
+/**
+ * For the students who finish Part 1 before the rest of the class.
+ *
+ * It teaches no new Excel. Everything in it is reading cells, which is all
+ * Part 1 has taught, and the averages in row 12 were already on the sheet when
+ * the lesson opened. The work is interpretation: deciding what a column means,
+ * noticing that a column which barely changes cannot explain a difference, and
+ * telling a strength apart from a gap.
+ *
+ * It writes nothing to the sheet, so a student can take it or leave it and
+ * Part 2 begins from exactly the same place either way.
+ */
+function bonusFresh(){return {unlocked:false,open:false,ans:{},seen:new Set(),rng:{},rngOk:false,rngTried:false,fn:"",fnOk:false,fnTried:"",won:false,hints:new Set(),closed:false}}
+
+/* The ten reviews as they sit on the sheet now, in sheet order, so everything
+   below follows the sort the student has just done rather than the original
+   order of the data. */
+function bRows(){const out=[];for(let r=2;r<=11;r++){const g=c=>+S.cells[K(SH,c+r)];out.push({r,id:S.cells[K(SH,"A"+r)],B:g("B"),C:g("C"),D:g("D"),E:g("E")})}return out}
+function bEnds(){const s=bRows().sort((x,y)=>x.E-y.E);return {lo:s[0],hi:s[s.length-1],worst:s.slice(0,3),best:s.slice(-3)}}
+function bSpan(c){const v=bRows().map(r=>r[c]);return {lo:Math.min(...v),hi:Math.max(...v)}}
+const bSeen=a=>S.bonus.seen.has(a);
+function bonusSee(){if(valid(S.anchor))S.bonus.seen.add(S.anchor)}
+const bAvg=c=>{const v=num(SH,c+"12");return v===null?null:v};
+
+/* A cell the student is sent to read. It shows its own name until they have
+   been there, then the number, so the table fills in as they work. */
+const bCell=a=>bSeen(a)?`<b>${S.cells[K(SH,a)]}</b>`:`<span class="bask">${a}</span>`;
+const bGot=(...a)=>a.every(bSeen);
+const f1b=v=>v===null?"&mdash;":v.toFixed(1);
+
+function bsteps(){
+ const E=bEnds(),W=E.worst,T=E.best;
+ const dif={B:Math.abs(E.hi.B-E.lo.B),C:Math.abs(E.hi.C-E.lo.C),D:Math.abs(E.hi.D-E.lo.D)};
+ const widest=["B","C","D"].reduce((m,c)=>dif[c]>dif[m]?c:m,"B");
+ const sD=bSpan("D"),sC=bSpan("C");
+ const nm={B:"Cleanliness",C:"Speed of service",D:"Staff kindness"};
+ const six=["B"+E.lo.r,"C"+E.lo.r,"D"+E.lo.r,"B"+E.hi.r,"C"+E.hi.r,"D"+E.hi.r];
+ const avB=bAvg("B"),avC=bAvg("C"),avD=bAvg("D");
+ const lw=c=>W.map(x=>x[c]).join(", "),lt=c=>T.map(x=>x[c]).join(", ");
+ const cnt4=bRows().filter(x=>x.C===4).length;
+
+ return [
+ {t:"What the numbers actually mean",
+  body:()=>`<p>Every score in columns <b>B</b>, <b>C</b> and <b>D</b> is one customer rating one part of their visit, from <b>1</b> at worst to <b>5</b> at best.</p>
+  <p>Before you can say what data means, you have to be sure which end of the scale is which, and what each column is even measuring. Row 1 holds the titles. Click along it if you want to read them again.</p>`,
+  hint:"Click B1, C1, D1 and E1 and read each title. A number in a cell only means something once you know what its column was asking about.",
+  quiz:[
+   {tag:"Reading the data",q:`Review ${E.lo.id} has a <b>${E.lo.C}</b> in column C, Speed of service. What is that customer telling you?`,
+    o:["They were served quickly","They waited a long time","They did not answer that question"],a:1,
+    yes:"Correct. 1 is the bottom of the scale, so a 1 for speed of service means a long wait.",
+    no:"Not quite. On this scale 1 is the worst and 5 is the best, so a 1 means the customer was unhappy with that part of their visit."},
+   {tag:"Reading the data",q:"Columns B, C and D each score one part of the visit. What is in column E?",
+    o:["The average of the other three","What the customer thought of the whole visit","How many times that customer has visited"],a:1,
+    yes:"Correct. Column E is the customer's own verdict on the whole visit. It is a judgement, not a sum of the other columns, which is exactly why it is worth asking what drives it.",
+    no:`Not quite. ${E.lo.id} on row ${E.lo.r} scored ${E.lo.B}, ${E.lo.C} and ${E.lo.D}, which average about ${((E.lo.B+E.lo.C+E.lo.D)/3).toFixed(1)}, and still gave ${E.lo.E} star overall. So column E is not the average of the others.`}]},
+
+ {t:"The two ends of the list",
+  body:()=>`<p>You sorted the reviews by their overall stars, so the unhappiest customer is now at the top of the list and the happiest is at the bottom.</p>
+  <p>Click each of the six cells named in the table. It fills in as you go.</p>
+  <table class="cmp bcmp"><tr><th></th><th class="n">${E.lo.id}, row ${E.lo.r}<span>${E.lo.E} star</span></th><th class="n">${E.hi.id}, row ${E.hi.r}<span>${E.hi.E} stars</span></th><th class="n">Difference</th></tr>
+  ${["B","C","D"].map(c=>{const a=c+E.lo.r,b=c+E.hi.r,both=bGot(a,b);
+    return `<tr${both&&c===widest?' class="win"':""}><td>${nm[c]}</td><td class="n">${bCell(a)}</td><td class="n">${bCell(b)}</td><td class="n">${both?dif[c]:"&mdash;"}</td></tr>`}).join("")}</table>
+  ${bGot(...six)?"":`<p class="small">Still to click: ${six.filter(a=>!bSeen(a)).join(", ")}.</p>`}`,
+  hint:`The Name Box tells you where you are. Row ${E.lo.r} is the unhappiest customer and row ${E.hi.r} is the happiest. You need columns B, C and D on both of those rows.`,
+  need:()=>bGot(...six),
+  quiz:[
+   {tag:"Reading the data",q:"Which part of the visit separates these two customers most?",
+    o:[nm.B,nm.C,nm.D],a:["B","C","D"].indexOf(widest),
+    yes:`Correct. ${["B","C","D"].filter(c=>c!==widest).map(c=>`${nm[c]} moved by ${dif[c]}`).join(" and ")}. ${nm[widest]} moved by ${dif[widest]}, which is most of the width of the scale.`,
+    no:"Not quite. Look at the Difference column in the table. Which row has the biggest number in it?"}]},
+
+ {t:"Does the column move at all?",
+  body:()=>{const B=S.bonus;
+   return `<p>A column can only explain why some customers were happy and others were not if the column <b>itself changes</b> between them. A column that is nearly the same on every row cannot explain anything, however high its scores are.</p>
+   <p>Scan down each of these two columns, rows 2 to 11, and type the lowest and the highest score you find.</p>
+   <div class="brng">
+   ${[["D","Staff kindness"],["C","Speed of service"]].map(([c,n])=>`<div class="brngrow"><span>${n}, column ${c}</span>
+     <label>lowest <input class="bnum" data-brng="${c}lo" value="${(B.rng[c+"lo"]||"").replace(/"/g,"&quot;")}" inputmode="numeric" autocomplete="off" aria-label="Lowest ${n}"></label>
+     <label>highest <input class="bnum" data-brng="${c}hi" value="${(B.rng[c+"hi"]||"").replace(/"/g,"&quot;")}" inputmode="numeric" autocomplete="off" aria-label="Highest ${n}"></label></div>`).join("")}
+   ${B.rngOk?"":`<button class="next" data-bonus="rng">Check</button>`}</div>
+   ${B.rngOk?`<p class="ok">That is right.</p><div class="hint" style="background:#fff"><p><b>Staff kindness</b> runs from ${sD.lo} to ${sD.hi}. The whole column fits inside <b>${sD.hi-sD.lo}</b> step of the scale.</p><p style="margin-top:6px"><b>Speed of service</b> runs from ${sC.lo} to ${sC.hi}. That is <b>${sC.hi-sC.lo}</b> steps, three times as wide.</p></div>`:B.rngTried?`<p style="color:var(--warn)">Not yet. Walk down the column one cell at a time, rows 2 to 11, and watch for the smallest and the largest number you pass.</p>`:""}`},
+  hint:`Click the top cell of a column, then hold the down arrow key to walk down it. Staff kindness never drops below ${sD.lo}. Speed of service goes as low as ${sC.lo}.`,
+  need:()=>S.bonus.rngOk,
+  quiz:[
+   {tag:"What it means",q:`Staff kindness is the highest scoring column on the sheet. Why can it not explain why ${E.lo.id} gave ${E.lo.E} star and ${E.hi.id} gave ${E.hi.E}?`,
+    o:["Because kindness does not matter to customers","Because both of them scored kindness about the same, so it is not what separates them","Because ten reviews is not enough to tell"],a:1,
+    yes:`Correct. Kindness was ${sD.lo} or ${sD.hi} for nearly everybody. Something that is the same for the happy customers and the unhappy ones cannot be the reason they differ.`,
+    no:`Not quite. ${E.lo.id} scored kindness ${E.lo.D} and ${E.hi.id} scored it ${E.hi.D}. How far apart is that, next to the ${dif[widest]} step gap in ${nm[widest].toLowerCase()}?`}]},
+
+ {t:"Find the gap",
+  body:()=>`<p>One piece left. Row 12 already holds the average score for each column, worked out for you. Click <b>B12</b>, <b>C12</b> and <b>D12</b> to read them.</p>
+  <table class="cmp bcmp"><tr><th></th><th class="n">Average</th><th class="n">Three unhappiest</th><th class="n">Three happiest</th></tr>
+  ${[["B",avB],["C",avC],["D",avD]].map(([c,v])=>`<tr${bGot("B12","C12","D12")&&c==="C"?' class="win"':""}><td>${nm[c]}</td><td class="n">${bSeen(c+"12")?`<b>${f1b(v)}</b>`:`<span class="bask">${c}12</span>`}</td><td class="n">${lw(c)}</td><td class="n">${lt(c)}</td></tr>`).join("")}</table>
+  <p class="small">The last two columns are the three lowest rated visits and the three highest, taken from the list you sorted.</p>`,
+  hint:"Row 12 sits just under the last review. These averages were already on the sheet when you opened it, so you only have to read them.",
+  need:()=>bGot("B12","C12","D12"),
+  quiz:[
+   {tag:"What it means",q:`Staff kindness has the highest average, ${f1b(avD)} out of 5. The manager has money for one improvement. Should it go on kindness training?`,
+    o:["Yes. It is what customers scored highest, so it is what they care about",
+       "No. Kindness is already near the top and barely changes between a 1 star visit and a 5 star one. The gap is speed of service",
+       "No. Kindness does not matter to customers"],a:1,
+    yes:`Correct. A high score means the business is already doing that thing well, not that it is the thing customers are judging it on. The gap is what customers notice and the business is not delivering: speed of service averages ${f1b(avC)}, the lowest on the sheet, and it is the column that moves with the overall verdict.`,
+    no:"Not quite. Weigh up two things at once: how much room is left to improve, and whether the column changes between the happy customers and the unhappy ones."},
+   {tag:"Be careful",q:`Cleanliness averages ${f1b(avB)}, and the three unhappiest customers scored it ${lw("B")} while the three happiest scored ${lt("B")}. What is the fair thing to say?`,
+    o:["Cleanliness makes no difference to these customers","Cleanliness matters too, but less than speed, and there is less to gain","Cleanliness is the real problem, not speed"],a:1,
+    yes:"Correct. The data is not telling you to ignore cleanliness. It is telling you where the biggest gap is. Good analysis says what the evidence supports and no more than that.",
+    no:"Not quite. Cleanliness does move between the unhappy customers and the happy ones, just not as far as speed does, and it starts from a higher score."}]},
+
+ /* The hand-over to Part 2. Both formulas here are ones they have not been
+    taught, which is the point: the names are readable, and the answer to the
+    second is already sitting on the sheet in C12 for anyone who thinks to
+    click it. That is exactly the move Part 2 opens with. */
+ {t:"A look at what is coming next",
+  body:()=>`<p>You have done all of that by eye. In Part 2 you start asking Excel to do it instead.</p>
+  <p>Nobody has taught you the two formulas below. Have a go at reading them anyway, because the names are meant to say what they do.</p>`,
+  hint:"Read COUNTIF as two words: COUNT, and IF. The part before the comma says where to look. The part after it says what to look for.",
+  quiz:[
+   {tag:"What it means",q:`What might <code>=COUNTIF(C2:C11,4)</code> mean?`,
+    o:["Add up all the speed of service scores","Count how many customers gave speed of service a 4","Find the 4th score down in column C"],a:1,
+    yes:`Correct, and you could work that out from the name alone. It counts the cells in C2 to C11 that hold a 4, which is ${cnt4} of the 10 customers. In Part 2 you will use this same function on the overall stars in column E.`,
+    no:"Not quite. Read it as two words, COUNT and IF: count the cells, if they match. C2:C11 says where to look, and the 4 says what to look for."}],
+  after:si=>{const B=S.bonus;
+   /* The second question waits for the first, so the step reads as a sequence. */
+   if((S.bonus.ans[si]||{})[0]!==1)return"";
+   const t=(B.fnTried||"").toUpperCase();
+   const nudge=B.fnOk?"":t===""?"":["AVG","AVE","MEAN"].includes(t)?"Close. Excel wants the whole word.":t==="SUM"?"SUM adds the numbers up. You want the one that then divides by how many there are.":["COUNT","COUNTIF"].includes(t)?"That one counts. You want the one that averages.":"Not that one. The answer is already on the sheet: click C12 and read the formula bar at the top.";
+   return `<div class="bfill"><p class="ask">2. This formula works out the average speed of service score. One piece is missing. Fill it in.</p>
+   <div class="formula bformula"><span class="tok-eq">=</span><input class="bfn" data-bfn="1" value="${(B.fn||"").replace(/"/g,"&quot;")}" autocomplete="off" spellcheck="false" aria-label="The missing part of the formula" placeholder="?"${B.fnOk?" disabled":""}><span class="tok-rg">(C2:C11)</span></div>
+   ${B.fnOk?`<p class="fb yes">Correct. <code>=AVERAGE(C2:C11)</code> gives ${f1b(bAvg("C"))}, the number already sitting in C12. In Part 2 you write one of these yourself.</p>`:`<button class="next" data-bonus="fn">Check</button>${nudge?`<p class="fb no">${nudge}</p>`:`<p class="small">Stuck? The answer is already on the sheet. Click C12 and look at the formula bar.</p>`}`}</div>`},
+  need:()=>S.bonus.fnOk}
+ ];
+}
+
+function bquiz(st,si){
+ const A=S.bonus.ans[si]||(S.bonus.ans[si]={});
+ return `<div class="quiz">${st.quiz.map((q,qi)=>`<div class="qn">${q.tag?`<span class="tag">${q.tag}</span>`:""}<p class="ask">${qi+1}. ${q.q}</p><div class="choices">${q.o.map((o,i)=>`<button class="choice${A[qi]===i?(i===q.a?" right":" wrong"):""}" data-bquiz="${si}" data-qi="${qi}" data-i="${i}">${o}</button>`).join("")}</div>${A[qi]!==undefined?`<p class="fb ${A[qi]===q.a?"yes":"no"}">${A[qi]===q.a?q.yes:q.no}</p>`:""}</div>`).join("")}</div>`;
+}
+function bok(st,si){
+ if(st.need&&!st.need())return false;
+ return !st.quiz||st.quiz.every((q,qi)=>(S.bonus.ans[si]||{})[qi]===q.a);
+}
+/* How far they have got: the first step that is not finished yet. */
+function bAt(){const L=bsteps();let i=0;while(i<L.length&&bok(L[i],i))i++;return i}
+
+function bonusHtml(){
+ const B=S.bonus;
+ if(!B.unlocked)return "";
+ if(!B.open)return `<div class="card bonus bonuscta"><span class="tag">Bonus challenge</span>
+   <h2>What is the data really saying?</h2>
+   <p>While the rest of the class catches up, there is a harder question hiding in the reviews you have just sorted. No new buttons and no formulas. Only reading the cells you already know how to find.</p>
+   <button class="next" data-bonus="open">Finish early? Click here to try the bonus challenge</button>${B.closed?`<p class="small">Your answers are still here.</p>`:""}</div>`;
+
+ const L=bsteps(),at=bAt(),done=at>=L.length;
+ let h=`<div class="card bonus bonushead"><span class="tag">Bonus challenge</span><h2>What is the data really saying?</h2>
+  <p>Three columns, ten customers, and one thing the averages on their own will not tell you.</p>
+  <div class="bar"><i style="width:${at/L.length*100}%"></i></div></div>`;
+
+ L.forEach((st,i)=>{const fin=i<at,cur=i===at,lock=i>at;
+  h+=`<div class="card step bstep${cur?" current":""}${fin?" done":""}${lock?" locked":""}">
+   <div class="bsum"><span class="badge">${fin?"✓":"B"+(i+1)}</span>${st.t}</div>`;
+  if(!lock){h+=`<div class="sbody">${st.body?st.body():""}${st.quiz?bquiz(st,i):""}${st.after?st.after(i):""}`;
+   if(!fin)h+=`<button class="hintbtn" data-bh="${i}">${B.hints.has(i)?"Hide hint":"Show hint"}</button>${B.hints.has(i)?`<div class="hint">${st.hint}</div>`:""}`;
+   h+=`</div>`}
+  h+=`</div>`});
+
+ if(done){
+  h+=`<div class="card bonus bdone"><h2>What the data was really saying</h2>
+   <p>This business is best at the thing its customers are not judging it on, and worst at the thing they are. Staff kindness is a real strength and worth keeping. Speed of service is the gap.</p>
+   <p>An average on its own would not have told you that. You had to look along the rows and down the columns to see which scores move together and which do not.</p>
+   <p>Part 2 is where you stop doing this by eye, and ask Excel the same questions with formulas.</p>
+   <div class="discuss"><p>Talk with your partner</p><ol>
+   <li>If you had only read the averages in row 12 and never looked at the individual reviews, what would you have missed?</li>
+   <li>A competitor opens nearby with the same prices. From this data alone, what is the one promise they could make that would take these customers?</li>
+   <li>What would you still want to know before spending any money on making the service faster?</li></ol></div></div>`}
+
+ h+=`<div class="card bonus bfoot"><button class="linkbtn" data-bonus="close">Put the bonus challenge away</button></div>`;
+ return h;
+}
+
 function isTarget(sh,a){const st=STEPS[S.step];return !!st&&!S.gate&&(st.tg||[]).some(([s,c])=>s===sh&&c===a)}
 function curPart(){return S.step<STEPS.length?STEPS[S.step].part:4}
 function renderRail(){
-  if(S.gate){const next=PARTS[S.gate];$("rail").innerHTML=presenter()+partsBar(S.gate,true)+`<div class="card partintro"><h2>Part ${S.gate} complete</h2><p><b>Please wait to begin Part ${next.n} until your lecturer tells you to.</b></p><p style="margin-top:6px">Next is Part ${next.n}, ${next.t}. ${next.d}</p><button class="next" style="margin-top:10px" data-go="1">Start Part ${next.n}</button></div>`;return}
+  if(S.gate){const next=PARTS[S.gate];$("rail").innerHTML=presenter()+partsBar(S.gate,true)+`<div class="card partintro"><h2>Part ${S.gate} complete</h2><p><b>Please wait to begin Part ${next.n} until your lecturer tells you to.</b></p><p style="margin-top:6px">Next is Part ${next.n}, ${next.t}. ${next.d}</p><button class="next" style="margin-top:10px" data-go="1">Start Part ${next.n}</button></div>`+bonusHtml();return}
   const part=curPart();const shown=S.view||Math.min(part,3);
   let h=presenter()+partsBar(shown,false);
   if(S.view&&S.view<Math.min(part,3))h+=`<div class="card partintro" style="background:#fff8e1"><p>You are looking back at Part ${S.view}. <button class="linkbtn" data-part="${Math.min(part,3)}">Return to Part ${Math.min(part,3)}</button></p></div>`;
+  if(shown===1&&S.bonus.unlocked)h+=bonusHtml();
   if(part===4)h+=`<div class="card partintro"><h2>All three parts complete</h2><p>Well done. Talk with your partner about the questions below.</p></div>`;
   const P=PARTS[shown-1];const inPart=STEPS.map((s,i)=>[s,i]).filter(([s])=>s.part===shown);const doneN=inPart.filter(([,i])=>i<S.step).length;
   h+=`<div class="card partintro"><h2>Part ${P.n}: ${P.t}</h2><p>${P.d}</p><div class="bar"><i style="width:${doneN/inPart.length*100}%"></i></div></div>`;
@@ -949,14 +1168,21 @@ $("rail").addEventListener("click",e=>{
   const ab=e.target.closest("[data-a11]");if(ab){checkA11();return}
   const ub=e.target.closest("[data-undo]");if(ub&&S.undo){writeRows(S.undo);S.undo=null;S.broken=false;paintAll();check(true);tip("The data is back as it was. Select E1:E11 and sort again, this time choosing Expand the selection.");return}
   const nx=e.target.closest("[data-next]");if(nx&&!nx.disabled){S.flags[nx.dataset.next]=true;check(true);return}
+  const bb=e.target.closest("[data-bonus]");if(bb){bonusClick(bb.dataset.bonus);return}
+  const bh=e.target.closest("[data-bh]");if(bh){const i=+bh.dataset.bh;S.bonus.hints.has(i)?S.bonus.hints.delete(i):S.bonus.hints.add(i);renderRail();return}
+  const bq=e.target.closest("[data-bquiz]");if(bq){const si=+bq.dataset.bquiz,qi=+bq.dataset.qi,i=+bq.dataset.i;const st=bsteps()[si];const A=S.bonus.ans[si]||(S.bonus.ans[si]={});if(A[qi]===st.quiz[qi].a)return;A[qi]=i;
+    /* No miss() here. The warm background means "this student is stuck" and the
+       bonus is meant to be hard, so a wrong answer in it must not raise that
+       flag for the lecturer. */
+    renderRail();bonusAfter();return}
   const go=e.target.closest("[data-go]");if(go){S.gate=null;S.view=null;onPartStart(curPart());renderTabs();renderRail();paintAll();return}
   const pt=e.target.closest("[data-part]");if(pt){goPart(+pt.dataset.part);return}
   const dm=e.target.closest("[data-demo]");if(dm&&!dm.disabled){demo(dm.dataset.demo);return}
   const qb=e.target.closest("[data-quiz]");if(qb){const st=STEPS.find(s=>s.id===qb.dataset.quiz);const qi=+qb.dataset.qi,i=+qb.dataset.i;const A=S.ans[st.id]||(S.ans[st.id]={});if(A[qi]===st.quiz[qi].a)return;A[qi]=i;if(i!==st.quiz[qi].a)miss();check(true);return}
   const sb=e.target.closest("[data-star]");if(sb){const cat=+sb.parentElement.dataset.cat;S.form.v[cat]=+sb.dataset.star;renderRail();return}
 });
-$("rail").addEventListener("input",e=>{if(e.target.id==="a11in")S.a11val=e.target.value});
-$("rail").addEventListener("keydown",e=>{if(e.target.id==="a11in"&&e.key==="Enter"){e.preventDefault();checkA11()}});
+$("rail").addEventListener("input",e=>{if(e.target.id==="a11in")S.a11val=e.target.value;else if(e.target.dataset.brng)S.bonus.rng[e.target.dataset.brng]=e.target.value;else if(e.target.dataset.bfn)S.bonus.fn=e.target.value});
+$("rail").addEventListener("keydown",e=>{if(e.target.id==="a11in"&&e.key==="Enter"){e.preventDefault();checkA11()}else if(e.target.dataset.brng&&e.key==="Enter"){e.preventDefault();bonusClick("rng")}else if(e.target.dataset.bfn&&e.key==="Enter"){e.preventDefault();bonusClick("fn")}});
 function checkA11(){const v=(S.a11val||"").trim().toUpperCase();if(v===String(S.cells[SH+"!A11"]).toUpperCase()){S.flags.a11=true;S.a11wrong=false;check(true)}else{S.a11wrong=true;miss();renderRail()}}
 $("rail").addEventListener("submit",e=>{
   if(e.target.id!=="mine")return;e.preventDefault();const f=S.form;S.you={sheet:SH,v:f.v.slice()};
@@ -1059,10 +1285,16 @@ setInterval(placeArrow,200);window.addEventListener("scroll",placeArrow,{passive
 
 // ---------- quiet progress colour for the lecturer ----------
 const WARM=[null,"#f6e1c4","#eec08c","#db9450","#b0652b","#7a3f17"];
+const WON="#1f5ea8"; // --sel, the deepest blue the page already uses
 function blue(t){const a=[228,238,249],b=[143,181,228];return "rgb("+a.map((v,i)=>Math.round(v+(b[i]-v)*t)).join(",")+")"}
 function miss(){S.miss++;updateBg()}
-function updateBg(){const b=document.body.style;let bg,dark=false;if(S.miss>0&&S.step<STEPS.length){const i=Math.min(S.miss,WARM.length-1);bg=WARM[i];dark=i>=4}else bg=blue(Math.min(1,S.step/STEPS.length));b.setProperty("--bg",bg);b.setProperty("--hdr-fg",dark?"#ffffff":"#1f1f1f");b.setProperty("--hdr-muted",dark?"rgba(255,255,255,.85)":"#45505f")}
+function updateBg(){const b=document.body.style;let bg,dark=false;if(S.miss>0&&S.step<STEPS.length){const i=Math.min(S.miss,WARM.length-1);bg=WARM[i];dark=i>=4}
+  /* A stuck student still outranks a finished one: the warm scale is the thing
+     the lecturer most needs to see. */
+  else if(S.bonus&&S.bonus.won){bg=WON;dark=true}
+  else bg=blue(Math.min(1,S.step/STEPS.length));b.setProperty("--bg",bg);b.setProperty("--hdr-fg",dark?"#ffffff":"#1f1f1f");b.setProperty("--hdr-muted",dark?"rgba(255,255,255,.85)":"#45505f")}
 function check(force){
+  if(S.bonus&&S.bonus.open)bonusSee();
   let changed=false;
   let fin=null;
   if(!S.gate)while(S.step<STEPS.length&&STEPS[S.step].ok()){const p=STEPS[S.step].part;S.step++;S.miss=0;S.arrow=null;changed=true;if(curPart()!==p&&curPart()<4){S.gate=p;fin=p;break}if(S.step>=STEPS.length)fin=4}
@@ -1070,24 +1302,85 @@ function check(force){
   if(changed||force)renderRail();
   if(fin)celebrate(fin);
 }
+function bonusClick(what){
+  const B=S.bonus;
+  if(what==="open"){B.open=true;B.closed=false;bonusSee()}
+  else if(what==="close"){B.open=false;B.closed=true}
+  else if(what==="fn"){
+    const raw=(B.fn||"").trim().toUpperCase().replace(/^=/,"").replace(/\(.*$/,"").replace(/\s+/g,"");
+    if(raw==="AVERAGE"){B.fnOk=true;B.fnTried=""}else B.fnTried=raw||"?";
+  }
+  else if(what==="rng"){
+    const want={Dlo:bSpan("D").lo,Dhi:bSpan("D").hi,Clo:bSpan("C").lo,Chi:bSpan("C").hi};
+    const ok=Object.keys(want).every(k=>(B.rng[k]||"").trim()!==""&&+B.rng[k]===want[k]);
+    if(ok)B.rngOk=true;else B.rngTried=true;
+  }
+  renderRail();bonusAfter();
+}
 function celebrate(p){
   document.querySelectorAll(".party").forEach(x=>x.remove());
   const last=p===4,next=PARTS[p];
   const o=document.createElement("div");o.className="party";o.setAttribute("role","dialog");o.setAttribute("aria-modal","true");o.setAttribute("aria-labelledby","partyh");
   o.innerHTML=`<canvas aria-hidden="true"></canvas><div class="partycard"><div class="rosette" aria-hidden="true"><span>${last?"★":p}</span></div><h2 id="partyh">${last?"All three parts complete!":`Part ${p} complete!`}</h2><p>${last?"Brilliant work. Talk with your partner about the questions in the last step.":`Well done. Please <b>wait to begin Part ${next.n}</b> until your lecturer tells you to start.`}</p>${last?"":`<p class="small">While you wait, look back over Part ${p} or help the person next to you.</p>`}<button class="next" data-party="1">${last?"Close":"OK, I will wait"}</button></div>`;
   document.body.appendChild(o);o.querySelector("button").focus();
-  o.querySelector("[data-party]").addEventListener("click",()=>o.remove());
+  o.querySelector("[data-party]").addEventListener("click",()=>{o.remove();
+    /* The bonus is for students who are now waiting on their classmates, so it
+       appears only once the celebration has been through and been closed. */
+    if(p===1&&!S.bonus.unlocked){S.bonus.unlocked=true;renderRail()}});
+  confetti(o,140,14);
+}
+
+/**
+ * Paper over an overlay.
+ *
+ * The clock is requestAnimationFrame where it runs, and a timer where it does
+ * not. Some embedded browsers never fire a frame, and there the celebration
+ * used to be an empty box: the card would appear with nothing falling behind
+ * it. A few dropped frames are a much smaller problem than that.
+ */
+function confetti(o,n,ns){
   const cv=o.querySelector("canvas"),ctx=cv.getContext&&cv.getContext("2d");if(!ctx)return;
   const W=cv.width=innerWidth,H=cv.height=innerHeight;const cols=["#1f5ea8","#65c1be","#e8a91e","#23706c","#8fb5e4","#f2c14e","#5b8fd6"];
-  const conf=Array.from({length:140},()=>({x:Math.random()*W,y:-Math.random()*H*0.8,w:6+Math.random()*6,h:10+Math.random()*8,c:cols[Math.random()*cols.length|0],vy:2+Math.random()*3,vx:-1+Math.random()*2,r:Math.random()*6,vr:-.2+Math.random()*.4}));
-  const str=Array.from({length:14},()=>({x:Math.random()*W,y:-Math.random()*H,c:cols[Math.random()*cols.length|0],len:120+Math.random()*120,amp:10+Math.random()*14,ph:Math.random()*6,vy:2.5+Math.random()*2.5}));
+  const conf=Array.from({length:n},()=>({x:Math.random()*W,y:-Math.random()*H*0.8,w:6+Math.random()*6,h:10+Math.random()*8,c:cols[Math.random()*cols.length|0],vy:2+Math.random()*3,vx:-1+Math.random()*2,r:Math.random()*6,vr:-.2+Math.random()*.4}));
+  const str=Array.from({length:ns},()=>({x:Math.random()*W,y:-Math.random()*H,c:cols[Math.random()*cols.length|0],len:120+Math.random()*120,amp:10+Math.random()*14,ph:Math.random()*6,vy:2.5+Math.random()*2.5}));
   const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
   function draw(t){ctx.clearRect(0,0,W,H);
     str.forEach(s=>{ctx.strokeStyle=s.c;ctx.lineWidth=5;ctx.lineCap="round";ctx.beginPath();for(let k=0;k<=s.len;k+=6){const xx=s.x+Math.sin(s.ph+k/18+t/300)*s.amp,yy=s.y+k;k?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)}ctx.stroke()});
     conf.forEach(c=>{ctx.save();ctx.translate(c.x,c.y);ctx.rotate(c.r);ctx.fillStyle=c.c;ctx.fillRect(-c.w/2,-c.h/2,c.w,c.h);ctx.restore()})}
   if(reduce){conf.forEach(c=>c.y=Math.random()*H);str.forEach(s=>s.y=Math.random()*H*0.7);draw(0);return}
-  const t0=performance.now();
-  (function tick(t){if(!o.isConnected)return;const el=t-t0;conf.forEach(c=>{c.y+=c.vy;c.x+=c.vx;c.r+=c.vr;if(el<2500&&c.y>H){c.y=-20;c.x=Math.random()*W}});str.forEach(s=>{s.y+=s.vy;if(el<2500&&s.y>H){s.y=-s.len;s.x=Math.random()*W}});draw(t);if(el<7000)requestAnimationFrame(tick);else ctx.clearRect(0,0,W,H)})(t0);
+  const t0=performance.now();let frames=0,raf=0,iv=0;
+  /* One step of the fall. Returns false once the paper is done. */
+  const step=t=>{const el=t-t0;
+    conf.forEach(c=>{c.y+=c.vy;c.x+=c.vx;c.r+=c.vr;if(el<2500&&c.y>H){c.y=-20;c.x=Math.random()*W}});
+    str.forEach(s=>{s.y+=s.vy;if(el<2500&&s.y>H){s.y=-s.len;s.x=Math.random()*W}});
+    draw(t);return el<7000};
+  const stop=()=>{clearInterval(iv);cancelAnimationFrame(raf);if(o.isConnected)ctx.clearRect(0,0,W,H)};
+  const tick=t=>{if(!o.isConnected)return stop();frames++;if(step(t))raf=requestAnimationFrame(tick);else stop()};
+  raf=requestAnimationFrame(tick);
+  /* If not one frame has arrived by now, nothing is driving it. */
+  setTimeout(()=>{if(frames)return;cancelAnimationFrame(raf);
+    iv=setInterval(()=>{if(!o.isConnected||!step(performance.now()))stop()},33)},150);
+}
+
+/**
+ * The reward for finishing the bonus: more paper than any part gets, and the
+ * page goes a deeper blue and stays there, so the lecturer can see across the
+ * room who went and did the hard one.
+ */
+function bonusCelebrate(){
+  document.querySelectorAll(".party").forEach(x=>x.remove());
+  const o=document.createElement("div");o.className="party party--bonus";o.setAttribute("role","dialog");o.setAttribute("aria-modal","true");o.setAttribute("aria-labelledby","bpartyh");
+  o.innerHTML=`<canvas aria-hidden="true"></canvas><div class="partycard"><div class="rosette" aria-hidden="true"><span>\u2605</span></div><h2 id="bpartyh">Bonus challenge complete</h2><p>You read the data properly. You found the gap, and you did not fall for the column with the highest score, which is the mistake that costs businesses money.</p><p class="small">Your screen has gone a deeper blue. That one is yours for the rest of the lesson.</p><button class="next" data-party="1">Back to the sheet</button></div>`;
+  document.body.appendChild(o);o.querySelector("button").focus();
+  o.querySelector("[data-party]").addEventListener("click",()=>o.remove());
+  confetti(o,300,30);
+}
+
+/* Fires once, the moment the last bonus question is right. */
+function bonusAfter(){
+  if(!S.bonus||S.bonus.won||!S.bonus.unlocked)return;
+  if(bAt()<bsteps().length)return;
+  S.bonus.won=true;updateBg();renderRail();bonusCelebrate();
 }
 
 // ---------- boot ----------

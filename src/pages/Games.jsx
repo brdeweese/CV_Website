@@ -7,7 +7,7 @@ const Crossword = lazy(() => import('../components/games/Crossword.jsx'))
 const Trolley = lazy(() => import('../components/games/Trolley.jsx'))
 const TradeGame = lazy(() => import('../components/games/TradeGame.jsx'))
 const PythonLab = lazy(() => import('../components/games/PythonLab.jsx'))
-const ReviewLab = lazy(() => import('../components/games/ReviewLab.jsx'))
+const ExcelIntro = lazy(() => import('../components/games/ExcelIntro.jsx'))
 
 /**
  * The classroom activities, playable.
@@ -23,7 +23,7 @@ const GAMES = [
     kicker: 'Guided activity',
     blurb:
       'An interactive activity that guides students through Excel in a simplified environment built to look like the real thing. They find cells, sort star ratings, use AVERAGE and COUNTIF, and build a bar chart from ten customer reviews that could come from a hotel or a hospital.',
-    Component: ReviewLab,
+    Component: ExcelIntro,
   },
   {
     id: 'butler',

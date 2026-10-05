@@ -7058,17 +7058,17 @@ button {
   }
 }
 
-/* ---- Care and Stay Review Lab --------------------------------------------
-   The lab is its own page, framed here and openable full screen. */
+/* ---- Introduction to Excel ------------------------------------------------
+   The activity is its own page, framed here and openable full screen. */
 
-.reviewlab {
+.excel-lab {
   margin-top: 1rem;
 }
-.reviewlab-open {
+.excel-lab-open {
   font-size: 0.86rem;
   margin: 0 0 0.6rem;
 }
-.reviewlab-frame {
+.excel-lab-frame {
   display: block;
   width: 100%;
   height: min(88vh, 900px);

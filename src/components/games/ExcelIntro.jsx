@@ -7,16 +7,16 @@
  */
 const LAB_URL = `${import.meta.env.BASE_URL}labs/introduction-to-excel/`
 
-export default function ReviewLab() {
+export default function ExcelIntro() {
   return (
-    <div className="reviewlab">
-      <p className="reviewlab-open">
+    <div className="excel-lab">
+      <p className="excel-lab-open">
         <a href={LAB_URL} target="_blank" rel="noopener noreferrer">
           Open the activity full screen (new tab) <span aria-hidden="true">↗</span>
         </a>
       </p>
       <iframe
-        className="reviewlab-frame"
+        className="excel-lab-frame"
         src={LAB_URL}
         title="Introduction to Excel: an interactive activity in a simplified spreadsheet"
         loading="lazy"

@@ -7057,3 +7057,23 @@ button {
     font-size: 0.68rem;
   }
 }
+
+/* ---- Care and Stay Review Lab --------------------------------------------
+   The lab is its own page, framed here and openable full screen. */
+
+.reviewlab {
+  margin-top: 1rem;
+}
+.reviewlab-open {
+  font-size: 0.86rem;
+  margin: 0 0 0.6rem;
+}
+.reviewlab-frame {
+  display: block;
+  width: 100%;
+  height: min(88vh, 900px);
+  min-height: 620px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: #fff;
+}

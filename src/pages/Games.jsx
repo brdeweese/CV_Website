@@ -7,6 +7,7 @@ const Crossword = lazy(() => import('../components/games/Crossword.jsx'))
 const Trolley = lazy(() => import('../components/games/Trolley.jsx'))
 const TradeGame = lazy(() => import('../components/games/TradeGame.jsx'))
 const PythonLab = lazy(() => import('../components/games/PythonLab.jsx'))
+const ReviewLab = lazy(() => import('../components/games/ReviewLab.jsx'))
 
 /**
  * The classroom activities, playable.
@@ -16,6 +17,14 @@ const PythonLab = lazy(() => import('../components/games/PythonLab.jsx'))
  * both slower and harder to read than the thing you actually came for.
  */
 const GAMES = [
+  {
+    id: 'reviewlab',
+    name: 'Care and Stay Review Lab',
+    kicker: 'Excel and customer feedback',
+    blurb:
+      'A step by step Excel practice tool built to look like desktop Excel. Students find cells, sort star ratings, use AVERAGE and COUNTIF, and build a bar chart from ten customer reviews that could come from a hotel or a hospital.',
+    Component: ReviewLab,
+  },
   {
     id: 'butler',
     name: "Pin the tail on Butler's curve",

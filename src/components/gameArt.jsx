@@ -118,7 +118,41 @@ function MiniPython() {
   )
 }
 
+export function MiniExcel() {
+  const cols = [0, 1, 2]
+  const rows = [0, 1, 2]
+  return (
+    <svg viewBox="0 0 120 64" aria-hidden="true">
+      {rows.map((r) =>
+        cols.map((c) => (
+          <rect
+            key={`${c}-${r}`}
+            className={r === 0 ? 'tt-mHead' : 'tt-mCell'}
+            x={8 + c * 25}
+            y={8 + r * 16}
+            width="23"
+            height="14"
+            rx="2"
+          />
+        )),
+      )}
+      {/* The selected cell, with Excel's handle on its corner. */}
+      <rect className="tt-mSel" x="33" y="24" width="23" height="14" rx="2" />
+      <rect className="tt-mHandle" x="54" y="36" width="4" height="4" />
+      {/* What the data becomes. */}
+      <rect className="tt-mBar" x="90" y="34" width="8" height="22" />
+      <rect className="tt-mBar" x="101" y="22" width="8" height="34" />
+    </svg>
+  )
+}
+
 export const GAME_ART = [
+  {
+    id: 'excel',
+    name: 'Introduction to Excel',
+    Art: MiniExcel,
+    href: `${import.meta.env.BASE_URL}labs/introduction-to-excel/`,
+  },
   { id: 'butler', name: "Pin the tail on Butler's curve", Art: MiniButler },
   { id: 'impacts', name: 'Sort the impact', Art: MiniImpacts },
   { id: 'python', name: 'Coding practice with AI', Art: MiniPython },

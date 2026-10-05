@@ -283,17 +283,38 @@ export default function Home() {
               work.
             </p>
             <div className="teach-grid">
-              {teaching.map((t) => (
-                <article
-                  className="teach-card reveal"
-                  key={t.title}
-                  data-discipline={t.discipline}
-                >
-                  <DisciplineTag id={t.discipline} />
-                  <h3 className="teach-title">{t.title}</h3>
-                  <p>{t.description}</p>
-                </article>
-              ))}
+              {teaching.map((t) => {
+                const body = (
+                  <>
+                    <DisciplineTag id={t.discipline} />
+                    <h3 className="teach-title">{t.title}</h3>
+                    <p>{t.description}</p>
+                    {t.href && (
+                      <span className="teach-go">
+                        Open the activity <span aria-hidden="true">→</span>
+                      </span>
+                    )}
+                  </>
+                )
+                return t.href ? (
+                  <a
+                    className="teach-card teach-card--link reveal"
+                    key={t.title}
+                    href={t.href}
+                    data-discipline={t.discipline}
+                  >
+                    {body}
+                  </a>
+                ) : (
+                  <article
+                    className="teach-card reveal"
+                    key={t.title}
+                    data-discipline={t.discipline}
+                  >
+                    {body}
+                  </article>
+                )
+              })}
             </div>
 
             <div className="teach-cta reveal">

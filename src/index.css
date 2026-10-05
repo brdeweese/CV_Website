@@ -5726,11 +5726,15 @@ button {
   display: block;
   height: 150px;
 }
-/* Card width and the gap between cards are both capped against the fan's own
-   width, so six of them always fit however narrow the column is: a card takes
-   46% of the space and the five gaps share the rest. The fan is the query
-   container because an element's own container-type does not apply to cqw in
-   its own rule, only in its descendants'. */
+/* Card width and the gap between cards are both worked out from the fan's own
+   width, so they fit however narrow the column is and however many cards there
+   are. The whole stack gets 89% of the fan and the rotation of the outer cards
+   takes the rest, which is what the per-count widths below come to. A gap is
+   22.38% of a card, written as a percentage because a percentage in translateX
+   resolves against the card's own box: a container unit would have had to pass
+   through two custom properties to get there, and one that does is resolved
+   once and never again when the fan changes width, which left a phone drawing
+   the desktop gap. */
 .playcta-card {
   /* Border-box, so the capped width is the whole card. Otherwise the padding
      and border sit outside it and the six cards spill past the fan. */
@@ -5738,7 +5742,7 @@ button {
   /* The outer cards are rotated, so each one's visual box is wider than its
      layout box. The caps leave that bleed room: the layout span comes to 89% of
      the fan, and the rotation takes up the rest. */
-  --fan-step: min(50px, 9.4cqw);
+  --fan-step: 22.38%;
   --fan-x: calc(var(--i) * var(--fan-step));
   position: absolute;
   left: 50%;
@@ -5753,6 +5757,19 @@ button {
     transform 0.55s cubic-bezier(0.3, 0, 0.2, 1),
     box-shadow 0.4s ease;
 }
+.playcta-fan[data-n='5'] .playcta-card {
+  width: min(140px, 46.96cqw);
+}
+.playcta-fan[data-n='7'] .playcta-card {
+  width: min(140px, 37.99cqw);
+}
+.playcta-fan[data-n='8'] .playcta-card {
+  width: min(140px, 34.68cqw);
+}
+.playcta-fan[data-n='9'] .playcta-card {
+  width: min(140px, 31.89cqw);
+}
+
 .playcta-card[data-front='true'] {
   transform: translate(-50%, -50%) translateX(var(--fan-x)) rotate(0deg) translateY(-10px)
     scale(1.07);
@@ -7076,4 +7093,51 @@ button {
   border: 1px solid var(--rule);
   border-radius: 8px;
   background: #fff;
+}
+
+/* The Introduction to Excel tile: a sheet, the selected cell, and what the
+   data becomes. */
+.tt-mHead {
+  fill: color-mix(in oklab, var(--tt-violet) 30%, var(--surface));
+  stroke: var(--tt-line);
+  stroke-width: 2;
+}
+.tt-mSel {
+  fill: var(--tt-blush-pale);
+  stroke: var(--tt-line);
+  stroke-width: 3;
+}
+.tt-mHandle {
+  fill: var(--tt-line);
+}
+.tt-mBar {
+  fill: var(--tt-blush);
+  stroke: var(--tt-line);
+  stroke-width: 2;
+}
+
+/* A teaching card that goes somewhere. */
+.teach-card--link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 0.18s ease,
+    transform 0.18s ease;
+}
+.teach-card--link:hover,
+.teach-card--link:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.teach-go {
+  display: inline-block;
+  margin-top: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+.teach-card--link:hover .teach-go span {
+  margin-left: 0.2rem;
 }

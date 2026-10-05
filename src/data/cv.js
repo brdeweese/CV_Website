@@ -825,6 +825,15 @@ export const curriculum = [
 
 export const teaching = [
   {
+    title: 'Introduction to Excel',
+    discipline: 'data',
+    /* The one activity with a page of its own, so the card links straight to
+       it rather than to the list. */
+    href: `${import.meta.env.BASE_URL}labs/introduction-to-excel/`,
+    description:
+      'An interactive activity guiding students through Excel in a simplified environment built to look like the real thing. They find cells, sort star ratings, use AVERAGE and COUNTIF, and build a chart from ten customer reviews.',
+  },
+  {
     title: 'Gap in the Market',
     discipline: 'tourism',
     description:

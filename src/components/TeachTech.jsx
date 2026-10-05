@@ -68,17 +68,30 @@ export default function TeachTech() {
       <div className="tt-tries">
         <p className="tt-triesHead">The activities, playable</p>
         <div className="tt-grid">
-          {GAME_ART.map(({ id, name, Art }) => (
-            <Link className="tt-tile" key={id} to={`/games#${id}`}>
-              <span className="tt-art" aria-hidden="true">
-                <Art />
-              </span>
-              <span className="tt-name">{name}</span>
-              <span className="tt-cta">
-                Click to Try <span aria-hidden="true">→</span>
-              </span>
-            </Link>
-          ))}
+          {GAME_ART.map(({ id, name, Art, href }) => {
+            const inner = (
+              <>
+                <span className="tt-art" aria-hidden="true">
+                  <Art />
+                </span>
+                <span className="tt-name">{name}</span>
+                <span className="tt-cta">
+                  Click to Try <span aria-hidden="true">→</span>
+                </span>
+              </>
+            )
+            /* An activity with its own page is a plain link out of the app;
+               the rest open their panel on the activity list. */
+            return href ? (
+              <a className="tt-tile" key={id} href={href}>
+                {inner}
+              </a>
+            ) : (
+              <Link className="tt-tile" key={id} to={`/games#${id}`}>
+                {inner}
+              </Link>
+            )
+          })}
         </div>
       </div>
     </section>
